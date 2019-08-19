@@ -1,0 +1,46 @@
+/*
+ *  Yihai
+ *
+ *  Copyright (c) 2019, CodeUP.
+ *  @author  Upik Saleh <upik@codeup.id>
+ */
+
+.system-default-login{
+    background: #d2d6de;
+}
+.tox{
+    padding:1px;
+}
+.select2-container{
+    width:100% !important;
+}
+.filters .form-control {
+    height: 30px !important;
+    padding: 2px 2px;
+}
+.navbar-nav>.messages-menu>.dropdown-menu>li .menu>li>a>p {
+    color: #404040;
+}
+.sidebar-menu, .main-sidebar .user-panel, .sidebar-menu>li.header {
+    white-space: normal;
+}
+.main-sidebar .site-info{
+    text-align: center;
+    padding: 5px;
+    background-color: #ecf0f5;
+}
+.main-sidebar .site-info .logo{
+}
+.main-sidebar .site-info .logo img{
+    width: 50%
+}
+.sidebar-collapse .main-sidebar .site-info .logo img{
+    width: 100%
+}
+
+.main-sidebar .site-info .name{
+    font-weight: bold;
+}
+.sidebar-collapse .main-sidebar .site-info .name{
+    display: none;
+}

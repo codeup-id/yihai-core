@@ -1,0 +1,36 @@
+{
+    "name": "code/yihai-core",
+    "description": "Yihai core",
+    "keywords": [
+        "yii2",
+        "framework",
+        "yihai",
+        "cms"
+    ],
+    "homepage": "http://yihai.codeup.id/",
+    "type": "library",
+    "license": "BSD-3-Clause",
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.6",
+        "ext-json": "*",
+        "yiisoft/yii2": "~2.0.24",
+        "2amigos/yii2-grid-view-library": "^1.0",
+        "tinymce/tinymce": ">=4",
+        "yiisoft/yii2-jui": "*",
+        "studio-42/elfinder": "^2.1.10",
+        "phpoffice/phpspreadsheet": "~1.8.2",
+        "mpdf/mpdf": "~8.0.2"
+    },
+    "config": {
+        "process-timeout": 1800,
+        "fxp-asset": {
+            "enabled": false
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "yihai\\core\\": "src"
+        }
+    }
+}

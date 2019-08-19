@@ -1,0 +1,31 @@
+/*
+ *  Yihai
+ *
+ *  Copyright (c) 2019, CodeUP.
+ *  @author  Upik Saleh <upik@codeup.id>
+ */
+
+
+/** REPORT TEMPLATE STYLE*/
+.main-report table{
+    width: 100%;
+    max-width: 100%;
+    border: 1px solid #2d2d2d;
+}
+.main-report table td, .main-report table th{
+    padding: 5px;
+}
+
+.page-break-always {
+    page-break-before: always;
+}
+
+
+.main-report table.no-border{
+    border:0;
+}
+
+.main-report table.no-border td{
+    border:0;
+}
+#tinymce .field {word-break:break-all;}
