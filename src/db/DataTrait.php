@@ -31,6 +31,10 @@ trait DataTrait
         return $this->hasOne(UserModel::class, ['id' => 'updated_by']);
     }
 
+    public function getCreated_at_simple()
+    {
+        return Yihai::$app->formatter->asDatetime_simple($this->created_at);
+    }
     public static function gridID($attribute = 'id', $value = 'id')
     {
         return [

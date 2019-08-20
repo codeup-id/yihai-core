@@ -8,6 +8,7 @@
 
 namespace yihai\core\report;
 
+use Mpdf\Mpdf;
 use Yihai;
 use yihai\core\base\FilterModel;
 use yihai\core\db\ActiveRecord;
@@ -33,19 +34,27 @@ abstract class BaseReport extends BaseObject implements ReportInteface
 {
     /** @var SysReports */
     public $model;
+
     private $_desc, $_template, $_template_render;
     /**
      * @var FilterModel
      */
     private $_filterModel;
     /**
+     * list queries
      * @var ActiveQuery[]
      */
     private $_db_queries;
-
-    private $_db_data;
-    private $_data_vars;
-    private $_hasBuild=false;
+    /**
+     * list data
+     * @var array
+     */
+    private $_data_vars = [];
+    /**
+     * template telah di build
+     * @var bool
+     */
+    private $_hasBuild = false;
 
     public function __construct($config = [])
     {
@@ -80,6 +89,7 @@ abstract class BaseReport extends BaseObject implements ReportInteface
             $this->_template_render = strtr($this->_template_render, [
                 '<!-- pagebreak -->' => '<div class="page-break-always"></div>'
             ]);
+            $this->buildTemplateConditions($this->_template_render);
             $this->buildTemplateLang();
             $this->buildTemplateGlobalVars();
             $this->buildTemplateDataList($this->_template_render);
@@ -90,14 +100,9 @@ abstract class BaseReport extends BaseObject implements ReportInteface
 
     }
 
-    public function runOnFilter()
-    {
-
-
-    }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getTemplateRender()
     {
@@ -106,50 +111,47 @@ abstract class BaseReport extends BaseObject implements ReportInteface
 
 
     /**
+     * mengambil data dari $data_var
      * @param ActiveRecord|array $data
      * @param $key
+     * @param string $type lists|global
      * @return string
      */
-    protected function dataGet($data, $key)
+    protected function dataGet($data, $key, $type = 'lists')
     {
         $formatter = explode(':', $key);
         $key = $formatter[0];
         unset($formatter[0]);
+        if($type === 'lists')
         $defaultKey = '{%' . $key . '%}';
+        else
+        $defaultKey = '{' . $key . '}';
         try {
-            if(is_array($data) && !ArrayHelper::keyExists($key, $data))
-                return $defaultKey;
-            elseif ($data instanceof ActiveRecord && !$data->hasProperty($key))
-                return $defaultKey;
-
+            if($type === 'lists') {
+                if (is_array($data) && !ArrayHelper::keyExists($key, $data))
+                    return $defaultKey;
+                elseif ($data instanceof ActiveRecord && (count(explode('.', $key)) == 1) && !$data->canGetProperty($key))
+                    return $defaultKey;
+            }
             $value = ArrayHelper::getValue($data, $key, null);
-            if(!empty($formatter)){
-                $allFormatter = $this->allFormatters();
-                foreach($formatter as $item){
-                    if(($f = ArrayHelper::getValue($allFormatter, $item)) && is_callable($f)){
+            if (!empty($formatter)) {
+                $allFormatter = $this->formatters();
+                foreach ($formatter as $item) {
+                    if (($f = ArrayHelper::getValue($allFormatter, $item)) && is_callable($f)) {
                         $value = call_user_func($f, $value);
                     }
                 }
             }
             return $value;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return $defaultKey;
         }
     }
 
-    public function run_buildTemplateDataGlobal($data, $inner, &$template)
-    {
 
-    }
-
-
-    protected function checkPatternDataList($template)
-    {
-        preg_match_all('/<!--%datalist:(.*)%-->(.*)?<!--%end_datalist:\1%-->/siU', $template, $matchDataList);
-        return $matchDataList;
-    }
 
     /**
+     * cek template telah di build
      * @return bool
      */
     public function isHasBuild()
@@ -157,25 +159,30 @@ abstract class BaseReport extends BaseObject implements ReportInteface
         return $this->_hasBuild;
     }
 
-    protected function buildTemplateDataListGlobal($template)
+    /**
+     * @param string $template
+     * @return array
+     */
+    protected function checkPatternDataList($template)
     {
-        if(!isset($this->_data_vars['global'])) return $template;
-//        if(!isset($this->_data_vars['global'])) return $template;
-        $render = preg_replace_callback('/{(.*?)}/', function ($key)  {
-            return $this->dataGet($this->_data_vars['global'], $key[1]);
-        }, $template);
-
-        return $render;
+        preg_match_all('/<!--%datalist:(.*)%-->(.*)?<!--%end_datalist:\1%-->/siU', $template, $matchDataList);
+        return $matchDataList;
     }
+
+    /**
+     * @param string $data
+     * @param string $template
+     * @return string
+     */
     protected function buildTemplateDataListData($data, $template)
     {
-        if(!isset($this->_data_vars['lists'])) return $template;
-        if(!isset($this->_data_vars['lists'][$data])) return $template;
+        if (!isset($this->_data_vars['lists'])) return $template;
+        if (!isset($this->_data_vars['lists'][$data])) return $template;
         $render = '';
         $no = 1;
-        foreach($this->_data_vars['lists'][$data] as $data) {
+        foreach ($this->_data_vars['lists'][$data] as $data) {
             $render .= preg_replace_callback('/{%(.*?)%}/', function ($key) use ($data, $no) {
-                if($key[1] === '__no'){
+                if ($key[1] === '__no') {
                     return $no;
                 }
                 return $this->dataGet($data, $key[1]);
@@ -184,34 +191,67 @@ abstract class BaseReport extends BaseObject implements ReportInteface
         }
         return $render;
     }
-    protected function buildTemplateDataList(&$template){
-        if($matchDataList = $this->checkPatternDataList($template)) {
+
+    protected function buildTemplateDataList(&$template)
+    {
+        if ($matchDataList = $this->checkPatternDataList($template)) {
             if (isset($matchDataList[0]) && isset($matchDataList[1]) && isset($matchDataList[2])) {
                 foreach ($matchDataList[0] as $k => $outerHtml) {
                     $inner = (isset($matchDataList[2][$k]) ? $matchDataList[2][$k] : '');
                     $outer = $outerHtml;
                     $data = (isset($matchDataList[1][$k]) ? $matchDataList[1][$k] : '');
-                    if($matchDataListSub = $this->checkPatternDataList($inner)) {
-                        str_replace($inner,$this->buildTemplateDataList($inner), $inner);
+                    if ($matchDataListSub = $this->checkPatternDataList($inner)) {
+                        str_replace($inner, $this->buildTemplateDataList($inner), $inner);
                     }
                     $template = str_replace($outer, $this->buildTemplateDataListData($data, $inner), $template);
 
                 }
             }
         }
-        return $template;
     }
 
+    protected function checkPatternConditions($template)
+    {
+        preg_match_all('/<!--%condition:(.*)%-->(.*)?<!--%end_condition:\1%-->/siU', $template, $matchDataList);
+        return $matchDataList;
+    }
+
+    protected function buildTemplateConditions(&$template)
+    {
+        if ($matchDataList = $this->checkPatternConditions($template)) {
+            if (isset($matchDataList[0]) && isset($matchDataList[1]) && isset($matchDataList[2])) {
+                $conditions = $this->conditions();
+                foreach ($matchDataList[0] as $k => $outerHtml) {
+                    $inner = (isset($matchDataList[2][$k]) ? $matchDataList[2][$k] : '');
+                    $outer = $outerHtml;
+                    $data = (isset($matchDataList[1][$k]) ? $matchDataList[1][$k] : '');
+                    $this->buildTemplateConditions($inner);
+                    if($data && isset($conditions[$data]) && is_callable($conditions[$data])){
+                        if(call_user_func($conditions[$data], $this->_data_vars)){
+                            $template = str_replace($outer, $inner, $template);
+                        }else{
+                            $template = str_replace($outer, '', $template);
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+
+    /**
+     * Build language data pada template
+     */
     public function buildTemplateLang()
     {
         preg_match_all('/{lang:(.*)?}/siU', $this->_template_render, $match);
-        if(isset($match[0]) && isset($match[1])){
+        if (isset($match[0]) && isset($match[1])) {
             $langs = array_combine($match[0], $match[1]);
             $langSource = 'yihai';
-            if(isset(Yihai::$app->i18n->translations['yihai-'.$this->model->module]))
-                $langSource = 'yihai-'.$this->model->module;
+            if (isset(Yihai::$app->i18n->translations['yihai-' . $this->model->module]))
+                $langSource = 'yihai-' . $this->model->module;
 
-            foreach ($langs as $template => $lang){
+            foreach ($langs as $template => $lang) {
                 $this->_template_render = str_replace($template, Yihai::t($langSource, $lang), $this->_template_render);
             }
         }
@@ -219,30 +259,56 @@ abstract class BaseReport extends BaseObject implements ReportInteface
 
     }
 
+    /**
+     * Build language data
+     */
     public function buildTemplateGlobalVars()
     {
-        $this->_template_render = preg_replace_callback('/{(?!\%)(.*?)(?!\%)}/', function ($key)  {
-            $value = ArrayHelper::getValue($this->_data_vars['global'], $key[1], '___null');
-            if($value === '___null'){
-                return '{'.$key[1].'}';
-            }
-            return $value;
+        $this->_template_render = preg_replace_callback('/{(?!\%)(.*?)(?!\%)}/', function ($key) {
+            return $this->dataGet($this->_data_vars['global'], $key[1],'global');
+//            return ArrayHelper::getValue($this->_data_vars['global'], $key[1], '___null');
+//            if ($value === '___null') {
+//                return '{' . $key[1] . '}';
+//            }
+//            return $value;
         }, $this->_template_render);
 
 
     }
-    private function allFormatters(){
-        $formatters = $this->formatters();
-        $r = [];
-        foreach($formatters as $key => $val){
-            $r = array_merge($r, $val);
-        }
-        return $r;
-    }
 
+    /**
+     * Formatters data
+     * ```php
+     * [
+     *      'time' => [
+     *          'full' => function($value) { return date('Y-m-d',$value); }
+     *      ]
+     * ]
+     * ```
+     * @return array
+     */
     public function formatters()
     {
         return Yihai::$app->reports->formatters();
+    }
+
+    /**
+     * conditions list
+     * - $data_vars adalah list data
+     * - return harus bool
+     * * ```php
+     * [
+     *      'user_is_system' => [
+     *          'full' => function($data_vars) { return $data_vars['global']['user']['id'] === 1; }
+     *      ]
+     * ]
+     * ```
+     *
+     * @return array
+     */
+    public function conditions()
+    {
+        return [];
     }
 
     /**
@@ -251,7 +317,7 @@ abstract class BaseReport extends BaseObject implements ReportInteface
      */
     public function dataQuery($query)
     {
-        if(!isset($this->_db_queries[$query]))
+        if (!isset($this->_db_queries[$query]))
             return [];
 
         return $this->_db_queries[$query]->all();
@@ -259,82 +325,85 @@ abstract class BaseReport extends BaseObject implements ReportInteface
     }
 
     /**
+     * get data one dari $this->_db_queries
      * @param $query
      * @return array|\yihai\core\db\ActiveRecord|null
      */
     public function dataQueryOne($query)
     {
-        if(!isset($this->_db_queries[$query]))
+        if (!isset($this->_db_queries[$query]))
             return [];
         return $this->_db_queries[$query]->one();
 
     }
 
-    protected function buildAvailableFieldsField($fields, $pre = ''){
-        $build = [];
-        foreach($fields as $field => $val){
-            $field = ($pre ? $pre .'.'.$field : $field);
-            if($val && is_array($val)){
-                $build = array_merge($build,$this->buildAvailableFieldsField($val, $field));
-            }elseif(is_string($field)){
-                $build[] = $field;
-            }
-        }
-        return $build;
-    }
-
-    public function buildAvailableFields($fieldsList)
-    {
-        $build = [];
-        foreach ($fieldsList as $name => $fields){
-            $build[$name] = $this->buildAvailableFieldsField($fields);
-        }
-        return $build;
-        
-    }
-
+    /**
+     * get all available fields
+     * @return array
+     */
     public function getAllAvailableFields()
     {
-        $comp = Yihai::$app->reports->availableFields();
-        $comp['global']['filter'] = $this->filterModel->attributes;
-        return ArrayHelper::merge($comp, $this->availableFields());
+        $comp = Yihai::$app->reports->dataVars();
+        $comp['global'] = ArrayHelper::keys_multi($comp['global']);
+        $comp['global']['filter'] = array_keys($this->filterModel->attributes);
+        $fields = ArrayHelper::merge($comp, $this->availableFields());
+        return $fields;
 
     }
+
+    /**
+     * @return ActiveQuery[]
+     */
     public function getDbQueries()
     {
         return $this->_db_queries;
     }
 
+    /**
+     * @return string
+     */
     public function getFilterModelName()
     {
         return 'report-' . $this->model->key;
     }
 
+    /**
+     * @return FilterModel
+     */
     public function getFilterModel()
     {
         return $this->_filterModel;
     }
 
+    /**
+     * gunakan @see filterHtml untuk membuat inputan
+     * @throws \Exception
+     */
     public function renderFilterHtml()
     {
         $form = ActiveForm::begin([]);
         $this->filterHtml($form);
-        echo Html::beginTag('div', ['class'=>'btn-group']);
-        echo Button::widget(['label' => Html::icon('eye'),'encodeLabel' => false,'options' => ['title'=>Yihai::t('yihai','View')]]);
+        echo Html::beginTag('div', ['class' => 'btn-group']);
+        echo Button::widget(['label' => Html::icon('eye'), 'encodeLabel' => false, 'options' => ['title' => Yihai::t('yihai', 'View')]]);
         echo Button::widget([
             'label' => Html::icon('print'),
             'encodeLabel' => false,
-            'options' => ['name'=>'type','formtarget'=>'_blank','formaction'=>Url::to(['export-report','key'=>$this->model->key,'__type'=>'print']),'title'=>Yihai::t('yihai','Print')]
+            'options' => ['name' => 'type', 'formtarget' => '_blank', 'formaction' => Url::to(['export-report', 'key' => $this->model->key, '__type' => 'print']), 'title' => Yihai::t('yihai', 'Print')]
         ]);
         echo Button::widget([
             'label' => Html::icon('download'),
             'encodeLabel' => false,
-            'options' => ['name'=>'type','formtarget'=>'_blank','formaction'=>Url::to(['export-report','key'=>$this->model->key,'__type'=>'pdf']),'title'=>Yihai::t('yihai','Download')]
+            'options' => ['name' => 'type', 'formtarget' => '_blank', 'formaction' => Url::to(['export-report', 'key' => $this->model->key, '__type' => 'pdf']), 'title' => Yihai::t('yihai', 'Download')]
         ]);
         echo Html::endTag('div');
         ActiveForm::end();
 
     }
+
+    /**
+     * format halaman untuk mpdf
+     * @return array
+     */
     public function pageFormats()
     {
 
@@ -397,7 +466,16 @@ abstract class BaseReport extends BaseObject implements ReportInteface
         ];
 
     }
+
     /**
+     * @return array
+     */
+    public function mpdf()
+    {
+        return [];
+    }
+    /**
+     * menambah atau mengganti mpdf options
      * @param \Mpdf\Mpdf $mpdf
      */
     public function mpdfOptions(&$mpdf)
@@ -429,6 +507,7 @@ abstract class BaseReport extends BaseObject implements ReportInteface
             ),
         ));
     }
+
     /**
      * @return string
      */

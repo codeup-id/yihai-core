@@ -86,15 +86,14 @@ class TinyMce extends InputWidget
         $id = $this->options['id'];
 
         $this->clientOptions['selector'] = "#$id";
-        // @codeCoverageIgnoreStart
+
         if ($this->language !== 'en') {
             $langFile = "{$this->language}.js";
             $langAssetBundle = TinyMceLangAsset::register($view);
             $langAssetBundle->js[] = $langFile;
             $this->clientOptions['language_url'] = $langAssetBundle->baseUrl . "/{$langFile}";
-            $this->clientOptions['language'] = "{$this->language}";//Language fix. Without it EN language when add some plugins like codemirror 
+            $this->clientOptions['language'] = "{$this->language}";
         }
-        // @codeCoverageIgnoreEnd
 
         $options = Json::encode($this->clientOptions);
         $js[] = 'tinymce.remove("#' . $id . '");';
@@ -115,62 +114,28 @@ class TinyMce extends InputWidget
             $elPathId = '&pathId='.implode(',',$this->elfinderPathId);
         }
         $view->registerJs('function tinyMceElFinderBrowser (callback, value, meta) {
-			
-			tinymce.activeEditor.windowManager.openUrl({
-				url: \'' . \yii\helpers\Url::to(['/system/file-manager/manager?tinymce'.$elPathId]) . '\',
+			tinymce.activeEditor.windowManager.open({
+				file: \'' . \yii\helpers\Url::to(['/system/file-manager/manager?tinymce'.$elPathId]) . '\',
 				title: \'' . Yihai::t('yihai', 'Browse File') . '\',
-				width: jQuery(window).width()/1.2,
+				width: jQuery(window).width()/1.2,	
 				height: jQuery(window).height()/1.2,
-				buttons: [
-				{
-                      type: \'cancel\',
-                      name: \'cancel\',
-                      text: \'' . Yihai::t('yihai', 'Cancel') . '\',
-                      disabled: false,
-                      primary: false,
-                      align: \'end\'
-                    }]
+				resizable: true
+			}, {
+				oninsert: function (file, fm) {
+					var url, reg, info;
+					url = fm.convAbsUrl(file.url);
+					info = file.name + \' (\' + fm.formatSize(file.size) + \')\';
+					if (meta.filetype == \'file\') {
+						callback(url, {text: info, title: info});
+					}
+					if (meta.filetype == \'image\') {
+						callback(url, {alt: info});
+					}
+					if (meta.filetype == \'media\') {
+						callback(url);
+					}
+				}
 			});
-
-			// @todo use official API but there seems no way to pass callback to TinyMCE 5 RC1 currently.
-			tinymce.activeEditor.windowManager._elfinderCallBack = function (file, fm) {
-				var url, reg, info;
-
-				// URL normalization
-				url = fm.convAbsUrl(file.url);
-				
-				// Make file info
-				info = file.name + \' (\' + fm.formatSize(file.size) + \')\';
-
-				// Provide file and text for the link dialog
-				if (meta.filetype == \'file\') {
-					callback(url, {text: info, title: info});
-				}
-
-				// Provide image and alt text for the image dialog
-				if (meta.filetype == \'image\') {
-					callback(url, {alt: info});
-				}
-
-				// Provide alternative source and posted for the media dialog
-				if (meta.filetype == \'media\') {
-					callback(url);
-				}
-			};
-
-			// set CSS for elFinder dialog
-			try {
-				myIfm = document.querySelector(\'div.tox-dialog__body-content > div > iframe.elfinder-manager\');
-				if (myIfm) {
-					pStyle = myIfm.parentElement.style;
-					pStyle.height = \'100%\';
-					pStyle.overflow = \'hidden\';
-					// hide footer
-					myIfm.parentElement.parentElement.parentElement.parentElement.nextElementSibling.style.display = \'none\';
-				}
-			} catch(e) {}
-			
-			return false;
 		}
 
 ');

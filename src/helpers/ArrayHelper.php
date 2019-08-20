@@ -11,6 +11,22 @@ namespace yihai\core\helpers;
 
 class ArrayHelper extends \yii\helpers\ArrayHelper
 {
+    public static function keys_multi(array $array)
+    {
+        $keys = array();
+
+        foreach ($array as $key => $value) {
+            if (is_array($value) && is_string($key)) {
+                $keys[$key] = static::keys_multi($value);
+            }else{
+                if(is_int($key))
+                    $key = $value;
+                $keys[] = $key;
+            }
+        }
+
+        return $keys;
+    }
     public static function getValue($array, $key, $default = null)
     {
         if ($key instanceof \Closure) {

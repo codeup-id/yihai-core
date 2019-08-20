@@ -93,31 +93,45 @@ class ReportComponent extends Component
                     '__no' => '{%__no%}'
                 ],
                 'datetime' => [
-                    'year_full' => date('Y', time()),
-                    'year_two_digit' => date('y', time()),
-                    'month_digit_two' => date('m', time()),
-                    'month_digit_nozero' => date('n', time()),
-                    'month_name_three' => Yihai::$app->formatter->asDate(time(), 'php:M'),
-                    'month_name_full' => Yihai::$app->formatter->asDate(time(), 'php:F'),
-                    'month_number_day' => date('t', time()),
-                    'day_digit_two' => date('d', time()),
-                    'day_digit_nozero' => date('j', time()),
-                    'day_digit_week' => Yihai::$app->formatter->asDate(time(), 'php:N'),
-                    'day_digit_year' => Yihai::$app->formatter->asDate(time(), 'php:z'),
-                    'day_name_three' => Yihai::$app->formatter->asDate(time(), 'php:D'),
-                    'day_name_full' => Yihai::$app->formatter->asDate(time(), 'php:l'),
-                    'time_am_or_pm' => Yihai::$app->formatter->asDate(time(), 'php:A'),
-                    'hour_digit_12' => Yihai::$app->formatter->asDate(time(), 'php:h'),
-                    'hour_digit_12_nozero' => Yihai::$app->formatter->asDate(time(), 'php:g'),
-                    'hour_digit_24' => Yihai::$app->formatter->asDate(time(), 'php:H'),
-                    'hour_digit_24_nozero' => Yihai::$app->formatter->asDate(time(), 'php:G'),
-                    'minutes' => Yihai::$app->formatter->asDate(time(), 'php:i'),
-                    'seconds' => Yihai::$app->formatter->asDate(time(), 'php:s'),
-                    'timezone_identifier' => Yihai::$app->formatter->asDate(time(), 'php:e'),
-                    'timezone_hours' => Yihai::$app->formatter->asDate(time(), 'php:P'),
-                    'timezone_abbreviation' => Yihai::$app->formatter->asDate(time(), 'php:T'),
-                    'full_datetime_iso' => Yihai::$app->formatter->asDate(time(), 'php:c'),
-                    'full_datetime_formatted' => Yihai::$app->formatter->asDate(time(), 'php:r'),
+                    'full' => [
+                        'iso' => Yihai::$app->formatter->asDate(time(), 'php:c'),
+                        'formatted' => Yihai::$app->formatter->asDate(time(), 'php:r'),
+                        'Y_m_d' => Yihai::$app->formatter->asDate(time(), 'php:Y-m-d'),
+                        'Y_m_d_h_i_s' => Yihai::$app->formatter->asDate(time(), 'php:Y-m-d H:i:s'),
+                    ],
+                    'year'=>[
+                        'full' => date('Y', time()),
+                        'two_digit' => date('y', time()),
+                    ],
+                    'month' => [
+                        'digit_two' => date('m', time()),
+                        'digit_nozero' => date('n', time()),
+                        'name_three' => Yihai::$app->formatter->asDate(time(), 'php:M'),
+                        'name_full' => Yihai::$app->formatter->asDate(time(), 'php:F'),
+                        'number_day' => date('t', time()),
+                    ],
+                    'day' => [
+                        'digit_two' => date('d', time()),
+                        'digit_nozero' => date('j', time()),
+                        'digit_week' => Yihai::$app->formatter->asDate(time(), 'php:N'),
+                        'digit_year' => Yihai::$app->formatter->asDate(time(), 'php:z'),
+                        'name_three' => Yihai::$app->formatter->asDate(time(), 'php:D'),
+                        'name_full' => Yihai::$app->formatter->asDate(time(), 'php:l'),
+                    ],
+                    'time' => [
+                        'am_or_pm' => Yihai::$app->formatter->asDate(time(), 'php:A'),
+                        'hour_digit_12' => Yihai::$app->formatter->asDate(time(), 'php:h'),
+                        'hour_digit_12_nozero' => Yihai::$app->formatter->asDate(time(), 'php:g'),
+                        'hour_digit_24' => Yihai::$app->formatter->asDate(time(), 'php:H'),
+                        'hour_digit_24_nozero' => Yihai::$app->formatter->asDate(time(), 'php:G'),
+                        'minutes' => Yihai::$app->formatter->asDate(time(), 'php:i'),
+                        'seconds' => Yihai::$app->formatter->asDate(time(), 'php:s'),
+                    ],
+                    'timezone'=>[ 
+                        'timezone_identifier' => Yihai::$app->formatter->asDate(time(), 'php:e'),
+                        'timezone_hours' => Yihai::$app->formatter->asDate(time(), 'php:P'),
+                        'timezone_abbreviation' => Yihai::$app->formatter->asDate(time(), 'php:T'),
+                    ],
                 ],
                 'user' => [
                     'id' => Yihai::$app->user->id,
@@ -130,48 +144,56 @@ class ReportComponent extends Component
 
     }
 
-    public function availableFields()
-    {
-        $dataVars = $this->dataVars();
-        return [
-            'global' => $dataVars['global']
-        ];
-    }
-
+    /**
+     * @return array
+     */
     public function formatters()
     {
         return [
+
             'datetime' => [
-                'year_full' => function ($value) { return date('Y', $value);},
-                'year_two_digit' => function ($value) { return date('y', $value);},
-                'month_digit_two' => function ($value) { return date('m', $value);},
-                'month_digit_nozero' => function ($value) { return date('n', $value);},
-                'month_name_three' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:M');},
-                'month_name_full' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:F');},
-                'month_number_day' => function ($value) { return date('t', $value);},
-                'day_digit_two' => function ($value) { return date('d', $value);},
-                'day_digit_nozero' => function ($value) { return date('j', $value);},
-                'day_digit_week' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:N');},
-                'day_digit_year' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:z');},
-                'day_name_three' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:D');},
-                'day_name_full' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:l');},
-                'time_am_or_pm' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:A');},
-                'hour_digit_12' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:h');},
-                'hour_digit_12_nozero' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:g');},
-                'hour_digit_24' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:H');},
-                'hour_digit_24_nozero' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:G');},
-                'minutes' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:i');},
-                'seconds' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:s');},
-                'timezone_identifier' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:e');},
-                'timezone_hours' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:P');},
-                'timezone_abbreviation' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:T');},
-                'full_datetime_iso' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:c');},
-                'full_datetime_formatted' => function ($value) {
-                    return Yihai::$app->formatter->asDate($value, 'php:r');
-                },
+                'full' => [
+                    'iso' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:c');},
+                    'formatted' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:r');},
+                    'Y_m_d' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:Y-m-d');},
+                    'Y_m_d_h_i_s' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:Y-m-d H:i:s');},
+                ],
+                'year'=>[
+                    'full' => function ($value) { return date('Y', $value);},
+                    'two_digit' => function ($value) { return date('y', $value);},
+                ],
+                'month' => [
+                    'digit_two' => function ($value) { return date('m', $value);},
+                    'digit_nozero' => function ($value) { return date('n', $value);},
+                    'name_three' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:M');},
+                    'name_full' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:F');},
+                    'number_day' => function ($value) { return date('t', $value);},
+                ],
+                'day' => [
+                    'digit_two' => function ($value) { return date('d', $value);},
+                    'digit_nozero' => function ($value) { return date('j', $value);},
+                    'digit_week' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:N');},
+                    'digit_year' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:z');},
+                    'name_three' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:D');},
+                    'name_full' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:l');},
+                ],
+                'time' => [
+                    'am_or_pm' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:A');},
+                    'hour_digit_12' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:h');},
+                    'hour_digit_12_nozero' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:g');},
+                    'hour_digit_24' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:H');},
+                    'hour_digit_24_nozero' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:G');},
+                    'minutes' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:i');},
+                    'seconds' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:s');},
+                ],
+                'timezone'=>[
+                    'timezone_identifier' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:e');},
+                    'timezone_hours' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:P');},
+                    'timezone_abbreviation' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:T');},
+                ],
             ],
             'user' => [
-                'username_from_ID'=>function($value){
+                'to_username'=>function($value){
                     return Yihai::$app->formatter->asUsername($value);
                 }
             ]

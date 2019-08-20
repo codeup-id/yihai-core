@@ -7,142 +7,300 @@
 if (window.tinymce && reportDataListJson && reportAvailableFieldsListJson && reportAvailableFieldsGlobalJson) {
     tinymce.PluginManager.add('codeupReport', function (editor) {
         var tinymceCodeupReport = {
+            currentConditionPath: null,
+            currentNode: null,
             currentPath: null,
             dataListToggleToolbar: [],
             currentClassListPath: '',
             currentField: null
         };
-        reportDataListJson.forEach(function (v, i) {
-            tinymceCodeupReport.dataListToggleToolbar[v] = editor.ui.registry.addToggleButton('toggleClassLists_' + v, {
+        editor.on('NodeChange', function (e) {
+            tinymceCodeupReport.currentNode = e;
+            var element = $(e.element);
+            tinymceCodeupReport.currentPath = $(element);
+            if (element.hasClass('field') || element.hasClass('mceNonEditable')) {
+                var a = tinymce.activeEditor.selection.getNode();
+                tinymce.activeEditor.selection.select($(a).closest('.field')[0]);
+                tinymceCodeupReport.currentField = element;
+
+            } else {
+                tinymceCodeupReport.currentField = null;
+            }
+            if(element.attr('report-list')){
+                tinymceCodeupReport.currentClassListPath = element
+            }else{
+                tinymceCodeupReport.currentClassListPath = null
+            }
+        });
+        if(REPORT_PAGE_WIDTH && REPORT_PAGE_HEIGHT) {
+
+            editor.addButton('toggleWidth', {
+                text: 'Toggle Size',
+                onclick: function () {
+                    if(this.active()){
+                        $(tinymce.activeEditor.dom.doc).find('body')
+                            .css('width','auto')
+                            .css('height', REPORT_PAGE_HEIGHT + 'cm')
+                            .css('margin', 'auto')
+                        this.active(false)
+                    }else {
+                        $(tinymce.activeEditor.dom.doc).find('body')
+                            .css('width', REPORT_PAGE_WIDTH + 'cm')
+                            .css('height', REPORT_PAGE_HEIGHT + 'cm')
+                            .css('margin', '0 auto')
+                        this.active(true);
+                    }
+                }
+            });
+        }
+        $.each(reportDataListJson, function (v, i) {
+            editor.addButton('toggleClassLists_' + v, {
                 text: '(LIST) ' + v,
-                onAction: function (api) {
-                    if (!tinymceCodeupReport.currentClassListPath)
+                onclick: function () {
+                    if (!tinymceCodeupReport.currentPath)
                         return;
-                    if (!api.isActive()) {
-                        $(tinymceCodeupReport.currentClassListPath).attr('report-list', v);
+                    if (!this.active()) {
+                        tinymceCodeupReport.currentPath.attr('report-list', v);
+                        this.active(true);
                     } else {
-                        $(tinymceCodeupReport.currentClassListPath).removeAttr('report-list');
+                        tinymceCodeupReport.currentPath.removeAttr('report-list');
+                        this.active(false);
                     }
                 },
-                onSetup: function (api) {
+                onpostrender: function () {
+                    var btn = this;
                     editor.on('click', function (e) {
-                        if ($(e.path[0]).hasClass('field')) {
-                            tinymceCodeupReport.currentField = $(e.path[0]);
-                        } else {
-                            tinymceCodeupReport.currentField = null;
+
+                        if(tinymceCodeupReport.currentPath.closest('[report-list]').attr('report-list')) {
+                            if (tinymceCodeupReport.currentPath.closest('[report-list]').attr('report-list') === v) {
+                                btn.active(true);
+                            }else{
+                                btn.active(false);
+                            }
+                        }else{
+                            btn.active(false);
                         }
-                        if ($(e.path[0]).attr('report-list') && $(e.path[0]).attr('report-list') === v) {
-                            tinymceCodeupReport.currentClassListPath = e.path[0];
-                            api.setActive(true);
-                        } else if ($(e.path[1]).attr('report-list') && $(e.path[1]).attr('report-list') === v) {
-                            //                        tinymceCodeupReport.currentClassListPath = e.path[1];
-                            api.setActive(true);
-                        } else {
-                            tinymceCodeupReport.currentClassListPath = e.path[0];
-                            api.setActive(false);
+                    });
+                }
+            });
+
+        });
+
+        function processMenuItemsList(fields, sub) {
+            var menu = [];
+            if(typeof sub === 'undefined')
+                sub = '';
+            $.each(fields, function (key, val) {
+                var _sub = sub+key;
+                if(isNaN(key)) {
+                    var keys = key.split(':');
+                    key = keys[0];
+                    if(keys[1]){
+                        _sub = keys[1];
+                    }
+                }
+                if (typeof val === 'string') {
+                    menu.push({
+                        text: val,
+                        icon: 'unlock',
+                        onclick: function () {
+                            editor.insertContent('&nbsp;<span class="field global-field"><field>{%' + sub + val + '%}</field></span>&nbsp;');
                         }
                     })
-                },
-            });
-        });
-        $.each(reportAvailableFieldsListJson, function (list, fields) {
-            editor.ui.registry.addMenuButton('fieldList_' + list, {
-                text: '(LIST Field) ' + list,
-                fetch: function (callback) {
-                    var menu = [];
-                    fields.forEach(function (v, i) {
-                        menu.push({
-                            type: 'menuitem',
-                            text: v,
-                            icon: 'unlock',
-                            onAction: function () {
-                                editor.insertContent('<span class="field global-field">{%' + v + '%}</span>');
-                            }
-                        })
-                    });
-                    callback(menu);
-                },
-                onSetup: function (api) {
-                    api.setDisabled(true);
-                    editor.on('click', function (e) {
-                        if ($(e.path[0]).attr('report-list') && $(e.path[0]).attr('report-list') === list) {
-                            api.setDisabled(false);
-                        } else if ($(e.path[1]).attr('report-list') && $(e.path[1]).attr('report-list') === list) {
-                            api.setDisabled(false);
-                        } else {
-                            api.setDisabled(true);
-                        }
+                }else if(val.constructor === ([]).constructor){
+                    menu.push({
+                        text: key,
+                        icon: 'unlock',
+                        menu: processMenuItemsList(val, _sub+'.')
                     })
                 }
-
+            });
+            return menu;
+        }
+        $.each(reportAvailableFieldsListJson, function (list, fields) {
+            editor.addButton('fieldList_' + list.replace(/ /g, '-'), {
+                type: 'menubutton',
+                text: '(LIST Field) ' + list,
+                icon: false,
+                menu: processMenuItemsList(fields),
+                disabled:true,
+                onpostrender: function(){
+                    var btn = this;
+                    editor.on('click', function (e) {
+                        if ($(e.path[0]).attr('report-list') && $(e.path[0]).attr('report-list') === list) {
+                            btn.disabled(false);
+                        } else if ($(e.path[1]).attr('report-list') && $(e.path[1]).attr('report-list') === list) {
+                            btn.disabled(false);
+                        } else {
+                            btn.disabled(true);
+                        }
+                    });
+                }
             });
         });
+
+        function processMenuItemsGlobal(fields, sub) {
+            var menu = [];
+            if(typeof sub === 'undefined')
+                sub = '';
+            $.each(fields, function (key, val) {
+                if (typeof val === 'string') {
+                    menu.push({
+                        text: val,
+                        icon: 'unlock',
+                        onclick: function () {
+                            editor.insertContent('&nbsp;<span class="field global-field"><field>{' + sub + val + '}</field></span>&nbsp;');
+                        },
+
+                    })
+                }else if(val.constructor === ([]).constructor){
+                    menu.push({
+                        text: key,
+                        icon: 'unlock',
+                        menu: processMenuItemsGlobal(val, sub+key+'.')
+                    })
+                }
+            });
+            return menu;
+        }
         $.each(reportAvailableFieldsGlobalJson, function (list, fields) {
-            if (typeof fields === 'object') {
-                editor.ui.registry.addMenuButton('fieldGlobal_' + list.replace(/ /g, '-'), {
-                    text: '(GLOBAL Field) ' + list,
-                    fetch: function (callback) {
-                        var menu = [];
-                        fields.forEach(function (v, i) {
-                            menu.push({
-                                type: 'menuitem',
-                                text: v,
-                                icon: 'unlock',
-                                onAction: function () {
-                                    editor.insertContent('<span class="field global-field">{' + list + '.' + v + '}</span>');
-                                }
-                            })
-                        });
-                        callback(menu);
-                    },
-                    onSetup: function (api) {
-                    }
+            editor.addButton('fieldGlobal_' + list.replace(/ /g, '-'), {
+                type: 'menubutton',
+                text: '(GLOBAL Field) ' + list,
+                icon: false,
+                menu: processMenuItemsGlobal(fields, list.replace(/ /g, '-')+'.'),
+                onpostrender:function(){
+                    editor.on('click', function(e){
 
-                });
-            }
-        })
-        $.each(reportFormatters, function (list, fields) {
-            if (typeof fields === 'object' && fields.constructor === ({}).constructor) {
-                editor.ui.registry.addMenuButton('formatters' + list.replace(/ /g, '-'), {
-                    text: '(Formatter) ' + list,
-                    fetch: function (callback) {
-                        var menu = [];
-                        Object.keys(fields).forEach(function (v, i) {
-                            menu.push({
-                                type: 'menuitem',
-                                text: v,
-                                icon: 'unlock',
-                                onAction: function () {
-                                    var field = tinymceCodeupReport.currentField.html();
-                                    var res = field.replace(/{(.*?)}/gi, function (x) {
-                                        var lastLi = x.substr(x.length - 2);
-                                        if (lastLi === '%}') {
-                                            return x.substr(0, x.length - 2) + ':' + v + '%}';
-                                        }else{
-                                            return x.substr(0, x.length - 1) + ':' + v + '}';
-                                        }
-                                    });
-                                    tinymceCodeupReport.currentField.html(res);
-                                },
-                                onSetup: function (api) {
-                                }
-                            })
-                        });
-                        callback(menu);
-                    },
-                    onSetup: function (api) {
-                        api.setDisabled(true);
-                        editor.on('click', function (e) {
-                            if (tinymceCodeupReport.currentField) {
-                                api.setDisabled(false);
-                            } else {
-                                api.setDisabled(true);
+                    })
+                }
+            });
+        });
+
+        function processMenuItemsFormatters(fields, sub) {
+            var menu = [];
+            if(typeof sub === 'undefined')
+                sub = '';
+            $.each(fields, function (key, val) {
+                if (typeof val === 'string') {
+                    menu.push({
+                        text: val,
+                        icon: 'unlock',
+                        onclick: function () {
+                            var fieldNode = tinymce.activeEditor.selection.getNode();
+                            if(fieldNode.innerHTML.search(':'+sub+val) >= 0){
+                                fieldNode.innerHTML=fieldNode.innerHTML.split(':'+sub+val).join('');
+                            }else {
+                                fieldNode.innerHTML = fieldNode.innerHTML.replace(/{(.*?)}/gi, function (x) {
+                                    var lastLi = x.substr(x.length - 2);
+                                    if (lastLi === '%}') {
+                                        return x.substr(0, x.length - 2) + ':' + sub + val + '%}';
+                                    } else {
+                                        return x.substr(0, x.length - 1) + ':' + sub + val + '}';
+                                    }
+                                });
                             }
-                        })
-                    }
-
+                            tinymce.activeEditor.selection.setNode(fieldNode);
+                        }
+                    })
+                }else if(val.constructor === ([]).constructor || val.constructor === ({}).constructor){
+                    menu.push({
+                        text: key,
+                        icon: 'unlock',
+                        menu: processMenuItemsFormatters(val, sub+key+'.')
+                    })
+                }
+            });
+            return menu;
+        }
+        editor.addButton('codeup_formatters', {
+            type: 'menubutton',
+            text: '(Formatters)',
+            icon: false,
+            menu: processMenuItemsFormatters(reportFormatters),
+            disabled:true,
+            onpostrender:function(){
+                var _self = this;
+                editor.on('NodeChange', function (e) {
+                    var node = tinymce.activeEditor.selection.getNode();
+                    if($(node).hasClass('field'))
+                        _self.disabled(false);
+                    else
+                        _self.disabled(true)
+                    // if(path0.prop("tagName") !=='HTML' && path0.prop("tagName") !== 'BODY'){
+                    //     _self.disabled(false);
+                    //     tinymceCodeupReport.currentConditionPath = path0;
+                    // }else{
+                    //     _self.disabled(true);
+                    // }
                 });
             }
-        })
+        });
+
+        function processMenuItemsConditions(fields, sub) {
+            var menu = [];
+            if(typeof sub === 'undefined')
+                sub = '';
+            $.each(fields, function (key, val) {
+                if (typeof val === 'string') {
+                    menu.push({
+                        text: val,
+                        icon: 'unlock',
+                        onclick: function () {
+                            if(tinymceCodeupReport.currentPath) {
+                                if(tinymceCodeupReport.currentPath.attr('condition')&&tinymceCodeupReport.currentPath.attr('condition')===val)
+                                    tinymceCodeupReport.currentPath.removeAttr('condition')
+                                else
+                                tinymceCodeupReport.currentPath.attr('condition', val);
+                            }
+                        },
+                        onpostrender: function(){
+                            var _self = this;
+                            editor.on('click', function (e) {
+                                var closest = tinymceCodeupReport.currentPath.closest('[condition]').attr('condition');
+                                if (closest && closest === val){
+                                    _self.active(true);
+                                }else{
+                                    _self.active(false);
+                                }
+                            })
+                        }
+                    })
+                }else if(val.constructor === ([]).constructor){
+                    menu.push({
+                        text: key,
+                        icon: 'unlock',
+                        menu: processMenuItemsConditions(val, sub+key+'.')
+                    })
+                }
+            });
+            return menu;
+        }
+        var conditions = processMenuItemsConditions(reportAvailableFieldsConditionJson);
+        editor.addButton('codeup_conditions', {
+            type: 'menubutton',
+            text: '(Conditions)',
+            icon: false,
+            // disabled:true,
+            menu: conditions,
+            onpostrender:function(){
+                var _self = this;
+                editor.on('click', function (e) {
+                    var path0 = $(e.path[0]);
+                    if(path0.prop("tagName") !=='HTML' && path0.prop("tagName") !== 'BODY'){
+                        _self.disabled(false);
+                        tinymceCodeupReport.currentConditionPath = path0;
+                    }else{
+                        _self.disabled(true);
+                    }
+                    if(tinymceCodeupReport.currentPath.closest('[condition]').attr('condition')){
+                        _self.active(true);
+                    }else{
+                        _self.active(false);
+                    }
+                });
+            }
+        });
+
     });
 }

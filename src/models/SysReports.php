@@ -45,11 +45,14 @@ use yii\base\UnknownClassException;
  * @property int $set_use_watermark_image_system [tinyint(1)]
  * @property bool $set_header_use_system [tinyint(1)]
  * @property string $set_page_format
- * @property string $set_page_orientation
- *
+ * @property string $set_page_orientation P|L
+
+ * @property bool $isPagePotrait
+ * @property bool $isPageLanscape
  *
  * @property BaseReport $reportClass
  * @property SysUploadedFiles $watermark_image
+ *
  */
 class SysReports extends ActiveRecord
 {
@@ -220,6 +223,16 @@ class SysReports extends ActiveRecord
     public function getWatermark_image()
     {
         return $this->hasOne(SysUploadedFiles::class, ['id'=>'set_watermark_image']);
+    }
+
+    public function getIsPagePotrait()
+    {
+        return $this->set_page_orientation === 'P';
+    }
+
+    public function getIsPageLanscape()
+    {
+        return $this->set_page_orientation === 'L';
     }
 
 

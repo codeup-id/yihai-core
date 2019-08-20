@@ -58,11 +58,11 @@ class BaseController extends Controller{
 		];
 
 
-		if(isset($_GET['tinymce'])){
+        if(isset($_GET['tinymce'])){
             $options['getFileCallback'] = new JsExpression('function(file, fm) { '.
-                'parent.tinymce.activeEditor.windowManager._elfinderCallBack(file, fm);'.
+                'parent.tinymce.activeEditor.windowManager.getParams().oninsert(file, fm);'.
                 'parent.tinymce.activeEditor.windowManager.close();}');
-		}
+        }
 
 		if(isset($_GET['filter'])){
 			if(is_array($_GET['filter']))

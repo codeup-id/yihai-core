@@ -16,21 +16,22 @@ use yii\db\ActiveQuery;
 interface ReportInteface
 {
     /**
-     * Report key
+     * Default Report key
      * @return string
      */
     public static function defaultKey();
     /**
-     * Report description
+     * Default Report description
      * @return string
      */
     public static function defaultDesc();
 
     /**
-     * Report Template
+     * Default Report Template
      * @return string
      */
     public static function defaultReportHtml();
+
     /**
      * @return ActiveQuery[]
      */
@@ -51,10 +52,34 @@ interface ReportInteface
 
     /**
      * @param ActiveForm $form
-     * @return mixed
+     * @return void
      */
     public function filterHtml($form);
+
+    /**
+     * ```php
+     *   return [
+     *      'lists' => [
+     *          '...' => ['...','...']
+     *      ],
+     *      'global' => .....
+     *   ];
+     * ```
+     * @return array
+     */
     public function availableFields();
+
+    /**
+     * data lists
+     * ```php
+     *      return [
+     *          'lists' => [
+     *              'key' => $this->dataQuery('key_query')
+     *          ]
+     *      ];
+     * ```
+     * @return mixed
+     */
     public function dataVars();
 
 }

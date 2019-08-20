@@ -11,6 +11,7 @@ namespace yihai\core\modules\system\controllers;
 
 use Yihai;
 use yihai\core\actions\CrudFormAction;
+use yihai\core\helpers\ArrayHelper;
 use yihai\core\models\SysReports;
 use yihai\core\rbac\RbacHelper;
 use yihai\core\report\BaseReport;
@@ -46,8 +47,8 @@ class ReportsController extends BackendController
                 ]
             ];
         }
-        if(($this->action->id === 'template' || $this->action->id==='update' || $this->action->id === 'delete') && ($id = Yihai::$app->request->getQueryParam('id'))){
-            if (!$sysReport = SysReports::findOne(['id' => $id, 'is_sys'=>0])) {
+        if (($this->action->id === 'template' || $this->action->id === 'update' || $this->action->id === 'delete') && ($id = Yihai::$app->request->getQueryParam('id'))) {
+            if (!$sysReport = SysReports::findOne(['id' => $id, 'is_sys' => 0])) {
                 throw new NotFoundHttpException();
             }
         }
@@ -128,16 +129,22 @@ class ReportsController extends BackendController
             'reportClass' => $this->reportClass,
             'key' => $key,
             'type' => $__type,
-            'systemSetting' => $systemSetting
+            'systemSetting' => $systemSetting,
         ]);
         /** @var \yihai\core\modules\system\ModuleSetting $systemSetting */
         $systemSetting = \yihai\core\modules\system\Module::loadSettings();
-        $mpdf = new \Mpdf\Mpdf([
+        $mpdf = new \Mpdf\Mpdf(ArrayHelper::merge([
             'tempDir' => Yihai::getAlias('@runtime/mpdf'),
-            'default_font_size' => 13,
+            'default_font_size' => 0,
             'orientation' => $this->sysReportBuild->set_page_orientation,
-            'format' => $this->sysReportBuild->set_page_format
-        ]);
+            'format' => $this->sysReportBuild->set_page_format,
+            'margin_left' => 5,
+            'margin_right' => 5,
+            'margin_top' => 10,
+            'margin_bottom' => 10,
+            'margin_header' => 1,
+            'margin_footer' => 1,
+        ], $reportClass->mpdf()));
         if ($this->sysReportBuild->useWatermark($systemSetting) && ($watermark_image = $this->sysReportBuild->watermark_image($systemSetting))) {
             $mpdf->showWatermarkImage = true;
             $mpdf->SetWatermarkImage($watermark_image->fullpath, 0.1, 40, 'F');
@@ -149,10 +156,10 @@ class ReportsController extends BackendController
         $reportClass->mpdfOptions($mpdf);
 
         $mpdf->WriteHTML($template);
-        $name = Yihai::t('yihai', 'Report').' '.$this->sysReportBuild->key.' ('.date('Y-m-d H-i-s', time()).').pdf';
-        if($__type === 'print') {
-            $mpdf->Output( $name, 'I');
-        }elseif($__type === 'pdf') {
+        $name = Yihai::t('yihai', 'Report') . ' ' . $this->sysReportBuild->key . ' (' . date('Y-m-d H-i-s', time()) . ').pdf';
+        if ($__type === 'print') {
+            $mpdf->Output($name, 'I');
+        } elseif ($__type === 'pdf') {
             $mpdf->Output($name, 'D');
         }
         exit;

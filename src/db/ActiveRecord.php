@@ -304,6 +304,6 @@ class ActiveRecord extends \yii\db\ActiveRecord
 
     public static function reportFields()
     {
-        return (new static())->attributes;
+        return array_keys((new static())->attributes);
     }
 }

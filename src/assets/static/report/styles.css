@@ -28,4 +28,24 @@
 .main-report table.no-border td{
     border:0;
 }
-#tinymce .field {word-break:break-all;}
+.main-report div{
+    min-height: 5px;
+}
+html{
+    background: #e4e4e4;
+    height:100%;
+}
+body{
+    height:100%;
+}
+#tinymce .field {
+    word-break:break-all;
+    user-select: all;
+}
+
+#tinymce [condition] {
+    border:1px dashed;
+}
+#tinymce [report-list] {
+    border:1px dashed blue;
+}
