@@ -9,9 +9,9 @@
 namespace yihai\core\base;
 
 
-use yii\base\Component;
+use yihai\core\theming\BaseWidget;
 
-class DashboardWidget extends Component
+class DashboardWidget extends BaseWidget
 {
 
 }

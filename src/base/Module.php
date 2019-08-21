@@ -27,6 +27,7 @@ abstract class Module extends \yii\base\Module implements BootstrapInterface
     /** @var ModuleSetting */
     private $_settings;
 
+    public $dashboardWidgetClass;
     public function init()
     {
         parent::init();

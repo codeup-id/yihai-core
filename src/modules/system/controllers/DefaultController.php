@@ -10,6 +10,7 @@ namespace yihai\core\modules\system\controllers;
 
 
 use Yihai;
+use yihai\core\base\Module;
 use yihai\core\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -53,7 +54,15 @@ class DefaultController extends Controller
 
     public function actionIndex()
     {
-        return $this->render('index');
+        $dashboardWidgets = [];
+        foreach(Yihai::$app->modules as $name => $config){
+            if($config instanceof Module && $config->dashboardWidgetClass){
+                $dashboardWidgets[$name] = $config->dashboardWidgetClass;
+            }
+        }
+        return $this->render('index', [
+            'dashboardWidgets' => $dashboardWidgets
+        ]);
     }
 
 
