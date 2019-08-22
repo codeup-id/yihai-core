@@ -247,7 +247,8 @@ Modal::begin([
         'shown.bs.modal' => /** @lang javascript */ 'function(event){
         var _modal = $(this);
         var href=$(event.relatedTarget).attr("href");
-        $.ajax(href, {
+        $.ajax({
+            url:href,
             success: function(d){
                 var formTitle = d.formTitle ? d.formTitle : $(event.relatedTarget).attr("title");
                 _modal.find(".modal-title").html(formTitle);
@@ -299,7 +300,6 @@ Modal::end();
 $this->registerJs("
 $('.content a[title], .content button[title]').tooltip({ trigger: 'hover' });
 jQuery(document).on(\"pjax:success\",  function(event){
-console.log(event);
     $('.content a[title], .content button[title]').tooltip({ trigger: 'hover' });
 });
 ");

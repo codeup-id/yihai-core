@@ -72,7 +72,7 @@ class CrudIndexAction extends CrudAction
                 /** @var \yihai\core\modules\system\ModuleSetting $systemSetting */
                 $mpdf = new \Mpdf\Mpdf([
                     'tempDir' => Yihai::getAlias('@runtime/mpdf'),
-                    'default_font_size' => 13,
+                    'default_font_size' => 0,
                     'orientation' => $this->modelOptions->gridPdfOrientation,
                     'format' => $this->modelOptions->gridPdfSize
                 ]);

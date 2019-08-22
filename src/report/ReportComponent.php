@@ -119,6 +119,7 @@ class ReportComponent extends Component
                         'name_full' => Yihai::$app->formatter->asDate(time(), 'php:l'),
                     ],
                     'time' => [
+                        'H_i_s' => Yihai::$app->formatter->asDate(time(), 'php:H:i:s'),
                         'am_or_pm' => Yihai::$app->formatter->asDate(time(), 'php:A'),
                         'hour_digit_12' => Yihai::$app->formatter->asDate(time(), 'php:h'),
                         'hour_digit_12_nozero' => Yihai::$app->formatter->asDate(time(), 'php:g'),
@@ -178,6 +179,7 @@ class ReportComponent extends Component
                     'name_full' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:l');},
                 ],
                 'time' => [
+                    'H_i_s' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:H:i:s');},
                     'am_or_pm' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:A');},
                     'hour_digit_12' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:h');},
                     'hour_digit_12_nozero' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:g');},

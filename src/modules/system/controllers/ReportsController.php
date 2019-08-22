@@ -120,6 +120,7 @@ class ReportsController extends BackendController
     public function actionExportReport($key, $__type = 'print')
     {
         $reportClass = $this->reportClass;
+        /** @var \yihai\core\modules\system\ModuleSetting $systemSetting */
         $systemSetting = \yihai\core\modules\system\Module::loadSettings();
 
         $reportClass->build();
@@ -131,19 +132,11 @@ class ReportsController extends BackendController
             'type' => $__type,
             'systemSetting' => $systemSetting,
         ]);
-        /** @var \yihai\core\modules\system\ModuleSetting $systemSetting */
-        $systemSetting = \yihai\core\modules\system\Module::loadSettings();
         $mpdf = new \Mpdf\Mpdf(ArrayHelper::merge([
             'tempDir' => Yihai::getAlias('@runtime/mpdf'),
             'default_font_size' => 0,
             'orientation' => $this->sysReportBuild->set_page_orientation,
-            'format' => $this->sysReportBuild->set_page_format,
-            'margin_left' => 5,
-            'margin_right' => 5,
-            'margin_top' => 10,
-            'margin_bottom' => 10,
-            'margin_header' => 1,
-            'margin_footer' => 1,
+            'format' => $this->sysReportBuild->set_page_format
         ], $reportClass->mpdf()));
         if ($this->sysReportBuild->useWatermark($systemSetting) && ($watermark_image = $this->sysReportBuild->watermark_image($systemSetting))) {
             $mpdf->showWatermarkImage = true;

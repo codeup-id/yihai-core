@@ -15,7 +15,7 @@ use yihai\core\theming\Html;
 /** @var \yihai\core\models\form\ChangePasswordForm $modelForm */
 $htmlGrid = Grid::begin();
 $htmlGrid->beginCol(['md-6']);
-echo $form->field($model, 'new')->passwordInput();
-echo $form->field($model, 'repeat')->passwordInput();
+echo $form->field($model, 'new')->passwordInput(['autocomplete'=>'off']);
+echo $form->field($model, 'repeat')->passwordInput(['autocomplete'=>'off']);
 $htmlGrid->endCol();
 Grid::end();

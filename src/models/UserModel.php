@@ -342,7 +342,8 @@ class UserModel extends \yihai\core\db\ActiveRecord
             'detailViewCreatedUpdated' => true,
             'detailViewCustom' => [
                 static::viewUserRole()
-            ]
+            ],
+            'gridPdfOrientation' => 'L'
 
         ]);
     }

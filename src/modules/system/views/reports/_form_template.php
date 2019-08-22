@@ -149,7 +149,6 @@ $('#sysreports-template').parents('form').on('beforeSubmit', function (event) {
             $(data).replaceWith('<!--%condition:'+condition+'%-->'+data.outerHTML+'<!--%end_condition:'+condition+'%-->');
         });
     }
-    console.log(content.html());
         tinyMCE.activeEditor.setContent(content.html())
     return true;
 });

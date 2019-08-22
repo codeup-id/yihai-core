@@ -234,6 +234,35 @@ class SysReports extends ActiveRecord
     {
         return $this->set_page_orientation === 'L';
     }
+    public function filterRules()
+    {
+        return [
+            ['key', 'safe'],
+            ['module', 'safe'],
+            ['desc', 'safe'],
+            ['is_sys', 'integer'],
+        ];
+    }
+
+    /**
+     * @param \yii\db\ActiveQuery|\yii\db\QueryInterface $query
+     * @param \yihai\core\base\FilterModel|static $filterModel
+     */
+    public function onSearch(&$query, $filterModel)
+    {
+        if($filterModel->key !== ''){
+            $query->andWhere(['like','key',$filterModel->key]);
+        }
+        if($filterModel->module !== ''){
+            $query->andWhere(['module'=>$filterModel->module]);
+        }
+        if($filterModel->desc !== ''){
+            $query->andWhere(['like','desc',$filterModel->desc]);
+        }
+        if($filterModel->is_sys !== ''){
+            $query->andWhere(['is_sys'=>$filterModel->is_sys]);
+        }
+    }
 
 
     protected function _options()
@@ -298,7 +327,11 @@ class SysReports extends ActiveRecord
                     'attribute' => 'is_sys',
                     'value' => function ($model) {
                         return $model->is_sys == '1' ? Yihai::t('yihai', 'Yes') : Yihai::t('yihai', 'No');
-                    }
+                    },
+                    'filter' => [
+                        '1' => Yihai::t('yihai','Yes'),
+                        '0' => Yihai::t('yihai','No')
+                    ]
                 ],
                 'created_by',
                 'created_at:datetime',

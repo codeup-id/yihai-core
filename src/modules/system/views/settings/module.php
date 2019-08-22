@@ -28,6 +28,9 @@ foreach ($model->attributes() as $attribute) {
                 'relative_urls' => false,
                 'remove_script_host' => false,
                 'height' => '400px',
+                'force_br_newlines' => false,
+                'force_p_newlines' => false,
+                'forced_root_block' => 'div',
             ]]);
     } elseif ($fieldType === $model::FIELD_YESNO) {
         echo $form->field($model, $attribute)->dropDownList([

@@ -67,6 +67,7 @@ abstract class BaseReport extends BaseObject implements ReportInteface
     public function init()
     {
         parent::init();
+        Yihai::$app->formatter->nullDisplay = '';
         $this->_desc = $this->model->desc ? $this->model->desc : static::defaultDesc();
         $this->_template = $this->model->template ? $this->model->template : static::defaultReportHtml();
         if ($this->filterRules()) {
@@ -472,7 +473,16 @@ abstract class BaseReport extends BaseObject implements ReportInteface
      */
     public function mpdf()
     {
-        return [];
+        return [
+            'default_font_size' => 0,
+            'default_font' => '',
+            'margin_left' => 15,
+            'margin_right' => 15,
+            'margin_top' => 16,
+            'margin_bottom' => 16,
+            'margin_header' => 9,
+            'margin_footer' => 9,
+        ];
     }
     /**
      * menambah atau mengganti mpdf options

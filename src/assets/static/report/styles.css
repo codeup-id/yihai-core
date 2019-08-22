@@ -5,17 +5,26 @@
  *  @author  Upik Saleh <upik@codeup.id>
  */
 
-
+hr {
+    margin-top: 5px !important;
+    margin-bottom: 5px !important;
+    border: 0 !important;
+    border-top: 1px solid #666666 !important;
+}
 /** REPORT TEMPLATE STYLE*/
 .main-report table{
     width: 100%;
     max-width: 100%;
     border: 1px solid #2d2d2d;
+    font-size:11px;
 }
 .main-report table td, .main-report table th{
     padding: 5px;
 }
-
+.main-report-build{
+    background-color: #fff;
+    margin:0 auto;
+}
 .page-break-always {
     page-break-before: always;
 }
