@@ -24,6 +24,9 @@ return \yii\helpers\ArrayHelper::merge(require __DIR__ . '/common.php', [
         'dashboardWidget' => [
             'class' => 'yihai\core\base\DashboardWidget'
         ] ,
+        'assetManager' => [
+            'linkAssets' => true,
+        ],
         'view' => [
             'class' => 'yihai\core\web\View',
             'theme' => [

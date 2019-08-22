@@ -21,4 +21,9 @@ class AppAsset extends AssetBundle
         return $this->baseUrl.'/'.$this->logo;
     }
 
+    public function getDefaultAvatar()
+    {
+        return $this->baseUrl.'/default_avatar.png';
+    }
+
 }

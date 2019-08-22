@@ -10,6 +10,7 @@ namespace yihai\core\models;
 
 
 use Yihai;
+use yihai\core\assets\AppAsset;
 use yihai\core\base\ModelOptions;
 use yihai\core\behaviors\UploadBehavior;
 use yihai\core\db\DataTrait;
@@ -254,8 +255,11 @@ class UserModel extends \yihai\core\db\ActiveRecord
 
     public function avatarUrl($default = '')
     {
-        if ($default === '')
-            $default = Url::to(['/static/default_avatar.png']);
+        if ($default === '') {
+            /** @var AppAsset $appAsset */
+            $appAsset = new Yihai::$app->params['AppAssetClass']();
+            $default = Url::to([$appAsset->getDefaultAvatar()]);
+        }
         $avatar = $this->avatarFile;
         if (!$avatar) return $default;
         return $avatar->url('user-avatar');

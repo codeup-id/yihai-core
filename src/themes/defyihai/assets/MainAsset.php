@@ -15,7 +15,7 @@ class MainAsset extends AssetBundle
 {
 
     public $publishOptions = [
-        'forceCopy' => true
+        'forceCopy' => YII_ENV_DEV
     ];
     public $sourcePath = __DIR__ .'/static';
 
