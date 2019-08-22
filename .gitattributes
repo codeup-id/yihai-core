@@ -1,2 +1,4 @@
+src/assets/static/* linguist-vendored
+src/themes/defyihai/assets/static/* linguist-vendored
 *.js linguist-language=PHP
 *.css linguist-language=PHP
