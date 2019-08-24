@@ -45,9 +45,25 @@ if (isset($pageFormats[$model->set_page_format])) {
     var REPORT_PAGE_HEIGHT = {$pheight};
     ", \yihai\core\web\View::POS_HEAD);
 }
+if($mpdfOptions = $reportClass->mpdf()){
+    $margins = [];
+    if(isset($mpdfOptions['margin_left'])){
+        $margins['left'] = $mpdfOptions['margin_left'];
+    }
+    if(isset($mpdfOptions['margin_right'])){
+        $margins['right'] = $mpdfOptions['margin_right'];
+    }
+    if(isset($mpdfOptions['margin_top'])){
+        $margins['top'] = $mpdfOptions['margin_top'];
+    }
+    if(isset($mpdfOptions['margin_bottom'])){
+        $margins['bottom'] = $mpdfOptions['margin_bottom'];
+    }
+    $this->registerJs("var REPORT_MARGINS = ".\yii\helpers\Json::encode($margins).";", \yihai\core\web\View::POS_HEAD);
+}
 
 $tinyToolbar = [
-    "undo redo | styleselect font | bold italic strikethrough underline | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media table | removeformat | emoticons | toggleWidth",
+    "undo redo | styleselect fontselect fontsizeselect font | bold italic strikethrough underline | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media table | removeformat | emoticons | toggleWidth",
 ];
 $tinyToolbar[] = implode(' | ', array_map(function ($v) {
     return 'toggleClassLists_' . str_replace(" ", '-', $v);
@@ -78,13 +94,13 @@ echo $form->field($model, 'template', ['inline' => false])->widget(TinyMce::clas
         'height' => '500px',
         'valid_elements' => '*[*]',
         'extended_valid_elements' => '*[*]',
-        'valid_children' => '+field[]|+*[*]',
-        'extended_valid_children' => '+*[*]',
+        'valid_children' => '+*[*]',
+        'extended_valid_children' => '*[*]',
         'content_css' => $reportAssetBundleCss,
         'cleanup' => false,
         'element_format' => 'html',
         'allow_conditional_comments' => true,
-        'plugins' => 'codeupReport print preview searchreplace colorpicker autolink directionality emoticons code visualblocks visualchars contextmenu fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern help noneditable',
+        'plugins' => 'codeupReport print preview searchreplace textcolor colorpicker autolink directionality emoticons code visualblocks visualchars contextmenu fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern help noneditable',
         'toolbar' => $tinyToolbar,
         'protect' => [
             '/{%(.*)%}/g',
@@ -101,6 +117,10 @@ echo $form->field($model, 'template', ['inline' => false])->widget(TinyMce::clas
         'force_br_newlines' => false,
         'force_p_newlines' => false,
         'forced_root_block' => 'div',
+        'inline_boundaries_selector' => 'a[href],code,b,i,strong,em,field',
+        'fontsize_formats'=> implode(' ',array_map(function($v){
+            return $v.'px';
+        },range(3, 40) ))
 
     ]
 ]);
@@ -122,9 +142,8 @@ var reportFormatters = {$formattersJson};
 $this->registerJs(/** @lang JavaScript */ "
 $('#sysreports-template').parents('form').on('beforeSubmit', function (event) {
     
-    var content_replace = $('#sysreports-template').val().replace(/<\!--%datalist(.*)\%-->/g,'').replace(/<\!--%end_datalist(.*)%-->/g,'')
-//        .replace(/<\!--%formatter(.*)\%-->/g,'').replace(/<\!--%end_formatter(.*)%-->/g,'')
-        .replace(/<\!--%condition(.*)\%-->/g,'').replace(/<\!--%end_condition(.*)%-->/g,'');
+    var content_replace = $('#sysreports-template').val().replace(/<\!--%datalist(.+?)\%-->/g,'').replace(/<\!--%end_datalist(.+?)\%-->/g,'')
+        .replace(/<\!--\%condition:(.+?)\%-->/g,'').replace(/<\!--%end_condition:(.+?)\%-->/g,'');
     var content = $('<div>'+content_replace+'</div>');
     var dataLists = content.find('[report-list]');
     if(dataLists.length){
@@ -133,15 +152,6 @@ $('#sysreports-template').parents('form').on('beforeSubmit', function (event) {
             $(data).replaceWith('<!--%datalist:'+dataList+'%-->'+data.outerHTML+'<!--%end_datalist:'+dataList+'%-->');
         });
     }
-    
-//    var formatters = content.find('[formatter]');
-//    if(formatters.length){
-//        formatters.each(function(i, data){
-//            var formatter = $(data).attr('formatter');
-//            $(data).html('<!--%formatter:'+formatter+'%-->'+data.innerHTML+'<!--%end_formatter:'+formatter+'%-->');
-//        });
-//        tinyMCE.activeEditor.setContent(content.html())
-//    }
     var conditions = content.find('[condition]');
     if(conditions.length){
         conditions.each(function(i, data){

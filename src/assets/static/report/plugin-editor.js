@@ -14,7 +14,7 @@ if (window.tinymce && reportDataListJson && reportAvailableFieldsListJson && rep
             currentClassListPath: '',
             currentField: null
         };
-        editor.on('NodeChange', function (e) {
+        editor.on('NodeChange', function (e) {$('td').tooltip({ trigger: 'hover' })
             tinymceCodeupReport.currentNode = e;
             var element = $(e.element);
             tinymceCodeupReport.currentPath = $(element);
@@ -26,28 +26,39 @@ if (window.tinymce && reportDataListJson && reportAvailableFieldsListJson && rep
             } else {
                 tinymceCodeupReport.currentField = null;
             }
-            if(element.attr('report-list')){
+            if (element.attr('report-list')) {
                 tinymceCodeupReport.currentClassListPath = element
-            }else{
+            } else {
                 tinymceCodeupReport.currentClassListPath = null
             }
         });
-        if(REPORT_PAGE_WIDTH && REPORT_PAGE_HEIGHT) {
-
+        if (REPORT_PAGE_WIDTH && REPORT_PAGE_HEIGHT) {
+            function initBodyStyle(){
+                $(tinymce.activeEditor.dom.doc).find('body')
+                    .css('width', REPORT_PAGE_WIDTH + 'cm')
+                    .css('height', REPORT_PAGE_HEIGHT + 'cm')
+                    .css('margin', '0 auto');
+                if (REPORT_MARGINS) {
+                    $(tinymce.activeEditor.dom.doc).find('body')
+                        .css('padding-left', (REPORT_MARGINS.left ? REPORT_MARGINS.left + 'mm' : '1px'))
+                        .css('padding-right', (REPORT_MARGINS.right ? REPORT_MARGINS.right + 'mm' : '1px'))
+                        .css('padding-top', (REPORT_MARGINS.top ? REPORT_MARGINS.top + 'mm' : '1px'))
+                        .css('padding-bottom', (REPORT_MARGINS.bottom ? REPORT_MARGINS.bottom + 'mm' : '1px'))
+                }
+            }
+            editor.on('init', initBodyStyle);
             editor.addButton('toggleWidth', {
                 text: 'Toggle Size',
+                active: true,
                 onclick: function () {
-                    if(this.active()){
+                    if (this.active()) {
                         $(tinymce.activeEditor.dom.doc).find('body')
-                            .css('width','auto')
+                            .css('width', 'auto')
                             .css('height', REPORT_PAGE_HEIGHT + 'cm')
                             .css('margin', 'auto')
                         this.active(false)
-                    }else {
-                        $(tinymce.activeEditor.dom.doc).find('body')
-                            .css('width', REPORT_PAGE_WIDTH + 'cm')
-                            .css('height', REPORT_PAGE_HEIGHT + 'cm')
-                            .css('margin', '0 auto')
+                    } else {
+                        initBodyStyle();
                         this.active(true);
                     }
                 }
@@ -69,15 +80,15 @@ if (window.tinymce && reportDataListJson && reportAvailableFieldsListJson && rep
                 },
                 onpostrender: function () {
                     var btn = this;
-                    editor.on('click', function (e) {
+                    editor.on('NodeChange', function (e) {
 
-                        if(tinymceCodeupReport.currentPath.closest('[report-list]').attr('report-list')) {
+                        if (tinymceCodeupReport.currentPath.closest('[report-list]').attr('report-list')) {
                             if (tinymceCodeupReport.currentPath.closest('[report-list]').attr('report-list') === v) {
                                 btn.active(true);
-                            }else{
+                            } else {
                                 btn.active(false);
                             }
-                        }else{
+                        } else {
                             btn.active(false);
                         }
                     });
@@ -88,14 +99,14 @@ if (window.tinymce && reportDataListJson && reportAvailableFieldsListJson && rep
 
         function processMenuItemsList(fields, sub) {
             var menu = [];
-            if(typeof sub === 'undefined')
+            if (typeof sub === 'undefined')
                 sub = '';
             $.each(fields, function (key, val) {
-                var _sub = sub+key;
-                if(isNaN(key)) {
+                var _sub = sub + key;
+                if (isNaN(key)) {
                     var keys = key.split(':');
                     key = keys[0];
-                    if(keys[1]){
+                    if (keys[1]) {
                         _sub = keys[1];
                     }
                 }
@@ -107,29 +118,28 @@ if (window.tinymce && reportDataListJson && reportAvailableFieldsListJson && rep
                             editor.insertContent('&nbsp;<span class="field global-field"><field>{%' + sub + val + '%}</field></span>&nbsp;');
                         }
                     })
-                }else if(val.constructor === ([]).constructor){
+                } else if (val.constructor === ([]).constructor) {
                     menu.push({
                         text: key,
                         icon: 'unlock',
-                        menu: processMenuItemsList(val, _sub+'.')
+                        menu: processMenuItemsList(val, _sub + '.')
                     })
                 }
             });
             return menu;
         }
+
         $.each(reportAvailableFieldsListJson, function (list, fields) {
             editor.addButton('fieldList_' + list.replace(/ /g, '-'), {
                 type: 'menubutton',
                 text: '(LIST Field) ' + list,
                 icon: false,
                 menu: processMenuItemsList(fields),
-                disabled:true,
-                onpostrender: function(){
+                disabled: true,
+                onpostrender: function () {
                     var btn = this;
-                    editor.on('click', function (e) {
-                        if ($(e.path[0]).attr('report-list') && $(e.path[0]).attr('report-list') === list) {
-                            btn.disabled(false);
-                        } else if ($(e.path[1]).attr('report-list') && $(e.path[1]).attr('report-list') === list) {
+                    editor.on('NodeChange', function (e) {
+                        if (tinymceCodeupReport.currentPath.closest('[report-list]').attr('report-list') === list) {
                             btn.disabled(false);
                         } else {
                             btn.disabled(true);
@@ -141,7 +151,7 @@ if (window.tinymce && reportDataListJson && reportAvailableFieldsListJson && rep
 
         function processMenuItemsGlobal(fields, sub) {
             var menu = [];
-            if(typeof sub === 'undefined')
+            if (typeof sub === 'undefined')
                 sub = '';
             $.each(fields, function (key, val) {
                 if (typeof val === 'string') {
@@ -153,24 +163,25 @@ if (window.tinymce && reportDataListJson && reportAvailableFieldsListJson && rep
                         },
 
                     })
-                }else if(val.constructor === ([]).constructor){
+                } else if (val.constructor === ([]).constructor) {
                     menu.push({
                         text: key,
                         icon: 'unlock',
-                        menu: processMenuItemsGlobal(val, sub+key+'.')
+                        menu: processMenuItemsGlobal(val, sub + key + '.')
                     })
                 }
             });
             return menu;
         }
+
         $.each(reportAvailableFieldsGlobalJson, function (list, fields) {
             editor.addButton('fieldGlobal_' + list.replace(/ /g, '-'), {
                 type: 'menubutton',
                 text: '(GLOBAL Field) ' + list,
                 icon: false,
-                menu: processMenuItemsGlobal(fields, list.replace(/ /g, '-')+'.'),
-                onpostrender:function(){
-                    editor.on('click', function(e){
+                menu: processMenuItemsGlobal(fields, list.replace(/ /g, '-') + '.'),
+                onpostrender: function () {
+                    editor.on('click', function (e) {
 
                     })
                 }
@@ -179,7 +190,7 @@ if (window.tinymce && reportDataListJson && reportAvailableFieldsListJson && rep
 
         function processMenuItemsFormatters(fields, sub) {
             var menu = [];
-            if(typeof sub === 'undefined')
+            if (typeof sub === 'undefined')
                 sub = '';
             $.each(fields, function (key, val) {
                 if (typeof val === 'string') {
@@ -188,9 +199,9 @@ if (window.tinymce && reportDataListJson && reportAvailableFieldsListJson && rep
                         icon: 'unlock',
                         onclick: function () {
                             var fieldNode = tinymce.activeEditor.selection.getNode();
-                            if(fieldNode.innerHTML.search(':'+sub+val) >= 0){
-                                fieldNode.innerHTML=fieldNode.innerHTML.split(':'+sub+val).join('');
-                            }else {
+                            if (fieldNode.innerHTML.search(':' + sub + val) >= 0) {
+                                fieldNode.innerHTML = fieldNode.innerHTML.split(':' + sub + val).join('');
+                            } else {
                                 fieldNode.innerHTML = fieldNode.innerHTML.replace(/{(.*?)}/gi, function (x) {
                                     var lastLi = x.substr(x.length - 2);
                                     if (lastLi === '%}') {
@@ -203,27 +214,28 @@ if (window.tinymce && reportDataListJson && reportAvailableFieldsListJson && rep
                             tinymce.activeEditor.selection.setNode(fieldNode);
                         }
                     })
-                }else if(val.constructor === ([]).constructor || val.constructor === ({}).constructor){
+                } else if (val.constructor === ([]).constructor || val.constructor === ({}).constructor) {
                     menu.push({
                         text: key,
                         icon: 'unlock',
-                        menu: processMenuItemsFormatters(val, sub+key+'.')
+                        menu: processMenuItemsFormatters(val, sub + key + '.')
                     })
                 }
             });
             return menu;
         }
+
         editor.addButton('codeup_formatters', {
             type: 'menubutton',
             text: '(Formatters)',
             icon: false,
             menu: processMenuItemsFormatters(reportFormatters),
-            disabled:true,
-            onpostrender:function(){
+            disabled: true,
+            onpostrender: function () {
                 var _self = this;
                 editor.on('NodeChange', function (e) {
                     var node = tinymce.activeEditor.selection.getNode();
-                    if($(node).hasClass('field'))
+                    if ($(node).hasClass('field'))
                         _self.disabled(false);
                     else
                         _self.disabled(true)
@@ -239,7 +251,7 @@ if (window.tinymce && reportDataListJson && reportAvailableFieldsListJson && rep
 
         function processMenuItemsConditions(fields, sub) {
             var menu = [];
-            if(typeof sub === 'undefined')
+            if (typeof sub === 'undefined')
                 sub = '';
             $.each(fields, function (key, val) {
                 if (typeof val === 'string') {
@@ -247,35 +259,36 @@ if (window.tinymce && reportDataListJson && reportAvailableFieldsListJson && rep
                         text: val,
                         icon: 'unlock',
                         onclick: function () {
-                            if(tinymceCodeupReport.currentPath) {
-                                if(tinymceCodeupReport.currentPath.attr('condition')&&tinymceCodeupReport.currentPath.attr('condition')===val)
-                                    tinymceCodeupReport.currentPath.removeAttr('condition')
+                            if (tinymceCodeupReport.currentPath) {
+                                if (tinymceCodeupReport.currentPath.attr('condition') && tinymceCodeupReport.currentPath.attr('condition') === val)
+                                    tinymceCodeupReport.currentPath.removeAttr('condition');
                                 else
-                                tinymceCodeupReport.currentPath.attr('condition', val);
+                                    tinymceCodeupReport.currentPath.attr('condition', val);
                             }
                         },
-                        onpostrender: function(){
+                        onpostrender: function () {
                             var _self = this;
                             editor.on('click', function (e) {
                                 var closest = tinymceCodeupReport.currentPath.closest('[condition]').attr('condition');
-                                if (closest && closest === val){
+                                if (closest && closest === val) {
                                     _self.active(true);
-                                }else{
+                                } else {
                                     _self.active(false);
                                 }
                             })
                         }
                     })
-                }else if(val.constructor === ([]).constructor){
+                } else if (val.constructor === ([]).constructor) {
                     menu.push({
                         text: key,
                         icon: 'unlock',
-                        menu: processMenuItemsConditions(val, sub+key+'.')
+                        menu: processMenuItemsConditions(val, sub + key + '.')
                     })
                 }
             });
             return menu;
         }
+
         var conditions = processMenuItemsConditions(reportAvailableFieldsConditionJson);
         editor.addButton('codeup_conditions', {
             type: 'menubutton',
@@ -283,19 +296,19 @@ if (window.tinymce && reportDataListJson && reportAvailableFieldsListJson && rep
             icon: false,
             // disabled:true,
             menu: conditions,
-            onpostrender:function(){
+            onpostrender: function () {
                 var _self = this;
                 editor.on('click', function (e) {
                     var path0 = $(e.path[0]);
-                    if(path0.prop("tagName") !=='HTML' && path0.prop("tagName") !== 'BODY'){
+                    if (path0.prop("tagName") !== 'HTML' && path0.prop("tagName") !== 'BODY') {
                         _self.disabled(false);
                         tinymceCodeupReport.currentConditionPath = path0;
-                    }else{
+                    } else {
                         _self.disabled(true);
                     }
-                    if(tinymceCodeupReport.currentPath.closest('[condition]').attr('condition')){
+                    if (tinymceCodeupReport.currentPath.closest('[condition]').attr('condition')) {
                         _self.active(true);
-                    }else{
+                    } else {
                         _self.active(false);
                     }
                 });

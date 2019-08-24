@@ -198,6 +198,11 @@ class ReportComponent extends Component
                 'to_username'=>function($value){
                     return Yihai::$app->formatter->asUsername($value);
                 }
+            ],
+            'others' => [
+                'yes_no' => function($value){
+                    return Yihai::$app->formatter->asYesno($value);
+                }
             ]
         ];
     }

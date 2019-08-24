@@ -136,8 +136,11 @@ class ReportsController extends BackendController
             'tempDir' => Yihai::getAlias('@runtime/mpdf'),
             'default_font_size' => 0,
             'orientation' => $this->sysReportBuild->set_page_orientation,
-            'format' => $this->sysReportBuild->set_page_format
+            'format' => $this->sysReportBuild->set_page_format,
+            'shrink_tables_to_fit'=>1
         ], $reportClass->mpdf()));
+
+        $mpdf->shrink_tables_to_fit=1;
         if ($this->sysReportBuild->useWatermark($systemSetting) && ($watermark_image = $this->sysReportBuild->watermark_image($systemSetting))) {
             $mpdf->showWatermarkImage = true;
             $mpdf->SetWatermarkImage($watermark_image->fullpath, 0.1, 40, 'F');

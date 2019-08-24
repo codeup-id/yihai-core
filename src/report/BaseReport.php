@@ -70,11 +70,17 @@ abstract class BaseReport extends BaseObject implements ReportInteface
         Yihai::$app->formatter->nullDisplay = '';
         $this->_desc = $this->model->desc ? $this->model->desc : static::defaultDesc();
         $this->_template = $this->model->template ? $this->model->template : static::defaultReportHtml();
+        $this->normalizeTemplete();
         if ($this->filterRules()) {
             $filterModel = FilterModel::newFromRules($this->filterRules());
             $filterModel->setFormName($this->filterModelName);
             $this->_filterModel = $filterModel;
         }
+    }
+
+    public function normalizeTemplete()
+    {
+        $this->_template = preg_replace('/<script(.*?)>(.*?)<\/script>/is', '', $this->template);
     }
 
     public function build()

@@ -264,6 +264,10 @@ class SysReports extends ActiveRecord
         }
     }
 
+    protected function onDataProvider(&$dataProvider)
+    {
+        $dataProvider->query = static::find()->orderBy(['class'=>SORT_ASC]);
+    }
 
     protected function _options()
     {
