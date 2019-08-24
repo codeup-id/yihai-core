@@ -10,6 +10,7 @@ namespace yihai\core\helpers;
 
 
 use Yihai;
+use yihai\core\console\Application;
 
 class Url extends \yii\helpers\Url
 {
@@ -87,9 +88,11 @@ class Url extends \yii\helpers\Url
      */
     public static function getKontenReplacing()
     {
-        return [
-            '{{==@web}}' => Url::to('@web', true)
-        ];
+        $replace = [];
+        if(!Yihai::$app instanceof Application){
+            $replace['{{==@web}}'] = Url::to('@web', true);
+        }
+        return $replace;
     }
 
     public static function imageBase64($mime, $data)
