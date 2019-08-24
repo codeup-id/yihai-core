@@ -20,7 +20,7 @@ use yii\widgets\Pjax;
 /** @var \yihai\core\modules\system\ModuleSetting $systemSetting */
 $this->title = 'Export Grid ' . $modelOptions->baseTitle;
 $systemSetting = \yihai\core\modules\system\Module::loadSettings();
-if($_grid_export !== 'csv' && $_grid_export !== 'xlsx') {
+if ($_grid_export !== 'csv' && $_grid_export !== 'xlsx') {
     if ($systemSetting->gridExportPrint_header) {
         echo $systemSetting->gridExportPrint_header;
     }
@@ -39,15 +39,15 @@ Yihai::$app->formatter->nullDisplay = '-';
 $grid->filterPosition = false;
 $grid->dataProvider->getSort()->attributes = [];
 
-if($_grid_export === 'xlsx') {
-    foreach($grid->columns as $column){
-        if($column instanceof \yii\grid\Column){
-            $styleHeader = isset($column->headerOptions['style']) ? $column->headerOptions['style'].';' :'';
-            $styleContent = isset($column->contentOptions['style']) ? $column->contentOptions['style'].';' :'';
+if ($_grid_export === 'xlsx') {
+    foreach ($grid->columns as $column) {
+        if ($column instanceof \yii\grid\Column) {
+            $styleHeader = isset($column->headerOptions['style']) ? $column->headerOptions['style'] . ';' : '';
+            $styleContent = isset($column->contentOptions['style']) ? $column->contentOptions['style'] . ';' : '';
             $styleHeader .= 'text-align:center;border:1px solid;word-wrap:break-word;vertical-align:middle;font-weight:bold';
             $styleContent .= 'border:1px solid;word-wrap:break-word;vertical-align:top;';
-            $column->headerOptions['style']=$styleHeader;
-            $column->contentOptions['style']=$styleContent;
+            $column->headerOptions['style'] = $styleHeader;
+            $column->contentOptions['style'] = $styleContent;
         }
     }
 }
@@ -60,10 +60,7 @@ $tableBody = $grid->renderTableBody();
 $tableFooter = false;
 
 if ($grid->showFooter) {
-        $tableFooter = $grid->renderTableFooter();
-}
-if($_grid_export === 'xlsx') {
-    $tableBody .= '<tr><td colspan="' . count($grid->columns) . '">ada</td></tr>';
+    $tableFooter = $grid->renderTableFooter();
 }
 
 $content = array_filter([
@@ -73,16 +70,17 @@ $content = array_filter([
     $tableBody,
     $tableFooter,
 ]);
-echo  Html::tag('table', implode("\n", $content), []);
-if($_grid_export === 'print' || $_grid_export === 'pdf' || $_grid_export === 'html') {
+echo Html::tag('table', implode("\n", $content), []);
+if ($_grid_export === 'print' || $_grid_export === 'pdf' || $_grid_export === 'html' || $_grid_export === 'xlsx') {
+    $isXlsx = $_grid_export === 'xlsx';
     echo Html::endTag('div');
     echo Html::beginTag('div', ['class' => 'print-info']);
     echo Html::beginTag('div', ['class' => 'left']);
-    echo '<table class="filter-table">';
+    echo '<table class="info-table">';
     echo '<tbody>';
-    echo '<tr><th>' . Yihai::t('yihai', 'Printed At') . '</th><td style="width: 1px">:</td><td>' . Yihai::$app->formatter->asDatetime(time(), 'php:Y-m-d H:i:s') . '</td></tr>';
-    echo '<tr><th>' . Yihai::t('yihai', 'Printed By') . '</th><td style="width: 1px">:</td><td>' . Yihai::$app->user->identity->data->fullname . ' (' . Yihai::$app->user->identity->model->username . ')</td></tr>';
-    echo '<tr><th>' . Yihai::t('yihai', 'Printed Count') . '</th><td style="width: 1px">:</td><td>' . $grid->dataProvider->getCount() . ' of ' . $grid->dataProvider->getTotalCount() . '</td></tr>';
+    echo '<tr><th>' . Yihai::t('yihai', 'Printed At') . '</th>' . (!$isXlsx ? '<td style="width: 1px">:</td>' : '') . '<td>' . Yihai::$app->formatter->asDatetime(time(), 'php:Y-m-d H:i:s') . '</td></tr>';
+    echo '<tr><th>' . Yihai::t('yihai', 'Printed By') . '</th>' . (!$isXlsx ? '<td style="width: 1px">:</td>' : '') . '<td>' . Yihai::$app->user->identity->data->fullname . ' (' . Yihai::$app->user->identity->model->username . ')</td></tr>';
+    echo '<tr><th>' . Yihai::t('yihai', 'Printed Count') . '</th>' . (!$isXlsx ? '<td style="width: 1px">:</td>' : '') . '<td>' . $grid->dataProvider->getCount() . ' of ' . $grid->dataProvider->getTotalCount() . '</td></tr>';
     echo '<tbody>';
     echo '</table>';
     echo Html::endTag('div');
@@ -102,7 +100,8 @@ if($_grid_export === 'print' || $_grid_export === 'pdf' || $_grid_export === 'ht
         foreach ($filters as $attr => $value) {
             echo '<tr>';
             echo '<th>' . $model->getAttributeLabel($attr) . '</th>';
-            echo '<td style="width: 1px;">:</td>';
+            if (!$isXlsx)
+                echo '<td style="width: 1px;">:</td>';
             echo '<td>' . $value . '</td>';
             echo '</tr>';
         }
@@ -196,7 +195,7 @@ if ($systemSetting->gridExportPrint_Watermark) {
 }
 
 if ($_grid_export === 'html') {
-    echo'<script>
+    echo '<script>
 //    window.print();
 //    window.close();
     </script>';
