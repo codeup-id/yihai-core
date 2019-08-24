@@ -44,5 +44,8 @@ return [
         'settings' => [
             'class' => 'yihai\core\base\Settings'
         ],
+        'reports' => [
+            'class' => 'yihai\core\report\ReportComponent'
+        ],
     ]
 ];

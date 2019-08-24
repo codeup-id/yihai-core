@@ -54,9 +54,6 @@ return \yii\helpers\ArrayHelper::merge(require __DIR__ . '/common.php', [
             'rules' => [
             ],
         ],
-        'reports' => [
-            'class' => 'yihai\core\report\ReportComponent'
-        ],
         'fileManager' => [
             'class' => 'yihai\core\extension\FileManager',
             'connectOptions' => [
