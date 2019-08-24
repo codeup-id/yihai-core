@@ -22,6 +22,10 @@ return [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
+        'cache-db' => [
+            'class' => 'yii\caching\FileCache',
+            'cachePath' => '@runtime/cache-db'
+        ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
