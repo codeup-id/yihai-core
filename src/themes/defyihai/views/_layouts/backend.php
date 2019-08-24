@@ -39,7 +39,7 @@ $appAsset = $appAssetClass::register($this);
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <?php $this->registerCsrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
-    <link rel="shotcut icon" href="<?= Url::to('@web') ?>/favicon.ico"/>
+    <link rel="shotcut icon" href="<?= Url::to('@web/favicon.ico') ?>"/>
     <?php $this->head() ?>
 </head>
 <body class="hold-transition <?= $activeTheme->skin ?> sidebar-mini fixed">
