@@ -11,7 +11,6 @@ namespace yihai\core\console\controllers;
 
 use Yihai;
 use yihai\core\console\Controller;
-use yii\console\controllers\MigrateController;
 
 class ModulesController extends Controller
 {

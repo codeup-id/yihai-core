@@ -10,7 +10,7 @@ namespace yihai\core\console\controllers;
 
 
 use Yii;
-
-class MigrateController extends \yii\console\controllers\MigrateController
+use yii\console\controllers\MigrateController as BaseYiiMigrateController;
+class MigrateController extends BaseYiiMigrateController
 {
 }
