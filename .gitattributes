@@ -2,3 +2,9 @@ src/assets/static/* linguist-vendored
 src/themes/defyihai/assets/static/* linguist-vendored
 *.js linguist-language=PHP
 *.css linguist-language=PHP
+
+/.github            export-ignore
+/.gitattributes     export-ignore
+/.scrutinizer.yml   export-ignore
+/.travis.yml        export-ignore
+/docs               export-ignore

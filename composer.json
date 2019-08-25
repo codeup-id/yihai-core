@@ -10,7 +10,6 @@
     "homepage": "http://yihai.codeup.id/",
     "type": "library",
     "license": "BSD-3-Clause",
-    "minimum-stability": "dev",
     "require": {
         "php": ">=5.6",
         "ext-json": "*",
