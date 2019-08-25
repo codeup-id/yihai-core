@@ -14,6 +14,7 @@
     "require": {
         "php": ">=5.6",
         "ext-json": "*",
+        "ext-openssl": "*",
         "yiisoft/yii2": "~2.0.24",
         "2amigos/yii2-grid-view-library": "^1.0",
         "tinymce/tinymce": "~4",
