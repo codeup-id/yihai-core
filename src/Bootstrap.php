@@ -11,6 +11,7 @@ namespace yihai\core;
 
 use Yihai;
 use yihai\core\base\Module;
+use yii\base\InvalidConfigException;
 
 class Bootstrap implements \yii\base\BootstrapInterface
 {
@@ -25,10 +26,23 @@ class Bootstrap implements \yii\base\BootstrapInterface
             Yihai::$app->theme->set();
         if ($app->modules) {
             foreach ($app->modules as $name => $config) {
-                if (!$module = $app->getModule($name)) continue;
+                try {
+                    $module = $app->getModule($name);
+                }catch (InvalidConfigException $e){
+                    if(is_dir(Yihai::getAlias('@yihai/modules/'.$name.'/src'))){
+                        Yihai::setAlias('@yihai/modules/cat',Yihai::getAlias('@yihai/modules/'.$name.'/src'));
+                    }
+                    elseif(is_dir(Yihai::getAlias('@yihai/modules/module-'.$name.'/src'))){
+                        Yihai::setAlias('@yihai/modules/cat',Yihai::getAlias('@yihai/modules/module-'.$name.'/src'));
+                    }
+                    elseif(is_dir(Yihai::getAlias('@yihai/modules/yihai-module-'.$name.'/src'))){
+                        Yihai::setAlias('@yihai/modules/cat',Yihai::getAlias('@yihai/modules/yihai-module-'.$name.'/src'));
+                    }
+                    $module = $app->getModule($name);
+                }
 
-                $this->_modules[$name] = $module;
                 if ($module instanceof \yihai\core\base\Module) {
+                    $this->_modules[$name] = $module;
                     try {
                         $module->init_app_config($app);
                     }catch (\Exception $e){}
