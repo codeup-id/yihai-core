@@ -63,6 +63,7 @@ class SetupController extends Controller
         $migrationController->migrationPath = ['@yihai/migrations'];
         $migrationController->migrationNamespaces = ['yihai\migrations'];
         $migrationController->runAction('up');
+        $this->generateCookieValidationKey(['@yihai/config/web.php']);
         $this->createUser();
 
     }
@@ -206,4 +207,31 @@ class SetupController extends Controller
         $class = new MigrateController('migrate', $this);
         return $class;
     }
+
+    /**
+     * @param array $configs
+     * @throws \yii\base\Exception
+     */
+    public function generateCookieValidationKey($configs)
+    {
+        $key = Yihai::$app->security->generateRandomString(32);
+        foreach ($configs as $config) {
+            $config = Yihai::getAlias($config);
+            if (is_file($config)) {
+                $content = file_get_contents($config);
+                preg_match('/(("|\')cookieValidationKey("|\')\s*=>\s*)("|\')(.+)("|\')/', $content,$match);
+                if(isset($match[5]) && $match[5] === '{cookieValidationKey}'){
+                    $content = str_replace('{cookieValidationKey}', $key, $content);
+                    file_put_contents($config, $content);
+                    $this->stdout("--------------------------\n== cookieValidationKey Generated: {$key} ({$config})\n--------------------------\n");
+                }
+                $content = preg_replace('/(("|\')cookieValidationKey("|\')\s*=>\s*)(""|\'\')/', "\\1'$key'", $content, -1, $count);
+                if ($count > 0) {
+                    file_put_contents($config, $content);
+                    $this->stdout("--------------------------\n== cookieValidationKey Generated: {$key} ({$config})\n--------------------------\n");
+                }
+            }
+        }
+    }
+
 }
