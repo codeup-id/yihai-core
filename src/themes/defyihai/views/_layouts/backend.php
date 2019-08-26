@@ -121,7 +121,7 @@ $appAsset = $appAssetClass::register($this);
                                 <div class="pull-right">
                                     <?= Html::beginForm(['/system/logout'], 'post')
                                     . Html::submitButton(
-                                        Yii::t('yihai', 'Logout'),
+                                        Yihai::t('yihai', 'Logout'),
                                         ['class' => 'btn btn-default btn-flat']
                                     )
                                     . Html::endForm() ?>
@@ -255,7 +255,7 @@ Modal::end();
 $deleteFooter = Html::beginForm([''], 'post', ['id' => 'yihai-crud-basemodal-deleteform'])
     . Html::hiddenInput('multiple')
     . Html::submitButton(
-        Yii::t('yihai', 'Yes'),
+        Yihai::t('yihai', 'Yes'),
         ['class' => 'btn btn-danger']
     ) . Html::button(Yihai::t('yihai', 'No'), ['class' => 'btn btn-default', 'data-dismiss' => 'modal'])
     . Html::endForm();

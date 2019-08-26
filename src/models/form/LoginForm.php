@@ -9,8 +9,8 @@
 namespace yihai\core\models\form;
 
 
+use Yihai;
 use yihai\core\base\UserIdent;
-use Yii;
 use yihai\core\base\Model;
 
 class LoginForm extends Model
@@ -42,9 +42,9 @@ class LoginForm extends Model
     public function attributeLabels()
     {
         return [
-            'username' => Yii::t('yihai', 'Username/Email'),
-            'password' => Yii::t('yihai', 'Password'),
-            'rememberMe' => Yii::t('yihai', 'Remember Me'),
+            'username' => Yihai::t('yihai', 'Username/Email'),
+            'password' => Yihai::t('yihai', 'Password'),
+            'rememberMe' => Yihai::t('yihai', 'Remember Me'),
         ];
     }
 
@@ -61,7 +61,7 @@ class LoginForm extends Model
             $user = $this->getUser();
 
             if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, Yii::t('yihai','Incorrect username or password.'));
+                $this->addError($attribute, Yihai::t('yihai','Incorrect username or password.'));
             }
         }
     }
@@ -73,7 +73,7 @@ class LoginForm extends Model
     public function login()
     {
         if ($this->validate()) {
-            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*30 : 0);
+            return Yihai::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*30 : 0);
         }
         return false;
     }

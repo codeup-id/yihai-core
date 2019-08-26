@@ -11,9 +11,7 @@ namespace yihai\core\grid;
 
 use Yihai;
 use yihai\core\base\ModelOptions;
-use yihai\core\rbac\RbacHelper;
 use yihai\core\theming\Html;
-use Yii;
 use yii\helpers\ArrayHelper;
 
 class ActionColumn extends \yii\grid\ActionColumn
@@ -83,13 +81,13 @@ class ActionColumn extends \yii\grid\ActionColumn
                 $classColor = '';
                 switch ($name) {
                     case 'view':
-                        $title = Yii::t('yii', 'View');
+                        $title = Yihai::t('yii', 'View');
                         break;
                     case 'update':
-                        $title = Yii::t('yii', 'Update');
+                        $title = Yihai::t('yii', 'Update');
                         break;
                     case 'delete':
-                        $title = Yii::t('yii', 'Delete');
+                        $title = Yihai::t('yii', 'Delete');
                         $classColor = 'text-danger ';
                         break;
                     default:

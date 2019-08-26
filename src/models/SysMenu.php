@@ -9,7 +9,6 @@
 namespace yihai\core\models;
 
 use Yihai;
-use Yii;
 
 /**
  * This is the model class for table "{{%sys_menu}}".
@@ -52,14 +51,14 @@ class SysMenu extends \yihai\core\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('yihai', 'ID'),
-            'route' => Yii::t('yihai', 'Route'),
-            'is_menu' => Yii::t('yihai', 'Is Menu'),
-            'is_group' => Yii::t('yihai', 'Is Group'),
-            'parent' => Yii::t('yihai', 'Parent'),
-            'backend' => Yii::t('yihai', 'Backend'),
-            'public' => Yii::t('yihai', 'Public'),
-            'pos' => Yii::t('yihai', 'Pos'),
+            'id' => Yihai::t('yihai', 'ID'),
+            'route' => Yihai::t('yihai', 'Route'),
+            'is_menu' => Yihai::t('yihai', 'Is Menu'),
+            'is_group' => Yihai::t('yihai', 'Is Group'),
+            'parent' => Yihai::t('yihai', 'Parent'),
+            'backend' => Yihai::t('yihai', 'Backend'),
+            'public' => Yihai::t('yihai', 'Public'),
+            'pos' => Yihai::t('yihai', 'Pos'),
         ];
     }
 

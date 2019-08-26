@@ -61,12 +61,12 @@ $this->title = Yihai::$app->name;
                 ])?>
             </div>
             <div class="col-xs-4">
-                <?= Html::submitButton(Yii::t('yihai','Sign In'), ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+                <?= Html::submitButton(Yihai::t('yihai','Sign In'), ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
             </div>
         </div>
 
         <?php ActiveForm::end(); ?>
-<!--        <a href="#">--><?//=Yii::t('yihai','Forgot password?')?><!--</a><br>-->
+<!--        <a href="#">--><?//=Yihai::t('yihai','Forgot password?')?><!--</a><br>-->
 
     </div>
 </div>
