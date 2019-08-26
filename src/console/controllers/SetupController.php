@@ -13,9 +13,7 @@ use Yihai;
 use yihai\core\models\SysUsersSystem;
 use yihai\core\rbac\PhpManager;
 use yihai\core\rbac\RbacHelper;
-use Yii;
 use yihai\core\console\Controller;
-use yihai\core\console\controllers\MigrateController;
 use yii\console\ExitCode;
 use yii\helpers\Console;
 
