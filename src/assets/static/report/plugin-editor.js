@@ -14,7 +14,7 @@ if (window.tinymce && reportDataListJson && reportAvailableFieldsListJson && rep
             currentClassListPath: '',
             currentField: null
         };
-        editor.on('NodeChange', function (e) {$('td').tooltip({ trigger: 'hover' })
+        editor.on('NodeChange', function (e) {
             tinymceCodeupReport.currentNode = e;
             var element = $(e.element);
             tinymceCodeupReport.currentPath = $(element);
@@ -55,7 +55,7 @@ if (window.tinymce && reportDataListJson && reportAvailableFieldsListJson && rep
                         $(tinymce.activeEditor.dom.doc).find('body')
                             .css('width', 'auto')
                             .css('height', REPORT_PAGE_HEIGHT + 'cm')
-                            .css('margin', 'auto')
+                            .css('margin', 'auto');
                         this.active(false)
                     } else {
                         initBodyStyle();
