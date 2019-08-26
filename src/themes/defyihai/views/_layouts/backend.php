@@ -142,19 +142,6 @@ $appAsset = $appAssetClass::register($this);
         </div>
         <section class="sidebar">
 
-            <!--            <div class="user-panel">-->
-            <!--                <div class="pull-left image">-->
-            <!--                    <img src="--><? //= $user_avatar_url ?><!--" class="img-circle"-->
-            <!--                         alt="User Image">-->
-            <!--                </div>-->
-            <!--                <div class="pull-left info">-->
-            <!--                    <p>-->
-            <!--                        <a href="--><? //= Url::to(['/system/profile']) ?><!--">-->
-            <? //= Yihai::$app->name ?><!--</a>-->
-            <!--                    </p>-->
-            <!--                </div>-->
-            <!--            </div>-->
-
             <?php
             if ($backendMenu = Menu::getMenu('backend')) {
                 echo \yihai\core\theming\SidebarMenu::widget([
