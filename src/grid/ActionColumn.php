@@ -81,13 +81,13 @@ class ActionColumn extends \yii\grid\ActionColumn
                 $classColor = '';
                 switch ($name) {
                     case 'view':
-                        $title = Yihai::t('yii', 'View');
+                        $title = Yihai::t('yihai', 'View');
                         break;
                     case 'update':
-                        $title = Yihai::t('yii', 'Update');
+                        $title = Yihai::t('yihai', 'Update');
                         break;
                     case 'delete':
-                        $title = Yihai::t('yii', 'Delete');
+                        $title = Yihai::t('yihai', 'Delete');
                         $classColor = 'text-danger ';
                         break;
                     default:

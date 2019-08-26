@@ -57,6 +57,7 @@ class Module extends \yihai\core\base\Module
                             'icon' => 'users',
                             'id' => 'users',
                             'type' => Menu::TYPE_GROUP,
+                            'label' => Yihai::t('yihai', 'Users'),
                             'position' => 10,
                             'child' => [
                                 'users' => new Menu([

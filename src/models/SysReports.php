@@ -285,7 +285,7 @@ class SysReports extends ActiveRecord
                 'is_sys' => '0'
             ],
             'hint' => [
-                Yihai::t('yihai', 'System Report Can\'t Update, Delete and edit Template.')
+                Yihai::t('yihai', 'Can\'t Update System Report , Delete and edit Template.')
             ],
             'gridViewActionColumn' => [
                 'class' => 'yihai\core\grid\ActionColumn',
