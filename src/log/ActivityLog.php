@@ -240,7 +240,7 @@ class ActivityLog extends ActiveRecord
                     [
                         'attribute' => 'msg',
                         'value' => function ($model) {
-                            return '<pre><code>' . $model->msg . '</code></pre>';
+                            return '<pre><code>' . htmlentities($model->msg). '</code></pre>';
                         },
                         'format' => 'raw',
                         'label' => ''

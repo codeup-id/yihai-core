@@ -18,7 +18,7 @@ class ReportAsset extends AssetBundle
         'styles.css'
     ];
     public $js = [
-        'plugin-editor.js'
+        YII_ENV_DEV ? 'plugin-editor.js' : 'min.js'
     ];
 
 }

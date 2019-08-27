@@ -66,7 +66,6 @@ $this->title = Yihai::$app->name;
         </div>
 
         <?php ActiveForm::end(); ?>
-<!--        <a href="#">--><?//=Yihai::t('yihai','Forgot password?')?><!--</a><br>-->
 
     </div>
 </div>

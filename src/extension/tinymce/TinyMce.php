@@ -70,8 +70,8 @@ class TinyMce extends InputWidget
 
     protected function presetFull()
     {
-        $this->clientOptions['plugins'] = 'print preview searchreplace autolink directionality code visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern help noneditable';
-        $this->clientOptions['toolbar'] = "undo redo | styleselect font | bold italic strikethrough underline | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media table | removeformat";
+        $this->clientOptions['plugins'] = 'print preview searchreplace textcolor colorpicker autolink directionality emoticons code visualblocks visualchars contextmenu fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern help noneditable';
+        $this->clientOptions['toolbar'] = "undo redo | styleselect fontselect fontsizeselect font | bold italic strikethrough underline | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media table | removeformat | emoticons";
     }
 
     /**

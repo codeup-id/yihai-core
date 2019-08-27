@@ -39,7 +39,7 @@ return [
             'translations' => [
                 'yihai*' => [
                     'class' => 'yihai\core\i18n\PhpMessageSource',
-                    'basePath' => '@yihai/messages',
+                    'basePath' => '@yihai-core/messages',
                     'fileMap' => [
                     ]
                 ]

@@ -144,32 +144,6 @@ if ($modelOptions->gridHtml) {
 }
 echo Html::endTag('div');
 echo Html::endForm();
-//if($modelOptions->gridPdf) {
-//    echo Html::beginForm(Yihai::$app->request->url, 'post', ['target' => '_blank', 'style' => 'display:inline-block']) . Html::input('hidden', '_grid_export', 'pdf') . Button::widget([
-//            'label' => Html::icon('file-pdf', ['prefix' => 'far fa-']),
-//            'encodeLabel' => false,
-//            'size' => Button::SIZE_SM,
-//            'options' => ['title' => Yihai::t('yihai', 'Download Pdf')]
-//        ]) . Html::endForm();
-//}
-//if($modelOptions->gridPdf) {
-//    echo Html::beginForm(Yihai::$app->request->url, 'post', ['target' => '_blank', 'style' => 'display:inline-block']) . Html::input('hidden', '_grid_export', 'xlsx') . Button::widget([
-//            'label' => Html::icon('file-excel', ['prefix' => 'far fa-']),
-//            'encodeLabel' => false,
-//            'size' => Button::SIZE_SM,
-//            'options' => ['title' => Yihai::t('yihai', 'Download xlsx')]
-//        ]) . Html::endForm();
-//    echo Html::endTag('div');
-//}
-//if($modelOptions->gridPdf) {
-//    echo Html::beginForm(Yihai::$app->request->url, 'post', ['target' => '_blank', 'style' => 'display:inline-block']) . Html::input('hidden', '_grid_export', 'xlsx') . Button::widget([
-//            'label' => Html::icon('file-excel', ['prefix' => 'far fa-']),
-//            'encodeLabel' => false,
-//            'size' => Button::SIZE_SM,
-//            'options' => ['title' => Yihai::t('yihai', 'Download xlsx')]
-//        ]) . Html::endForm();
-//    echo Html::endTag('div');
-//}
 echo Html::endTag('div');
 echo GridView::widget(ArrayHelper::merge([
     'class' => GridView::class,

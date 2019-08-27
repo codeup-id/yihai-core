@@ -16,9 +16,6 @@ hr {
     width: 100%;
     max-width: 100%;
     border: 1px solid #2d2d2d;
-    overflow: visible;
-    font-size:11px;
-    autosize:2.4;
 }
 .main-report table th{
     text-align: center;
@@ -58,6 +55,10 @@ html{
 }
 body{
     height:100%;
+    font-size: 11px;
+}
+.main-report{
+    font-size:8pt !important;
 }
 #tinymce *{
     font-family: Verdana,Arial,Helvetica,sans-serif;

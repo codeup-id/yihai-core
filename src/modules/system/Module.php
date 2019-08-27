@@ -12,11 +12,6 @@ namespace yihai\core\modules\system;
 use Yihai;
 use yihai\core\rbac\RbacHelper;
 use yihai\core\web\Menu;
-use yihai\core\models\SysMenu;
-use yii\base\Application;
-use yii\base\BootstrapInterface;
-use yii\helpers\ArrayHelper;
-use yii\web\GroupUrlRule;
 
 class Module extends \yihai\core\base\Module
 {

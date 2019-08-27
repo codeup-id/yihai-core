@@ -22,6 +22,7 @@ use yihai\core\web\Application;
 /**
  * Class SysSettings
  * @package yihai\core\models
+ * @property int $id [int(11)]
  * @property string $key [varchar(50)]
  * @property string $module [varchar(50)]
  * @property string $value [blob]

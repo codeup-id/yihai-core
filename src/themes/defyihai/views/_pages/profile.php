@@ -44,10 +44,11 @@ DetailView::end();
 $htmlGrid->endCol();
 $htmlGrid->beginCol(['md-6']);
 if($userData) {
-    DetailView::begin([
+    $detailViewUserData = DetailView::begin([
         'model' => $userData,
-        'attributes' => $userData->infoAttributes()
+        'attributes' => $userData->infoAttributes() ? $userData->infoAttributes() : []
     ]);
+    $detailViewUserData->template = '<tr><th class="text-center" colspan="3">'.Yihai::t('yihai', 'User Attribute').'</th></tr>'.$detailViewUserData->template;
     DetailView::end();
 }
 $htmlGrid->endCol();

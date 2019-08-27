@@ -16,12 +16,12 @@ use yihai\core\behaviors\TimestampBehavior;
 use yihai\core\behaviors\UploadBehavior;
 use yihai\core\db\ActiveRecord;
 use yihai\core\db\DataTrait;
+use yihai\core\helpers\ArrayHelper;
 use yihai\core\log\LoggableBehavior;
 use yihai\core\modules\system\ModuleSetting;
 use yihai\core\report\BaseReport;
 use yihai\core\theming\Html;
 use yihai\core\web\Application;
-use yii\base\InvalidConfigException;
 use yii\base\UnknownClassException;
 
 /**
@@ -274,13 +274,7 @@ class SysReports extends ActiveRecord
 
         return new ModelOptions([
             'baseTitle' => 'Reports',
-//            'actionDelete' => false,
             'actionCreate' => false,
-//            'formButtonContinueEdit' => true,
-//            'actionView'=>false,
-//            'useModalLinkCreate' => false,
-//            'findParams' =>
-//            'useModalLinkUpdate' => false,
             'mergeDeleteParams' => [
                 'is_sys' => '0'
             ],
@@ -304,6 +298,7 @@ class SysReports extends ActiveRecord
                 'buttonsCustom' => [
                     'duplicate' => [
                         'modal' => true,
+                        'label'=>Yihai::t('yihai', 'Duplicate'),
                         'icon' => 'copy'
                     ],
                     'template' => [
@@ -323,7 +318,12 @@ class SysReports extends ActiveRecord
                     }
                 ],
                 'key',
-                'module',
+                [
+                    'attribute'=>'module',
+                    'filter' =>function(){
+                        return ArrayHelper::map(static::find()->select('module')->distinct('module')->all(), 'module', 'module');
+                    }
+                ],
                 [
                     'attribute' => 'desc',
                 ],
@@ -337,10 +337,10 @@ class SysReports extends ActiveRecord
                         '0' => Yihai::t('yihai','No')
                     ]
                 ],
-                'created_by',
-                'created_at:datetime',
-                'updated_by',
-                'updated_at:datetime',
+                static::gridCreatedBy(),
+                static::gridCreatedAtSimple(),
+                static::gridUpdatedBy(),
+                static::gridUpdatedAtSimple(),
 
             ]
         ]);

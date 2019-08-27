@@ -91,7 +91,10 @@ class ActionColumn extends \yii\grid\ActionColumn
                         $classColor = 'text-danger ';
                         break;
                     default:
-                        $title = ucfirst($name);
+                        if(isset($additionalOptions['label']))
+                            $title = ArrayHelper::remove($additionalOptions, 'label');
+                        else
+                            $title = ucfirst($name);
                 }
                 $options = array_merge([
                     'title' => $title,

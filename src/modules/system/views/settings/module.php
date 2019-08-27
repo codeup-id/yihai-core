@@ -31,6 +31,10 @@ foreach ($model->attributes() as $attribute) {
                 'force_br_newlines' => false,
                 'force_p_newlines' => false,
                 'forced_root_block' => 'div',
+                'table_class_list' => [
+                    ['title' => 'default', 'value' => 'default-table'],
+                    ['title' => 'no-border', 'value' => 'no-border']
+                ],
             ]]);
     } elseif ($fieldType === $model::FIELD_YESNO) {
         echo $form->field($model, $attribute)->dropDownList([

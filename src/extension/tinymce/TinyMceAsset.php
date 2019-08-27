@@ -17,4 +17,7 @@ class TinyMceAsset extends AssetBundle
     public $js = [
         'tinymce.min.js'
     ];
+    public $depends = [
+        'yihai\core\assets\JqueryAsset'
+    ];
 }
