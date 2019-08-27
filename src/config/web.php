@@ -13,6 +13,9 @@ return \yii\helpers\ArrayHelper::merge(require __DIR__ . '/common.php', [
 //        'errorHandler' => [
 //            'errorAction' => 'system/error',
 //        ],
+        'response' => [
+            'class' => 'yihai\core\web\Response'
+        ],
         'user' => [
             'class' => 'yihai\core\web\User',
             'identityClass' => 'yihai\core\base\UserIdent',

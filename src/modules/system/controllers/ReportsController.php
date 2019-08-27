@@ -9,14 +9,14 @@
 namespace yihai\core\modules\system\controllers;
 
 
+use Mpdf\Output\Destination;
 use Yihai;
 use yihai\core\actions\CrudFormAction;
-use yihai\core\helpers\ArrayHelper;
 use yihai\core\models\SysReports;
 use yihai\core\rbac\RbacHelper;
 use yihai\core\report\BaseReport;
 use yihai\core\web\BackendController;
-use yihai\core\web\Controller;
+use yihai\core\web\Response;
 use yii\web\NotFoundHttpException;
 
 class ReportsController extends BackendController
@@ -103,7 +103,6 @@ class ReportsController extends BackendController
      */
     public function actionBuild($key)
     {
-//        $this->reportClass->filterOnFilter();
         return $this->render('build', [
             'key' => $key,
             'model' => $this->sysReportBuild,
@@ -132,32 +131,28 @@ class ReportsController extends BackendController
             'type' => $__type,
             'systemSetting' => $systemSetting,
         ]);
-        $mpdf = new \Mpdf\Mpdf(ArrayHelper::merge([
-            'tempDir' => Yihai::getAlias('@runtime/mpdf'),
-            'default_font_size' => 0,
+        Yihai::$app->response->format = Response::FORMAT_PDF;
+        Yihai::$app->response->formatters['pdf'] = [
+            'class' => 'yihai\core\web\response\MpdfFormatter',
             'orientation' => $this->sysReportBuild->set_page_orientation,
+            'dest' => $__type === 'print' ? Destination::INLINE : Destination::DOWNLOAD,
+            'fileName' => Yihai::t('yihai', 'Report') . ' ' . $this->sysReportBuild->key . ' (' . date('Y-m-d H-i-s', time()) . ').pdf',
+            'mpdfConfig' => array_merge([
+                'showWatermarkImage' => true,
+                'shrink_tables_to_fit' => 1
+            ],$reportClass->mpdf()),
             'format' => $this->sysReportBuild->set_page_format,
-            'shrink_tables_to_fit'=>1
-        ], $reportClass->mpdf()));
+            'mpdf' => function(\Mpdf\Mpdf $mpdf) use($reportClass, $systemSetting){
+                if ($this->sysReportBuild->useWatermark($systemSetting) && ($watermark_image = $this->sysReportBuild->watermark_image($systemSetting))) {
+                    $mpdf->showWatermarkImage = true;
+                    $mpdf->SetWatermarkImage($watermark_image->fullpath, 0.1, 40, 'F');
+                }
 
-        $mpdf->shrink_tables_to_fit=1;
-        if ($this->sysReportBuild->useWatermark($systemSetting) && ($watermark_image = $this->sysReportBuild->watermark_image($systemSetting))) {
-            $mpdf->showWatermarkImage = true;
-            $mpdf->SetWatermarkImage($watermark_image->fullpath, 0.1, 40, 'F');
-        }
-
-        $mpdf->SetTitle($this->sysReportBuild->key . ' Report');
-        $mpdf->SetAuthor('Yihai App - ' . Yihai::$app->id);
-        $mpdf->SetAuthor(Yihai::$app->user->identity->model->username . ' (Yihai App)');
-        $reportClass->mpdfOptions($mpdf);
-
-        $mpdf->WriteHTML($template);
-        $name = Yihai::t('yihai', 'Report') . ' ' . $this->sysReportBuild->key . ' (' . date('Y-m-d H-i-s', time()) . ').pdf';
-        if ($__type === 'print') {
-            $mpdf->Output($name, 'I');
-        } elseif ($__type === 'pdf') {
-            $mpdf->Output($name, 'D');
-        }
-        exit;
+                $mpdf->SetTitle($this->sysReportBuild->key . ' Report');
+                $mpdf->SetAuthor(Yihai::$app->user->identity->model->username . ' (Yihai App)');
+                $reportClass->mpdfOptions($mpdf);
+            }
+        ];
+        return $template;
     }
 }

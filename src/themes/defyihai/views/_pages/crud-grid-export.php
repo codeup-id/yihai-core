@@ -79,8 +79,7 @@ if ($_grid_export === 'print' || $_grid_export === 'pdf' || $_grid_export === 'h
     echo '<table class="info-table">';
     echo '<tbody>';
     echo '<tr><th>' . Yihai::t('yihai', 'Printed At') . '</th>' . (!$isXlsx ? '<td style="width: 1px">:</td>' : '') . '<td>' . Yihai::$app->formatter->asDatetime(time(), 'php:Y-m-d H:i:s') . '</td></tr>';
-    echo '<tr><th>' . Yihai::t('yihai', 'Printed By') . '</th>' . (!$isXlsx ? '<td style="width: 1px">:</td>' : '') . '<td>' . Yihai::$app->user->identity->data->fullname . ' (' . Yihai::$app->user->identity->model->username . ')</td></tr>';
-    echo '<tr><th>' . Yihai::t('yihai', 'Printed Count') . '</th>' . (!$isXlsx ? '<td style="width: 1px">:</td>' : '') . '<td>' . $grid->dataProvider->getCount() . ' of ' . $grid->dataProvider->getTotalCount() . '</td></tr>';
+    echo '<tr><th>' . Yihai::t('yihai', 'Printed By') . '</th>' . (!$isXlsx ? '<td style="width: 1px">:</td>' : '') . '<td>' . Yihai::$app->user->identity->data->fullname . ' (' .Yihai::$app->user->identity->username .'|'. Yihai::$app->user->identity->model->group . ')</td></tr>';
     echo '<tbody>';
     echo '</table>';
     echo Html::endTag('div');
@@ -117,7 +116,7 @@ echo '<style>
             color-adjust: exact !important;
         }
         body{
-          font-size: 13px;
+          font-size: 11px;
           position: relative;
           width: 100%;
           height: 100%;

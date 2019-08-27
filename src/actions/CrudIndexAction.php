@@ -11,24 +11,16 @@ namespace yihai\core\actions;
 
 use Mpdf\Output\Destination;
 use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Shared\Font;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Worksheet\HeaderFooter;
 use PhpOffice\PhpSpreadsheet\Worksheet\HeaderFooterDrawing;
 use Yihai;
-use yihai\core\grid\DataColumn;
 use yihai\core\grid\GridView;
-use yihai\core\modules\system\Module;
 use yihai\core\modules\system\ModuleSetting;
-use yihai\core\rbac\RbacHelper;
-use yihai\core\theming\Html;
 use yihai\core\theming\LinkPager;
 use yii\data\ActiveDataProvider;
-use yii\grid\CheckboxColumn;
 use yii\helpers\ArrayHelper;
-use yii\helpers\Url;
-use yii\web\Response;
+use yihai\core\web\Response;
 
 class CrudIndexAction extends CrudAction
 {
@@ -52,7 +44,7 @@ class CrudIndexAction extends CrudAction
         $this->exception_limit();
         if ($this->viewFile)
             $this->modelOptions->viewFileIndex = $this->viewFile;
-        if (($_grid_export = Yihai::$app->request->get('_grid_export')) && in_array($_grid_export, ['print','pdf','xlsx','csv','html'])) {
+        if (($_grid_export = Yihai::$app->request->get('_grid_export')) && in_array($_grid_export, ['print', 'pdf', 'xlsx', 'csv', 'html'])) {
             $this->_grid_export = $_grid_export;
             $this->addParams('_grid_export', $this->_grid_export);
             $this->controller->layout = '@yihai/views/_layouts/blank-content';
@@ -66,55 +58,56 @@ class CrudIndexAction extends CrudAction
 
     public function run()
     {
-        if($this->_grid_export) {
+        if ($this->_grid_export) {
+            /** @var \yihai\core\modules\system\ModuleSetting $systemSetting */
             $systemSetting = \yihai\core\modules\system\Module::loadSettings();
             if ($this->_grid_export === 'print' || $this->_grid_export === 'pdf') {
-                /** @var \yihai\core\modules\system\ModuleSetting $systemSetting */
-                $mpdf = new \Mpdf\Mpdf([
-                    'tempDir' => Yihai::getAlias('@runtime/mpdf'),
-                    'default_font_size' => 0,
+                Yihai::$app->response->format = Response::FORMAT_PDF;
+                Yihai::$app->response->formatters['pdf'] = [
+                    'class' => 'yihai\core\web\response\MpdfFormatter',
                     'orientation' => $this->modelOptions->gridPdfOrientation,
-                    'format' => $this->modelOptions->gridPdfSize
-                ]);
-                $mpdf->SetTitle($this->modelOptions->baseTitle . ' Data');
-                $mpdf->SetAuthor('Yihai App - ' . Yihai::$app->id);
-                $mpdf->SetAuthor(Yihai::$app->user->identity->model->username . ' (Yihai App)');
-                $mpdf->SetWatermarkImage($systemSetting->gridExportWatermark_image->fullpath, 0.1, 40, 'F');
-                $mpdf->showWatermarkImage = true;
-                $mpdf->SetFooter(array(
-                    'odd' => array(
-                        'L' => array(
-                            'content' => '',
-                            'font-size' => 10,
-                            'font-style' => 'B',
-                            'font-family' => 'serif',
-                            'color' => '#000000'
-                        ),
-                        'C' => array(
-                            'content' => '{PAGENO}/{nbpg}',
-                            'font-size' => 10,
-                            'font-style' => 'N',
-                            'font-family' => 'serif',
-                            'color' => '#636363'
-                        ),
-                        'R' => array(
-                            'content' => $this->modelOptions->baseTitle . ' Data',
-                            'font-size' => 10,
-                            'font-style' => 'N',
-                            'font-family' => 'serif',
-                            'color' => '#636363'
-                        ),
-                        'line' => 1,
-                    ),
-                ));
-                $this->addParams($this->modelOptions->baseTitle, $mpdf);
-                $c = parent::run();
-                $mpdf->WriteHTML($c);
-                if ($this->_grid_export === 'print')
-                    $mpdf->Output("Export " . $this->modelOptions->baseTitle . '.pdf', Destination::INLINE);
-                else
-                    $mpdf->Output("Export " . $this->modelOptions->baseTitle . '.pdf', Destination::DOWNLOAD);
-                exit;
+                    'fileName' => "Export " . $this->modelOptions->baseTitle . '.pdf',
+                    'dest' => $this->_grid_export === 'print' ? Destination::INLINE : Destination::DOWNLOAD,
+                    'mpdfConfig' => [
+                        'showWatermarkImage' => true,
+                    ],
+                    'format' => $this->modelOptions->gridPdfSize,
+                    'mpdf' => function(\Mpdf\Mpdf $mpdf) use($systemSetting){
+                        $mpdf->SetTitle($this->modelOptions->baseTitle . ' Data');
+                        $mpdf->SetAuthor(Yihai::$app->user->identity->model->username . ' (Yihai App)');
+                        $mpdf->SetWatermarkImage($systemSetting->gridExportWatermark_image->fullpath, 0.1, 40, 'F');
+                        $mpdf->SetFooter(array(
+                            'odd' => array(
+                                'L' => array(
+                                    'content' => '',
+                                    'font-size' => 10,
+                                    'font-style' => 'B',
+                                    'font-family' => 'serif',
+                                    'color' => '#000000'
+                                ),
+                                'C' => array(
+                                    'content' => '{PAGENO}/{nbpg}',
+                                    'font-size' => 10,
+                                    'font-style' => 'N',
+                                    'font-family' => 'serif',
+                                    'color' => '#636363'
+                                ),
+                                'R' => array(
+                                    'content' => $this->modelOptions->baseTitle . ' Data',
+                                    'font-size' => 10,
+                                    'font-style' => 'N',
+                                    'font-family' => 'serif',
+                                    'color' => '#636363'
+                                ),
+                                'line' => 1,
+                            ),
+                        ));
+                        if(is_callable($this->modelOptions->gridExportMpdf)){
+                            call_user_func($this->modelOptions->gridExportMpdf, $mpdf);
+                        }
+                    }
+                ];
+                return parent::run();
             } elseif ($this->_grid_export === 'xlsx') {
                 $spreadsheet = $this->spreadsheetFromHtml($systemSetting);
                 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

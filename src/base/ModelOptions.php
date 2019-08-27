@@ -22,6 +22,7 @@ use yii\helpers\Url;
 /**
  * Class ModelOptions
  * @package yihai\core\base
+ * @property callable $gridExportMpdf
  */
 class ModelOptions extends BaseObject
 {
@@ -393,6 +394,23 @@ class ModelOptions extends BaseObject
             }
         }
         return $importAttributes;
+    }
+
+    /**
+     * @return callable
+     */
+    public function getGridExportMpdf()
+    {
+        return $this->gridExportMpdf;
+    }
+
+    /**
+     * function($mpdf){...}
+     * @param callable $gridExportMpdf
+     */
+    public function setGridExportMpdf($gridExportMpdf)
+    {
+        $this->gridExportMpdf = $gridExportMpdf;
     }
 
 }

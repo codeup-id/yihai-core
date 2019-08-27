@@ -28,19 +28,10 @@ if($model->set_header_use_system){
 }
 echo Html::beginTag('div', ['class' => 'main-report']);
 echo $reportClass->getTemplateRender();
+echo Html::endTag('div');
 $watermark_image = $model->watermark_image($systemSetting);
 if ($model->useWatermark($systemSetting)) {
-    $this->registerCss('
-        /*body:after{
-            content: "Data";
-            position: fixed;
-            bottom:0;
-            left:0;
-            text-align:right;
-            width:100%;
-            font-size:30px;
-            opacity : 0.1;
-        }*/
+    $this->registerCss('    
         body:before{
             content: "";
             display: block;
