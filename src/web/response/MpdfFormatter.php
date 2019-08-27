@@ -9,7 +9,6 @@
 namespace yihai\core\web\response;
 
 
-use Mpdf\HTMLParserMode;
 use Mpdf\Mpdf;
 use Yihai;
 use yii\base\Component;
