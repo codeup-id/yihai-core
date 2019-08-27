@@ -29,6 +29,7 @@ $activeTheme = Yihai::$app->theme->activeTheme;
 if(isset(Yihai::$app->params['AppAssetClass']))
     $appAssetClass = Yihai::$app->params['AppAssetClass'];
 $appAsset = $appAssetClass::register($this);
+$skin = (isset(Yihai::$app->params['___settings']) && Yihai::$app->params['___settings']['skin']) ? Yihai::$app->params['___settings']['skin'] : $activeTheme->skin;
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -42,7 +43,7 @@ $appAsset = $appAssetClass::register($this);
     <link rel="shotcut icon" href="<?= Url::to('@web/favicon.ico') ?>"/>
     <?php $this->head() ?>
 </head>
-<body class="hold-transition <?= $activeTheme->skin ?> sidebar-mini fixed">
+<body class="hold-transition <?= $skin ?> sidebar-mini fixed">
 <?php $this->beginBody() ?>
 
 <div class="wrapper">
@@ -92,9 +93,9 @@ $appAsset = $appAssetClass::register($this);
                                 </ul>
                             </li>
 
-                            <li class="footer"><a
+                            <?php /**<li class="footer"><a
                                         href="<?= Url::to(['/system/notifications']) ?>"><?= Yihai::t('yihai', 'View all'); ?></a>
-                            </li>
+                            </li> */?>
                         </ul>
                         <?php endif; ?>
                     <li class="dropdown user user-menu">
@@ -116,7 +117,7 @@ $appAsset = $appAssetClass::register($this);
                             </li>
                             <li class="user-footer">
                                 <div class="pull-left">
-                                    <a href="<?= Url::to(['/system/profile']) ?>" class="btn btn-default btn-flat">Profile</a>
+                                    <a href="<?= Url::to(['/system/profile']) ?>" class="btn btn-default btn-flat"><?=Yihai::t('yihai','Profile')?></a>
                                 </div>
                                 <div class="pull-right">
                                     <?= Html::beginForm(['/system/logout'], 'post')
@@ -128,6 +129,9 @@ $appAsset = $appAssetClass::register($this);
                                 </div>
                             </li>
                         </ul>
+                    </li>
+                    <li>
+                        <a href="#" data-toggle="control-sidebar"><i class="fal fa-cogs"></i></a>
                     </li>
                 </ul>
             </div>
@@ -220,6 +224,33 @@ $appAsset = $appAssetClass::register($this);
         </div>
         <?= Yihai::$app->copyright ?>
     </footer>
+    <aside class="control-sidebar control-sidebar-light">
+        <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
+            <li class="active"><a href="#control-sidebar-settings-tab" data-toggle="tab"><i class="fal fa-cog"></i></a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="control-sidebar-settings-tab">
+                <?=Html::beginForm('','POST',['id'=>'control-sidebar-settings-form']);?>
+                <?=Html::hiddenInput('___settings', 1);?>
+                <?=Html::hiddenInput('skin', $skin, ['id'=>'settings-form-skin-id']);?>
+                    <div class="form-group">
+                        <label for="switch-language" class="control-sidebar-subheading">
+                            <?=Yihai::t('yihai','Language')?>
+                        </label>
+                            <select id="switch-language" name="language" class="form-control">
+                                <?php foreach (Yihai::$app->params['languageList'] as $key => $v){
+                                echo "<option ".(Yihai::$app->language === $key ? 'selected':'')." value=\"{$key}\">{$v}</option>";
+                                }
+                                ?>
+                            </select>
+                    </div>
+                <div class="form-group" id="skins-list">
+                </div>
+                <button class="btn btn-primary btn-block"><?=Yihai::t('yihai','Save')?></button>
+                <?=Html::endForm();?>
+            </div>
+        </div>
+    </aside>
 </div>
 <?php
 

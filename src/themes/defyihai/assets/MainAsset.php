@@ -26,7 +26,7 @@ class MainAsset extends AssetBundle
     ];
 
     public $js = [
-        'js/scripts.js'
+        YII_ENV_DEV ? 'js/scripts.js' : 'js/min.js'
     ];
 
     public $depends = [

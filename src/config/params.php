@@ -9,4 +9,8 @@
 
 return [
     'AppAssetClass' => 'yihai\core\assets\AppAsset',
+    'languageList' => [
+        'id' => 'Indonesia',
+        'en' => 'English'
+    ]
 ];

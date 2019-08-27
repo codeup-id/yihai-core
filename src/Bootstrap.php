@@ -20,10 +20,45 @@ class Bootstrap implements \yii\base\BootstrapInterface
      */
     private $_modules;
 
+    /**
+     * @param \yihai\core\console\Application|\yihai\core\web\Application $app
+     * @return \yii\web\Response|void
+     */
+    private function settingsGet($app)
+    {
+        if(Yihai::$app->request->post('___settings')){
+            $settings = Yihai::$app->request->post();
+            unset($settings[Yihai::$app->request->csrfParam], $settings['___settings']);
+            $languagePost = Yihai::$app->request->post('language');
+                $cookies = $app->response->cookies;
+                $app->language = $languagePost;
+                $cookies->add(new \yii\web\Cookie([
+                    'name' => '___settings',
+                    'value' => $settings
+                ]));
+            return $app->response->refresh();
+
+        }
+        elseif($app->request->cookies->has('___settings'))
+        {
+            $settings = $app->request->cookies->getValue('___settings');
+            if(isset($app->params['___settings']))
+                $settings = array_merge($app->params['___settings'], $settings);
+            $app->params['___settings'] = $settings;
+            if(isset($settings['language']) && isset($app->params['languageList'][$settings['language']]))
+                $app->language = $settings['language'];
+        }
+    }
+
+    /**
+     * @param \yihai\core\console\Application|\yihai\core\web\Application $app
+     */
     public function bootstrap($app)
     {
-        if (Yihai::$app instanceof \yii\web\Application)
+        if (Yihai::$app instanceof \yii\web\Application) {
             Yihai::$app->theme->set();
+            $this->settingsGet($app);
+        }
         if ($app->modules) {
             foreach ($app->modules as $name => $config) {
                 try {
