@@ -181,7 +181,7 @@ class ActivityLog extends ActiveRecord
     protected function _options()
     {
         return new ModelOptions([
-            'baseTitle' => 'Activity Log',
+            'baseTitle' => Yihai::t('yihai','Log aktivitas'),
             'actionCreate' => false,
             'actionUpdate' => false,
             'actionDelete' => false,

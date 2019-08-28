@@ -122,7 +122,7 @@ class SysSettings extends ActiveRecord
     protected function _options()
     {
         return new ModelOptions([
-            'baseTitle' => 'Settings',
+            'baseTitle' => Yihai::t('yihai','Semua pengaturan'),
             'actionDelete' => false,
             'actionCreate'=>false,
             'actionView'=>false,

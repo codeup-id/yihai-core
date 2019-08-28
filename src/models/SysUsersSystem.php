@@ -141,7 +141,7 @@ class SysUsersSystem extends AbstractUserModel
     {
 
         return new ModelOptions([
-            'baseTitle' => 'Users System',
+            'baseTitle' => Yihai::t('yihai','Pengguna ({type})', ['type'=>'system/superuser']),
             'gridColumnData' => [
                 static::gridID(),
                 'fullname',

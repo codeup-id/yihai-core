@@ -135,7 +135,7 @@ class SysReports extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'key' => Yihai::t('yihai', 'Key'),
+            'key' => Yihai::t('yihai', 'ID Key'),
             'is_sys' => Yihai::t('yihai', 'Laporan Sistem'),
             'set_use_watermark' => Yihai::t('yihai', 'Gunakan watermark'),
             'set_use_watermark_image_system' => Yihai::t('yihai', 'Gunakan pengaturan sistem'),
@@ -273,7 +273,7 @@ class SysReports extends ActiveRecord
     {
 
         return new ModelOptions([
-            'baseTitle' => 'Reports',
+            'baseTitle' => Yihai::t('yihai','Laporan/Dokumen'),
             'actionCreate' => false,
             'mergeDeleteParams' => [
                 'is_sys' => '0'

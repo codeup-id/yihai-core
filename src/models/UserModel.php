@@ -303,7 +303,7 @@ class UserModel extends \yihai\core\db\ActiveRecord
     {
         return new ModelOptions([
             'model' => $this,
-            'baseTitle' => 'Users',
+            'baseTitle' => Yihai::t('yihai','Semua pengguna'),
             'actionCreate' => false,
             'actionDelete' => false,
             'actionUpdate' => false,
