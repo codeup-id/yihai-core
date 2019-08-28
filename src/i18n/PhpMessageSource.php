@@ -18,16 +18,14 @@ class PhpMessageSource extends \yii\i18n\PhpMessageSource
     protected function loadMessages($category, $language)
     {
         $messages = parent::loadMessages($category, $language);
-//        $core_file = Yihai::getAlias('@yihai-core/messages/' . $language . '/' . $category . '.php');
-//        if (is_file($core_file))
-//            return array_merge(include $core_file, $messages);
-//        else {
-//            if (isset($this->pathMap[$category])) {
-//                $core_file = Yihai::getAlias($this->pathMap[$category] . "/$language/" . $category . '.php');
-//                if (is_file($core_file))
-//                    return array_merge(include $core_file, $messages);
-//            }
-//        }
+        foreach ($this->pathMap as $pathMap) {
+            $pathMap = Yihai::getAlias($pathMap);
+            if (!is_dir($pathMap)) continue;
+            $fileMap = $pathMap . DIRECTORY_SEPARATOR . $language . DIRECTORY_SEPARATOR . $category . '.php';
+            if (is_file($fileMap)) {
+                $messages = array_merge($messages, include $fileMap);
+            }
+        }
         return $messages;
     }
 }

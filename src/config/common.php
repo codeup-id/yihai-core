@@ -40,6 +40,9 @@ return [
                 'yihai*' => [
                     'class' => 'yihai\core\i18n\PhpMessageSource',
                     'basePath' => '@yihai-core/messages',
+                    'pathMap' => [
+                        '@yihai/messages'
+                    ],
                     'fileMap' => [
                     ]
                 ]
