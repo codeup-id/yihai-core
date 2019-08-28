@@ -13,6 +13,6 @@ use yihai\core\theming\Html;
 /** @var \yihai\core\base\ModelOptions $modelOptions */
 
 if (!Yihai::$app->request->getIsAjax() && !Yihai::$app->request->getIsPjax())
-    $this->title = Yihai::t('yihai', $modelOptions->getBaseTitle());
+    $this->title = $modelOptions->getBaseTitle();
 $content = $this->renderFile($viewFile, $modelOptions->viewParams);
 echo $content;

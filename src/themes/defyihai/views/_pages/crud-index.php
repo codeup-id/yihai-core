@@ -44,7 +44,7 @@ if ($modelOptions->actionImport && $modelOptions->importAttributes && $modelOpti
 }
 if ($modelOptions->actionImport && $modelOptions->importCustom && $modelOptions->userCanAction('import')) {
     foreach ($modelOptions->importCustom as $key => $importCustom) {
-        $links2[] = '<a href="' . $modelOptions->getActionUrlTo('import', ['custom' => $key]) . '" ' . ($modelOptions->useModalLinkImport ? $modal_attr : '') . ' class="btn btn-primary">' . Html::icon('file-import', ['prefix' => 'fal fa-']) . ' ' . Yihai::t('yihai', $importCustom['label']) . '</a>';
+        $links2[] = '<a href="' . $modelOptions->getActionUrlTo('import', ['custom' => $key]) . '" ' . ($modelOptions->useModalLinkImport ? $modal_attr : '') . ' class="btn btn-primary">' . Html::icon('file-import', ['prefix' => 'fal fa-']) . ' ' . $importCustom['label'] . '</a>';
     }
 
 }

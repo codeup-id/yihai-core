@@ -56,7 +56,7 @@ foreach ($detailViewCustom as $label => $custom) {
         'afterBody' => $custom,
 
     ]);
-    echo Html::tag('div', Html::icon('th-list') . ' ' . Yihai::t('yihai', $label), ['class' => ('text-bold')]);
+    echo Html::tag('div', Html::icon('th-list') . ' ' .  $label, ['class' => ('text-bold')]);
     BoxCard::end();
     echo Html::endTag('div');
 }
