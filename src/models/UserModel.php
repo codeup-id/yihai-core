@@ -99,7 +99,7 @@ class UserModel extends \yihai\core\db\ActiveRecord
             [['username', 'password', 'reset_token', 'created_by', 'updated_by'], 'string', 'max' => 64],
             ['username','match',
                 'pattern' => '/^(?![_.-])(?!.*[_.-]{2})[a-z0-9._.-]+(?<![_.-])$/',
-                'message' => Yihai::t('yihai', "Invalid {attribute}. No ({begin}) at the beginning, no ({inside}) inside, no ({end}) at the end, allowed characters ({allowed})",[
+                'message' => Yihai::t('yihai', "{attribute} tidak valid. tidak ada ({begin}) di awal, tidak ada ({inside}) di dalam, tidak ada ({end}) di akhir, karakter yang diizinkan ({allowed})",[
                     'attribute' => 'Username',
                     'begin' => '_, ., -',
                     'inside' => '__, _, ._, .., --',
@@ -124,22 +124,22 @@ class UserModel extends \yihai\core\db\ActiveRecord
     {
         return [
             'id' => Yihai::t('yihai', 'ID'),
-            'username' => Yihai::t('yihai', 'Username'),
+            'username' => Yihai::t('yihai', 'Nama pengguna'),
             'email' => Yihai::t('yihai', 'Email'),
-            'password' => Yihai::t('yihai', 'Password'),
-            'group' => Yihai::t('yihai', 'Group'),
+            'password' => Yihai::t('yihai', 'Kata sandi'),
+            'group' => Yihai::t('yihai', 'Grup'),
             'data' => Yihai::t('yihai', 'Data'),
             'status' => Yihai::t('yihai', 'Status'),
             'statustext' => Yihai::t('yihai', 'Status'),
             'access_token' => Yihai::t('yihai', 'Access Token'),
             'auth_key' => Yihai::t('yihai', 'Auth Key'),
             'reset_token' => Yihai::t('yihai', 'Reset Token'),
-            'last_time' => Yihai::t('yihai', 'Last Time'),
-            'created_by' => Yihai::t('yihai', 'Created By'),
-            'created_at' => Yihai::t('yihai', 'Created At'),
-            'updated_by' => Yihai::t('yihai', 'Updated By'),
-            'updated_at' => Yihai::t('yihai', 'Updated At'),
-            'memberSince' => Yihai::t('yihai', 'Member Since'),
+            'last_time' => Yihai::t('yihai', 'Terakhir masuk'),
+            'created_by' => Yihai::t('yihai', 'Dibuat oleh'),
+            'created_at' => Yihai::t('yihai', 'Dibuat pada'),
+            'updated_by' => Yihai::t('yihai', 'Diperbarui oleh'),
+            'updated_at' => Yihai::t('yihai', 'Diperbarui pada'),
+            'memberSince' => Yihai::t('yihai', 'Anggota sejak'),
         ];
     }
     //--EVENTS-----------------------------------------------------------------------
@@ -237,10 +237,10 @@ class UserModel extends \yihai\core\db\ActiveRecord
     public function getStatustext()
     {
         if ($this->status === self::STATUS_ACTIVE)
-            return Yihai::t('yihai', 'Active');
+            return Yihai::t('yihai', 'Aktif');
         elseif ($this->status === self::STATUS_DELETED)
-            return Yihai::t('yihai', 'Deleted');
-        return Yihai::t('yihai', 'Non Active');
+            return Yihai::t('yihai', 'Dihapus');
+        return Yihai::t('yihai', 'Tidak aktif');
     }
 
     /**
@@ -316,7 +316,7 @@ class UserModel extends \yihai\core\db\ActiveRecord
                     'password' => [
                         'modal' => true,
                         'icon' => 'password',
-                        'title' => Yihai::t('yihai', 'Change Password'),
+                        'title' => Yihai::t('yihai', 'Ganti kata sandi'),
                     ],
                 ]
             ],

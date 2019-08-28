@@ -29,9 +29,9 @@ class ChangePasswordAction extends Action
         if($modelForm->load(Yihai::$app->request->post()) && $modelForm->validate()) {
             if ($modelForm->updatePassword()) {
                 ActivityLog::newLog('change-password');
-                Alert::addFlashAlert(Alert::KEY_CRUD, 'success', Yihai::t('yihai', 'Success update password'), true);
+                Alert::addFlashAlert(Alert::KEY_CRUD, 'success', Yihai::t('yihai', 'Berhasil memperbarui kata sandi'), true);
             } else {
-                Alert::addFlashAlert(Alert::KEY_CRUD, 'danger', Yihai::t('yihai', 'Error update password'));
+                Alert::addFlashAlert(Alert::KEY_CRUD, 'danger', Yihai::t('yihai', 'Kesalahan memperbarui kata sandi'));
             }
             return $this->controller->redirect(['profile']);
         }

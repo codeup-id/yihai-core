@@ -63,13 +63,13 @@ $skin = (isset(Yihai::$app->params['___settings']) && Yihai::$app->params['___se
                     <?php if ($notif_pinned = Yihai::$app->notification->all(NotificationFormat::TYPE_PINNED)): ?>
                     <li class="dropdown messages-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"
-                           title="<?= Yihai::t('yihai', 'Pinned Notifications'); ?>">
+                           title="<?= Yihai::t('yihai', 'Notifikasi disematkan'); ?>">
                             <i class="fal fa-exclamation"></i>
                             <span class="label label-default"><?= count($notif_pinned) ?></span>
                         </a>
                         <ul class="dropdown-menu">
                             <li class="header"><i
-                                        class="fal fa-exclamation"></i> <?= Yihai::t('yihai', 'Pinned Notifications'); ?>
+                                        class="fal fa-exclamation"></i> <?= Yihai::t('yihai', 'Notifikasi disematkan'); ?>
                             </li>
                             <li>
                                 <ul class="menu">
@@ -111,18 +111,18 @@ $skin = (isset(Yihai::$app->params['___settings']) && Yihai::$app->params['___se
 
                                 <p>
                                     <?= Yihai::$app->user->identity->data->fullname ?>
-                                    <small><?= Yihai::t('yihai', 'Member Since') ?>
+                                    <small><?= Yihai::t('yihai', 'Anggota sejak') ?>
                                         : <?= Yihai::$app->user->identity->model->memberSince ?></small>
                                 </p>
                             </li>
                             <li class="user-footer">
                                 <div class="pull-left">
-                                    <a href="<?= Url::to(['/system/profile']) ?>" class="btn btn-default btn-flat"><?=Yihai::t('yihai','Profile')?></a>
+                                    <a href="<?= Url::to(['/system/profile']) ?>" class="btn btn-default btn-flat"><?=Yihai::t('yihai','Profil')?></a>
                                 </div>
                                 <div class="pull-right">
                                     <?= Html::beginForm(['/system/logout'], 'post')
                                     . Html::submitButton(
-                                        Yihai::t('yihai', 'Logout'),
+                                        Yihai::t('yihai', 'Keluar'),
                                         ['class' => 'btn btn-default btn-flat']
                                     )
                                     . Html::endForm() ?>
@@ -202,7 +202,7 @@ $skin = (isset(Yihai::$app->params['___settings']) && Yihai::$app->params['___se
                 echo Html::beginTag('div', ['id' => 'main-hint-info', 'style' => 'display:none']);
                 echo \yihai\core\theming\Alert::widget([
                     'type' => 'info',
-                    'title' => Yihai::t('yihai', 'Hint / Info'),
+                    'title' => Yihai::t('yihai', 'Petunjuk / Info'),
                     'icon' => Html::icon('info', ['class' => 'icon']),
                     'closeButton' => false,
                     'body' => $hint
@@ -235,7 +235,7 @@ $skin = (isset(Yihai::$app->params['___settings']) && Yihai::$app->params['___se
                 <?=Html::hiddenInput('skin', $skin, ['id'=>'settings-form-skin-id']);?>
                     <div class="form-group">
                         <label for="switch-language" class="control-sidebar-subheading">
-                            <?=Yihai::t('yihai','Language')?>
+                            <?=Yihai::t('yihai','Bahasa')?>
                         </label>
                             <select id="switch-language" name="language" class="form-control">
                                 <?php foreach (Yihai::$app->params['languageList'] as $key => $v){
@@ -246,7 +246,7 @@ $skin = (isset(Yihai::$app->params['___settings']) && Yihai::$app->params['___se
                     </div>
                 <div class="form-group" id="skins-list">
                 </div>
-                <button class="btn btn-primary btn-block"><?=Yihai::t('yihai','Save')?></button>
+                <button class="btn btn-primary btn-block"><?=Yihai::t('yihai','Simpan')?></button>
                 <?=Html::endForm();?>
             </div>
         </div>
@@ -286,15 +286,15 @@ Modal::end();
 $deleteFooter = Html::beginForm([''], 'post', ['id' => 'yihai-crud-basemodal-deleteform'])
     . Html::hiddenInput('multiple')
     . Html::submitButton(
-        Yihai::t('yihai', 'Yes'),
+        Yihai::t('yihai', 'Ya'),
         ['class' => 'btn btn-danger']
-    ) . Html::button(Yihai::t('yihai', 'No'), ['class' => 'btn btn-default', 'data-dismiss' => 'modal'])
+    ) . Html::button(Yihai::t('yihai', 'Tidak'), ['class' => 'btn btn-default', 'data-dismiss' => 'modal'])
     . Html::endForm();
 
 Modal::begin([
     'id' => 'yihai-crud-basemodal-delete',
     'headerOptions' => ['class' => 'bg-red'],
-    'header' => '<div class="text-bold"><i class="fal fa-pen-square"></i> <span class="modal-title"></span>' . Yihai::t('yihai', 'Delete item') . '</div>',
+    'header' => '<div class="text-bold"><i class="fal fa-pen-square"></i> <span class="modal-title"></span>' . Yihai::t('yihai', 'Hapus item.') . '</div>',
     'clientOptions' => ['backdrop' => 'static'],
     'footer' => $deleteFooter,
     'size' => Modal::SIZE_SMALL,
@@ -305,9 +305,9 @@ Modal::begin([
         if(multiple){
 //            href = href+"?yihai_multiple="+multiple;
         $(this).find("#yihai-crud-basemodal-deleteform").find(\'input[name="multiple"]\').val((multiple));
-            $(this).find(".delete-text-info").text("' . Yihai::t('yihai', 'Are you sure you want to delete selected item?') . '");
+            $(this).find(".delete-text-info").text("' . Yihai::t('yihai', 'Anda yakin ingin menghapus item yang dipilih?') . '");
         }else{
-            $(this).find(".delete-text-info").text("' . Yihai::t('yihai', 'Are you sure you want to delete item?') . '");
+            $(this).find(".delete-text-info").text("' . Yihai::t('yihai', 'Anda yakin ingin menghapus item ini?') . '");
         }
         $(this).find("#yihai-crud-basemodal-deleteform").attr("action", href)
     }',

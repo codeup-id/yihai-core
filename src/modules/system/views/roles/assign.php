@@ -16,7 +16,7 @@ use yihai\core\theming\Modal;
 use yii\helpers\ArrayHelper;
 use yii\rbac\Item;
 
-$this->title = Yihai::t('yihai','Assign User');
+$this->title = Yihai::t('yihai','Tetapkan Pengguna');
 $authManager = Yihai::$app->getAuthManager();
 $allRoles = $authManager->getRoles();
 $allPermissions = $authManager->getPermissions();
@@ -48,7 +48,7 @@ echo $form->field($model, 'user_id')->widget(Select2::class, [
     ],
 ]);
 echo Button::widget([
-    'label' => Yihai::t('yihai', 'Add Roles'),
+    'label' => Yihai::t('yihai', 'Tambah Peran'),
     'type' => 'primary',
     'options' => [
         'type' => 'submit'
@@ -78,7 +78,7 @@ echo Select2::widget([
 echo '<br/>';
 echo '<br/>';
 echo Button::widget([
-    'label' => Yihai::t('yihai', 'Check'),
+    'label' => Yihai::t('yihai', 'Cek '),
     'type' => 'primary',
     'options' => [
         'type' => 'submit'
@@ -118,10 +118,10 @@ if ($check_id = Yihai::$app->request->get('check-user_id')) {
                     return Modal::widget([
                         'toggleButton' => ['label' => Html::icon('trash'), 'encodeLabel' => false],
                         'form' => Html::beginForm('?check-user_id=' . $check_id),
-                        'header' => Yihai::t('yihai', 'Delete role "{name}"?', ['name' => $model->name]),
+                        'header' => Yihai::t('yihai', 'Hapus peran "{name}"?', ['name' => $model->name]),
                         'body' => Html::hiddenInput('delete-type', Item::TYPE_ROLE) . Html::hiddenInput('delete-role', $model->name),
-                        'footer' => Button::widget(['size' => Modal::SIZE_SMALL, 'label' => Yihai::t('yihai', 'Yes'), 'type' => 'danger']) . ' ' .
-                            Modal::dismissButton(['label' => Yihai::t('yihai', 'No')]),
+                        'footer' => Button::widget(['size' => Modal::SIZE_SMALL, 'label' => Yihai::t('yihai', 'Ya'), 'type' => 'danger']) . ' ' .
+                            Modal::dismissButton(['label' => Yihai::t('yihai', 'Tidak')]),
                     ]);
                 }
             ],
@@ -161,10 +161,10 @@ if ($check_id = Yihai::$app->request->get('check-user_id')) {
                     return Modal::widget([
                         'toggleButton' => ['label' => Html::icon('trash'), 'encodeLabel' => false],
                         'form' => Html::beginForm('?check-user_id=' . $check_id),
-                        'header' => Yihai::t('yihai', 'Delete role "{name}"?', ['name' => $model->name]),
+                        'header' => Yihai::t('yihai', 'Hapus peran "{name}"?', ['name' => $model->name]),
                         'body' => Html::hiddenInput('delete-type', Item::TYPE_PERMISSION) . Html::hiddenInput('delete-role', $model->name),
-                        'footer' => Button::widget(['size' => Modal::SIZE_SMALL, 'label' => Yihai::t('yihai', 'Yes'), 'type' => 'danger']) . ' ' .
-                            Modal::dismissButton(['label' => Yihai::t('yihai', 'No')]),
+                        'footer' => Button::widget(['size' => Modal::SIZE_SMALL, 'label' => Yihai::t('yihai', 'Ya'), 'type' => 'danger']) . ' ' .
+                            Modal::dismissButton(['label' => Yihai::t('yihai', 'Tidak')]),
                     ]);
                 }
             ],

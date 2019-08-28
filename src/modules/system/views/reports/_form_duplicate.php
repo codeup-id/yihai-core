@@ -35,5 +35,5 @@ if(($fromId = Yihai::$app->request->getQueryParam('id')) && ($fromReport = SysRe
     $htmlGrid->endCol();
     \yihai\core\theming\Grid::end();
 }else{
-    echo Yihai::t('yihai', 'No report class to duplicate.');
+    echo Yihai::t('yihai', 'Tidak ada kelas laporan untuk digandakan.');
 }

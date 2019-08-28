@@ -42,7 +42,7 @@ $title = [];
 if ($type === Item::TYPE_ROLE) {
     $title = [
         Button::widget([
-            'label' => Yihai::t('yihai', 'Add Custom Role'),
+            'label' => Yihai::t('yihai', 'Tambah peran kustom'),
             'type' => 'primary',
             'tag' => 'a',
             'options' => [
@@ -58,11 +58,11 @@ if ($role && $type === Item::TYPE_PERMISSION) {
         $htmlGrid = \yihai\core\theming\Grid::begin();
         $htmlGrid->beginCol(['md-6']);
         \yihai\core\theming\BoxCard::begin([
-            'title' => Yihai::t('yihai', 'Add Role'),
+            'title' => Yihai::t('yihai', 'Tambah Peran'),
             'tools_order' => [],
             'footer' => true,
             'footerContent' => Button::widget([
-                'label' => Yihai::t('yihai', 'Add Role'),
+                'label' => Yihai::t('yihai', 'Tambah'),
                 'type' => 'primary'
             ])
         ]);
@@ -78,11 +78,11 @@ if ($role && $type === Item::TYPE_PERMISSION) {
         $htmlGrid->endCol();
         $htmlGrid->beginCol(['md-6']);
         \yihai\core\theming\BoxCard::begin([
-            'title' => Yihai::t('yihai', 'Add Permission'),
+            'title' => Yihai::t('yihai', 'Tambah Permisi'),
             'tools_order' => [],
             'footer' => true,
             'footerContent' => Button::widget([
-                'label' => Yihai::t('yihai', 'Add Permissions'),
+                'label' => Yihai::t('yihai', 'Tambah Permisi'),
                 'type' => 'primary'
             ])
         ]);
@@ -105,14 +105,6 @@ if ($role && $type === Item::TYPE_PERMISSION) {
         \yihai\core\theming\Grid::end();
         echo Html::endForm();
     }
-//    $title[] = \yihai\core\theming\Button::widget([
-//        'label' => Yihai::t('yihai', 'All'),
-//        'type' => 'primary',
-//        'tag' => 'a',
-//        'options' => [
-//            'href' => Url::toRoute(['permissions'])
-//        ]
-//    ]);
 }
 BoxCard::begin([
     'title' => implode(' ', $title)

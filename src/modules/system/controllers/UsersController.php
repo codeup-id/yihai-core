@@ -44,9 +44,9 @@ class UsersController extends BackendController
             'class' => CrudFormAction::class,
             'formView' => '@yihai/views/_pages/change-password-user.php',
             'modelClass' => ChangePasswordUserForm::class,
-            'formTitle' => Yihai::t('yihai', 'Change Password'),
+            'formTitle' => Yihai::t('yihai', 'Ganti kata sandi'),
             'formType' => CrudFormAction::FORM_UPDATE,
-            'messageSuccess' => Yihai::t('yihai', 'Success update password')
+            'messageSuccess' => Yihai::t('yihai', 'Sukses mengganti kata sandi')
         ];
         return $actions;
     }

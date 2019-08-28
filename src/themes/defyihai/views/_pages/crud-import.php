@@ -18,11 +18,11 @@ use yii\helpers\Url;
 $_isAjax = Yihai::$app->request->getIsAjax() || Yihai::$app->request->getIsPjax();
 
 if ($_isAjax) {
-    $cancelBtn = Html::button(Html::icon('undo') . ' ' . Yihai::t('yihai', 'Cancel'),
+    $cancelBtn = Html::button(Html::icon('undo') . ' ' . Yihai::t('yihai', 'Batal'),
         ['class' => ['btn', 'btn-default'], 'data-dismiss' => 'modal']
     );
 }else{
-    $cancelBtn = Html::a(Html::icon('undo') . ' ' . Yihai::t('yihai', 'Cancel'),
+    $cancelBtn = Html::a(Html::icon('undo') . ' ' . Yihai::t('yihai', 'Batal'),
         [$modelOptions->actionIndex],
         ['class' => ['btn', 'btn-default']]
     );
@@ -36,18 +36,18 @@ if (isset($modelImportForm)) {
     $htmlGrid->beginCol(['md-6']);
     $form = ActiveForm::begin();
     echo $form->field($modelImportForm, 'file')->fileInput([]);
-    echo Html::submitButton(Yihai::t('yihai', 'Send'), ['class' => 'btn btn-success']);
+    echo Html::submitButton(Yihai::t('yihai', 'Kirim'), ['class' => 'btn btn-success']);
     echo ' '.$cancelBtn;
     ActiveForm::end();
     $htmlGrid->endCol();
     $htmlGrid->beginCol(['md-6']);
-    echo Html::tag('div', Yihai::t('yihai', 'Important!'), ['style'=>'font-weight:bold']);
-    echo Html::tag('div', Yihai::t('yihai', 'make sure the uploaded file matches the template format.'));
+    echo Html::tag('div', Yihai::t('yihai', 'Penting!'), ['style'=>'font-weight:bold']);
+    echo Html::tag('div', Yihai::t('yihai', 'Pastikan file yang diunggah cocok dengan format templat.'));
     $urlDownload = $modelOptions->getActionUrlTo('import',['downloadtemplate'=>1]);
     if($custom){
         $urlDownload = $modelOptions->getActionUrlTo('import',['downloadtemplate'=>1, 'custom'=>$custom]);
     }
-    echo Html::a(Html::icon('download'). ' '. Yihai::t('yihai', 'Download template'), $urlDownload, ['class'=>'btn btn-primary']);
+    echo Html::a(Html::icon('download'). ' '. Yihai::t('yihai', 'Unduh templat.'), $urlDownload, ['class'=>'btn btn-primary']);
     $htmlGrid->endCol();
     Grid::end();
     if (!$_isAjax)
@@ -55,7 +55,7 @@ if (isset($modelImportForm)) {
 } elseif (isset($modelImport)) {
     $form = ActiveForm::begin();
     BoxCard::begin([
-        'title' => Html::submitButton(Yihai::t('yihai', 'Import'), ['class'=>'btn btn-success']). ' '. Html::a(Yihai::t('yihai', 'Cancel'), '?cancel', ['class' => 'btn btn-danger'])
+        'title' => Html::submitButton(Yihai::t('yihai', 'Import'), ['class'=>'btn btn-success']). ' '. Html::a(Yihai::t('yihai', 'Batal'), '?cancel', ['class' => 'btn btn-danger'])
     ]);
 
     echo '<table class="table table-bordered">';

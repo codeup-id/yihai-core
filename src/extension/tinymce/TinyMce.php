@@ -116,7 +116,7 @@ class TinyMce extends InputWidget
         $view->registerJs('function tinyMceElFinderBrowser (callback, value, meta) {
 			tinymce.activeEditor.windowManager.open({
 				file: \'' . \yii\helpers\Url::to(['/system/file-manager/manager?tinymce'.$elPathId]) . '\',
-				title: \'' . Yihai::t('yihai', 'Browse File') . '\',
+				title: \'' . Yihai::t('yihai', 'Jelajahi File') . '\',
 				width: jQuery(window).width()/1.2,	
 				height: jQuery(window).height()/1.2,
 				resizable: true

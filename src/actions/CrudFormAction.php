@@ -53,12 +53,12 @@ class CrudFormAction extends CrudAction
         if ($this->model->load(Yihai::$app->request->post())) {
             if ($this->model->validate()) {
                 if ($this->model->save(false)) {
-                    $msg = ($this->messageSuccess ? $this->messageSuccess : Yihai::t('yihai', 'Success'));
+                    $msg = ($this->messageSuccess ? $this->messageSuccess : Yihai::t('yihai', 'Sukses'));
                     Alert::addFlashAlert(Alert::KEY_CRUD, 'success', $msg, true);
                     return $this->controller->redirect($this->redirect);
                 }
             } else {
-                $msg = ($this->messageError ? $this->messageError : Yihai::t('yihai', 'Error'));
+                $msg = ($this->messageError ? $this->messageError : Yihai::t('yihai', 'Kesalahan'));
                 $messageDangers = [Html::tag('b', $msg)];
                 foreach ($this->model->getErrors() as $attribute => $err) {
                     $messageDangers[] = implode('<br/>', $err);

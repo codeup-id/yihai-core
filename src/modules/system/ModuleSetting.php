@@ -53,13 +53,13 @@ class ModuleSetting extends \yihai\core\base\ModuleSetting
     public function attributeHints()
     {
         return [
-            'gridExportWatermark_image' => Yihai::t('yihai', 'Image watermark for grid data print/pdf.'),
-            'gridExportPrint_header' => Yihai::t('yihai', 'Header for grid data print/pdf.'),
-            'gridExportPrint_Watermark' => Yihai::t('yihai', 'Use watermark for grid data print.'),
-            'gridExportPdf_Watermark' => Yihai::t('yihai', 'Use watermark for grid data PDF.'),
-            'reportWatermark' => Yihai::t('yihai', 'Use watermark for report PDF.'),
-            'reportWatermarkImage' => Yihai::t('yihai', 'Image watermark for report.'),
-            'reportHeader' => Yihai::t('yihai', 'Header for report.'),
+            'gridExportWatermark_image' => Yihai::t('yihai', 'Gambar watermark untuk ekspor grid data.'),
+            'gridExportPrint_header' => Yihai::t('yihai', 'Header untuk ekspor grid data.'),
+            'gridExportPrint_Watermark' => Yihai::t('yihai', 'Gunakan watermark untuk grid data (cetak).'),
+            'gridExportPdf_Watermark' => Yihai::t('yihai', 'Gunakan watermark untuk grid data (PDF).'),
+            'reportWatermark' => Yihai::t('yihai', 'Gunakan watermark untuk laporan.'),
+            'reportWatermarkImage' => Yihai::t('yihai', 'Gambar watermark untuk laporan.'),
+            'reportHeader' => Yihai::t('yihai', 'Header untuk laporan.'),
         ];
     }
 

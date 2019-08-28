@@ -30,8 +30,8 @@ class ChangePasswordUserForm extends UserModel
     public function attributeLabels()
     {
         return [
-            'new' => Yihai::t('yihai', 'New password'),
-            'repeat' => Yihai::t('yihai', 'Repeat new password'),
+            'new' => Yihai::t('yihai', 'Kata sandi baru'),
+            'repeat' => Yihai::t('yihai', 'Ulangi kata sandi baru'),
         ];
     }
     public function save($runValidation = true, $attributeNames = null)

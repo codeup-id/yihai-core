@@ -34,8 +34,8 @@ class Formatter extends \yii\i18n\Formatter
     public function asYesno($value)
     {
         if($value)
-            return Yihai::t('yihai','Yes');
-        return Yihai::t('yihai','No');
+            return Yihai::t('yihai','Ya');
+        return Yihai::t('yihai','Tidak');
     }
 
     public function asStrip_tags($value)

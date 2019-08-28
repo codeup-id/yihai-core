@@ -32,7 +32,7 @@ class AddRoleForm extends Model
         $am = Yihai::$app->getAuthManager();
         $custom_role_name = RbacHelper::roleRoleCustomName($this->name);
         if($am->getRole($custom_role_name)){
-            $this->addError('name', Yihai::t('yihai', 'Custom Role "{name}" already exist.',['name'=>$this->name]));
+            $this->addError('name', Yihai::t('yihai', 'Peran Kustom: "{name}" sudah ada.',['name'=>$this->name]));
             return false;
         }
         try {

@@ -167,7 +167,7 @@ class CrudExportAction extends CrudAction
         $exportForm->addRule('format', 'required');
         if ($exportForm->load(Yihai::$app->request->post())) {
             if (!$exportForm->attributes) {
-                Alert::addFlashAlert(Alert::KEY_CRUD, 'danger',Yihai::t('yihai', 'Export attribute cannot be empty'));
+                Alert::addFlashAlert(Alert::KEY_CRUD, 'danger',Yihai::t('yihai', 'Atribut ekspor tidak boleh kosong'));
                 return $this->controller->redirect($this->modelOptions->getActionUrlTo('export'));
             }
             return $this->runExport($exportForm->attributes, $exportForm->format);

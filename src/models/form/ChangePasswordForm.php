@@ -31,16 +31,16 @@ class ChangePasswordForm extends Model
     public function attributeLabels()
     {
         return [
-            'old' => Yihai::t('yihai', 'Old password'),
-            'new' => Yihai::t('yihai', 'New password'),
-            'repeat' => Yihai::t('yihai', 'Repeat new password'),
+            'old' => Yihai::t('yihai', 'Kata sandi lama'),
+            'new' => Yihai::t('yihai', 'Kata sandi baru'),
+            'repeat' => Yihai::t('yihai', 'Ulangi kata sandi baru'),
         ];
     }
 
     public function checkOld($attribute, $params)
     {
         if(!Yihai::$app->user->identity->validatePassword($this->{$attribute}))
-            $this->addError($attribute, Yihai::t('yihai','Incorrect old password.'));
+            $this->addError($attribute, Yihai::t('yihai','Kata sandi lama salah.'));
     }
 
     /**

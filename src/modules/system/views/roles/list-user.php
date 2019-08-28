@@ -11,7 +11,7 @@ use yihai\core\theming\Html;
 use yii\data\ArrayDataProvider;
 
 /** @var string $role */
-$this->title = Yihai::t('yihai', 'Users in role: {role}', ['role'=>$role]);
+$this->title = Yihai::t('yihai', 'Pengguna dalam peran: {role}', ['role'=>$role]);
 $authManager = Yihai::$app->getAuthManager();
 $model= [];
 foreach ($authManager->getUserIdsByRole($role) as $userId){
@@ -32,11 +32,11 @@ $dataProvider = new ArrayDataProvider([
 ]);
 echo Html::beginForm();
 \yihai\core\theming\BoxCard::begin([
-    'title' => Yihai::t('yihai', 'Assign User'),
+    'title' => Yihai::t('yihai', 'Tetapkan Pengguna'),
     'tools_order' => [],
     'footer' => true,
     'footerContent' => Button::widget([
-        'label' => Yihai::t('yihai', 'Assign User'),
+        'label' => Yihai::t('yihai', 'Tetapkan Pengguna'),
         'type' => 'primary'
     ])
 ]);
@@ -77,7 +77,7 @@ echo \yihai\core\grid\GridView::widget([
         ],
         [
             'attribute' => 'id',
-            'label' => Yihai::t('yihai', 'User ID')
+            'label' => Yihai::t('yihai', 'ID Pengguna')
         ],
         'username',
     ]

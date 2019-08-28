@@ -25,15 +25,15 @@ class ProfileUpdateAction extends Action
         Yihai::$app->layout = $this->layout;
         $model = Yihai::$app->user->identity->data;
         if(!$model){
-            throw new NotFoundHttpException(Yihai::t('yihai', 'User data not found'));
+            throw new NotFoundHttpException(Yihai::t('yihai', 'Data pengguna tidak ditemukan'));
         }
         if($model->load(Yihai::$app->request->post()) && $model->validate()){
             if($model->save()){
 
-                Alert::addFlashAlert(Alert::KEY_CRUD, 'success', Yihai::t('yihai', 'Update success'),true);
+                Alert::addFlashAlert(Alert::KEY_CRUD, 'success', Yihai::t('yihai', 'Sukses perbarui'),true);
                 return $this->controller->redirect('profile');
             }else{
-                Alert::addFlashAlert(Alert::KEY_CRUD, 'danger', Yihai::t('yihai', 'Can\'t update'));
+                Alert::addFlashAlert(Alert::KEY_CRUD, 'danger', Yihai::t('yihai', 'Tidak dapat memperbarui'));
             }
         }
         $params = [

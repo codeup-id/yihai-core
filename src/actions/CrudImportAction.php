@@ -56,7 +56,7 @@ class CrudImportAction extends CrudAction
             exit;
         }
         if (empty($this->modelOptions->importAttributes)) {
-            Alert::addFlashAlert(Alert::KEY_CRUD, 'danger', Yihai::t('yihai', 'Attribute "importAttributes" not set'));
+            Alert::addFlashAlert(Alert::KEY_CRUD, 'danger', Yihai::t('yihai', 'Atribut "importAttributes" tidak disetel'));
             return $this->controller->redirect($this->modelOptions->getActionUrlTo('index'));
         }
         $spreadsheet = new Spreadsheet();
@@ -245,7 +245,7 @@ class CrudImportAction extends CrudAction
             if (file_exists($this->_tmp_dir . $this->_import_file)) {
                 FileHelper::unlink($this->_tmp_dir . $this->_import_file);
             }
-            Alert::addFlashAlert(Alert::KEY_CRUD, 'success', Yihai::t('yihai', 'Import done.'), true);
+            Alert::addFlashAlert(Alert::KEY_CRUD, 'success', Yihai::t('yihai', 'Impor selesai.'), true);
             return $this->controller->redirect($this->modelOptions->getActionUrlTo('index'));
 
         }
@@ -267,12 +267,12 @@ class CrudImportAction extends CrudAction
                 $this->modelOptions->importAttributes = $custom['attributes'];
                 $this->addParams('custom', $qParams['custom']);
             } else {
-                Alert::addFlashAlert(Alert::KEY_CRUD, 'danger', Yihai::t('yihai', 'Custom import not found.'));
+                Alert::addFlashAlert(Alert::KEY_CRUD, 'danger', Yihai::t('yihai', 'Impor kustom tidak ditemukan.'));
                 return $this->controller->redirect($this->modelOptions->getActionUrlTo('index'));
             }
         } else {
             if (empty($this->modelOptions->getImportAttributes())) {
-                Alert::addFlashAlert(Alert::KEY_CRUD, 'danger', Yihai::t('yihai', 'Attribute "importAttributes" not set'));
+                Alert::addFlashAlert(Alert::KEY_CRUD, 'danger', Yihai::t('yihai', 'Atribut "importAttributes" tidak disetel'));
                 return $this->controller->redirect($this->modelOptions->getActionUrlTo('index'));
             }
         }

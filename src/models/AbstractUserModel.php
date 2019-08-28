@@ -94,7 +94,7 @@ abstract class AbstractUserModel extends \yihai\core\db\ActiveRecord implements 
             ['user_username', 'string','min'=>4, 'max' => 63],
             ['user_username','match',
                 'pattern' => '/^(?![_.-])(?!.*[_.-]{2})[a-z0-9._.-]+(?<![_.-])$/',
-                'message' => Yihai::t('yihai', "Invalid {attribute}. No ({begin}) at the beginning, no ({inside}) inside, no ({end}) at the end, allowed characters ({allowed})",[
+                'message' => Yihai::t('yihai', "{attribute} tidak valid. tidak ada ({begin}) di awal, tidak ada ({inside}) di dalam, tidak ada ({end}) di akhir, karakter yang diizinkan ({allowed})",[
                     'attribute' => 'Username',
                     'begin' => '_, ., -',
                     'inside' => '__, _, ._, .., --',
@@ -113,8 +113,17 @@ abstract class AbstractUserModel extends \yihai\core\db\ActiveRecord implements 
     public function attributeLabels()
     {
         return [
-            'fullname' => Yihai::t('yihai', 'Fullname'),
-            'user_avatar_upload' => Yihai::t('yihai', 'User Avatar')
+            'fullname' => Yihai::t('yihai', 'Nama lengkap'),
+            'user_avatar_upload' => Yihai::t('yihai', 'Avatar pengguna'),
+            'user_username' => Yihai::t('yihai', 'Nama pengguna'),
+            'user_password' => Yihai::t('yihai', 'Kata sandi'),
+            'user_email' => Yihai::t('yihai', 'Email pengguna'),
+        ];
+    }
+    public function attributeHints()
+    {
+        return [
+            'user_username' => Yihai::t('yihai', 'digunakan untuk login.')
         ];
     }
 

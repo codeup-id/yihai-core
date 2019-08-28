@@ -43,14 +43,14 @@ class CrudDeleteAction extends \yihai\core\actions\CrudAction{
                     $multiple = $multiple_array;
                 }
                 if ($this->findModelDelete($multiple)->delete()) {
-                    Alert::addFlashAlert(Alert::KEY_CRUD, 'success', Yihai::t('yihai', 'Success delete items'), true);
+                    Alert::addFlashAlert(Alert::KEY_CRUD, 'success', Yihai::t('yihai', 'Sukses menghapus items'), true);
                 }
             }
         }else{
             $id = Yihai::$app->request->getQueryParams();
             unset($id[Yihai::$app->urlManager->routeParam]);
             if ($this->findModelDelete($id)->delete()) {
-                Alert::addFlashAlert(Alert::KEY_CRUD, 'success', Yihai::t('yihai', 'Success delete item'), true);
+                Alert::addFlashAlert(Alert::KEY_CRUD, 'success', Yihai::t('yihai', 'Sukses menghapus item'), true);
             }
         }
         return $this->controller->redirect($this->modelOptions->getActionUrlTo('index'));

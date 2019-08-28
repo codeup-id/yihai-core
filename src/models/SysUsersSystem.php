@@ -70,11 +70,10 @@ class SysUsersSystem extends AbstractUserModel
     {
         return ArrayHelper::merge(parent::attributeLabels(), [
             'id' => Yihai::t('yihai', 'ID'),
-            'fullname' => Yihai::t('yihai', 'Fullname'),
-            'created_by' => Yihai::t('yihai', 'Created By'),
-            'created_at' => Yihai::t('yihai', 'Created At'),
-            'updated_by' => Yihai::t('yihai', 'Updated By'),
-            'updated_at' => Yihai::t('yihai', 'Updated At'),
+            'created_by' => Yihai::t('yihai', 'Dibuat oleh'),
+            'created_at' => Yihai::t('yihai', 'Dibuat pada'),
+            'updated_by' => Yihai::t('yihai', 'Diperbarui oleh'),
+            'updated_at' => Yihai::t('yihai', 'Diperbarui pada'),
         ]);
     }
 

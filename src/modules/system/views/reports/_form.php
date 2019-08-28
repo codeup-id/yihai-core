@@ -20,13 +20,13 @@ $htmlGrid->beginCol(['lg-3','md-4']);
 /** @var \yihai\core\modules\system\ModuleSetting $sysSetting */
 $sysSetting = \yihai\core\modules\system\Module::loadSettings();
 echo $form->field($model, 'set_use_watermark')->dropDownList([
-    0 => Yihai::t('yihai', 'Use system setting').' ('.($sysSetting->reportWatermark?Yihai::t('yihai','Yes'):Yihai::t('yihai','No')).')',
-    1 => Yihai::t('yihai', 'Yes'),
-    -1 => Yihai::t('yihai', 'No'),
+    0 => Yihai::t('yihai', 'Gunakan pengaturan sistem').' ('.($sysSetting->reportWatermark?Yihai::t('yihai','Ya'):Yihai::t('yihai','Tidak')).')',
+    1 => Yihai::t('yihai', 'Ya'),
+    -1 => Yihai::t('yihai', 'Tidak'),
 ]);
 echo $form->field($model, 'set_use_watermark_image_system')->dropDownList([
-    1 => Yihai::t('yihai', 'Yes'),
-    0 => Yihai::t('yihai', 'No'),
+    1 => Yihai::t('yihai', 'Ya'),
+    0 => Yihai::t('yihai', 'Tidak'),
 ]);
 echo Html::beginTag('div', ['id'=>'custom-watermark-upload','style'=>'display:'.($model->set_use_watermark_image_system?'none':'block')]);
 echo $form->field($model, 'set_watermark_image_upload')->fileInput();
@@ -35,8 +35,8 @@ if($model->watermark_image)
 echo Html::endTag('div');
 
 echo $form->field($model, 'set_header_use_system')->dropDownList([
-    1 => Yihai::t('yihai', 'Yes'),
-    0 => Yihai::t('yihai', 'No'),
+    1 => Yihai::t('yihai', 'Ya'),
+    0 => Yihai::t('yihai', 'Tidak'),
 ]);
 $htmlGrid->endCol();
 $htmlGrid->beginCol(['lg-3','md-4']);

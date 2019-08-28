@@ -33,6 +33,7 @@ interface ReportInteface
     public static function defaultReportHtml();
 
     /**
+     * list query
      * @return ActiveQuery[]
      */
     public function dbQueries();
@@ -44,6 +45,13 @@ interface ReportInteface
     public function filterRules();
 
     /**
+     * saat menerima form filter
+     * contoh:
+     * ```php
+     *  if($filterModel->filterRuleAttribute){
+     *      $query->andWhere(['table_field' => $filterModel->filterRuleAttribute]);
+     *  }
+     * ```
      * @param ActiveQuery[] $query
      * @param FilterModel $filterModel
      * @return mixed
@@ -51,12 +59,14 @@ interface ReportInteface
     public function filterOnFilter(&$query, $filterModel);
 
     /**
+     * filter html form
      * @param ActiveForm $form
      * @return void
      */
     public function filterHtml($form);
 
     /**
+     * field yang tersedia ditamplkan pada template editor
      * ```php
      *   return [
      *      'lists' => [

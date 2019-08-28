@@ -9,14 +9,14 @@
 use yihai\core\theming\Html;
 
 /** @var \yihai\core\base\ModuleSetting $model */
-$this->title = Yihai::t('yihai', 'Settings Module "{module}"', ['module' => $model->getModuleId()]);
+$this->title = Yihai::t('yihai', 'Pengaturan modul: "{module}"', ['module' => $model->getModuleId()]);
 $form = \yihai\core\theming\ActiveForm::begin();
 \yihai\core\theming\BoxCard::begin([
     'title' => 'Form',
     'tools_order' => [],
     'type' => 'primary',
     'footer' => true,
-    'footerContent' => \yihai\core\theming\Button::widget(['label' => Yihai::t('yihai', 'Save Settings'), 'type' => 'primary'])
+    'footerContent' => \yihai\core\theming\Button::widget(['label' => Yihai::t('yihai', 'Simpan pengaturan'), 'type' => 'primary'])
 ]);
 $htmlGrid = \yihai\core\theming\Grid::begin();
 foreach ($model->attributes() as $attribute) {
@@ -38,8 +38,8 @@ foreach ($model->attributes() as $attribute) {
             ]]);
     } elseif ($fieldType === $model::FIELD_YESNO) {
         echo $form->field($model, $attribute)->dropDownList([
-            '1' => Yihai::t('yihai', 'Yes'),
-            '0' => Yihai::t('yihai', 'No')
+            '1' => Yihai::t('yihai', 'Ya'),
+            '0' => Yihai::t('yihai', 'Tidak')
         ]);
     } elseif ($fieldType === $model::FIELD_IMAGE) {
         $img = '';
@@ -47,8 +47,8 @@ foreach ($model->attributes() as $attribute) {
             $img = Html::tag('div', Html::img($file->urlFile('settings'), ['width' => '200px']), ['style'=>'padding:10px']);
         }
         echo $form->field($model, $attribute, ['template'=>'{label}'.$img.'{input}{error}{hint}'])->fileInput([
-            '1' => Yihai::t('yihai', 'Yes'),
-            '0' => Yihai::t('yihai', 'No')
+            '1' => Yihai::t('yihai', 'Ya'),
+            '0' => Yihai::t('yihai', 'Tidak')
         ]);
     } else {
         echo $form->field($model, $attribute);

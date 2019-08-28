@@ -13,14 +13,14 @@ use yii\helpers\Url;
 use yii\widgets\DetailView;
 use yii\widgets\ListView;
 /** @var \yihai\core\web\View $this */
-$this->title = Yihai::t('yihai', 'Profile');
+$this->title = Yihai::t('yihai', 'Profil');
 $userModel = Yihai::$app->user->identity->model;
 $userData = Yihai::$app->user->identity->data;
 BoxCard::begin([
     'tools_order' => [],
     'type' => 'success',
-    'title' => Html::a(Yihai::t('yihai', 'Change Password'), ['/system/change-password'], ['class'=>'btn btn-primary']) . ' '.
-        Html::a(Yihai::t('yihai', 'Update Info'), ['/system/profile-update'], ['class'=>'btn btn-primary']),
+    'title' => Html::a(Yihai::t('yihai', 'Ganti kata sandi'), ['/system/change-password'], ['class'=>'btn btn-primary']) . ' '.
+        Html::a(Yihai::t('yihai', 'Perbarui info'), ['/system/profile-update'], ['class'=>'btn btn-primary']),
 ]);
 $htmlGrid = Grid::begin([]);
 $htmlGrid->beginCol(['md-6']);
@@ -48,7 +48,7 @@ if($userData) {
         'model' => $userData,
         'attributes' => $userData->infoAttributes() ? $userData->infoAttributes() : []
     ]);
-    $detailViewUserData->template = '<tr><th class="text-center" colspan="3">'.Yihai::t('yihai', 'User Attribute').'</th></tr>'.$detailViewUserData->template;
+    $detailViewUserData->template = '<tr><th class="text-center" colspan="3">'.Yihai::t('yihai', 'Atribut pengguna').'</th></tr>'.$detailViewUserData->template;
     DetailView::end();
 }
 $htmlGrid->endCol();

@@ -21,7 +21,7 @@ return [
     'All Users' => 'Semua Pengguna',
     'Are you sure you want to delete item?' => 'Anda yakin ingin menghapus item?',
     'Are you sure you want to delete selected item?' => 'Anda yakin ingin menghapus item yang dipilih?',
-    'Assign User' => 'Tetapkan Pengguna',
+    'Assign User' => 'Add Roles',
     'Attribute "importAttributes" not set' => 'Atribut "importAttributes" tidak disetel',
     'Auth Key' => 'Auth Key',
     'Back' => 'Kembali',

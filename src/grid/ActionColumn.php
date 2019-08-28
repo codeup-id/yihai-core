@@ -32,7 +32,7 @@ class ActionColumn extends \yii\grid\ActionColumn
     public function init()
     {
         if (!$this->header)
-            $this->header = Yihai::t('yihai', 'Action');
+            $this->header = Yihai::t('yihai', 'Aksi');
         if ($this->headerOptions)
             $this->headerOptions = ['class' => 'text-center'];
         if (!$this->contentOptions)
@@ -81,13 +81,13 @@ class ActionColumn extends \yii\grid\ActionColumn
                 $classColor = '';
                 switch ($name) {
                     case 'view':
-                        $title = Yihai::t('yihai', 'View');
+                        $title = Yihai::t('yihai', 'Lihat');
                         break;
                     case 'update':
-                        $title = Yihai::t('yihai', 'Update');
+                        $title = Yihai::t('yihai', 'Perbarui');
                         break;
                     case 'delete':
-                        $title = Yihai::t('yihai', 'Delete');
+                        $title = Yihai::t('yihai', 'Hapus');
                         $classColor = 'text-danger ';
                         break;
                     default:

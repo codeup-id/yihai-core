@@ -49,17 +49,17 @@ $saveBtn = Html::submitButton(Html::icon('save') . ' ' . $formButton,
     ['class' => ['btn', 'btn-success']]
 );
 
-$saveContinueEditBtn = Html::submitButton(Html::icon('save') . ' ' . Yihai::t('yihai', '{formAction} and continue edit',['formAction'=>$formButton]),
+$saveContinueEditBtn = Html::submitButton(Html::icon('save') . ' ' . Yihai::t('yihai', '{formAction} dan lanjutkan edit',['formAction'=>$formButton]),
     ['class' => ['btn', 'btn-primary'], 'formaction'=>Url::current(['__redirect'=>Url::current()])]
 );
 if ($_isAjax) {
-    $cancelBtn = Html::button(Html::icon('undo') . ' ' . Yihai::t('yihai', 'Cancel'),
+    $cancelBtn = Html::button(Html::icon('undo') . ' ' . Yihai::t('yihai', 'Batal'),
         ['class' => ['btn', 'btn-default'], 'data-dismiss' => 'modal']
     );
     echo $content;
     echo $saveBtn . ' ' . ($modelOptions->formButtonContinueEdit ? $saveContinueEditBtn : '').' ' . $cancelBtn;
 } else {
-    $cancelBtn = Html::a(Html::icon('undo') . ' ' . Yihai::t('yihai', 'Cancel'),
+    $cancelBtn = Html::a(Html::icon('undo') . ' ' . Yihai::t('yihai', 'Batal'),
         $modelOptions->redirect,
         ['class' => ['btn', 'btn-default']]
     );

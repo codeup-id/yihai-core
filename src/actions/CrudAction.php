@@ -151,14 +151,14 @@ class CrudAction extends Action
             $this->init_form();
         } elseif ($this->type === self::TYPE_VIEW) {
             $this->viewFile = $this->modelOptions->viewFileView;
-            $this->addParams('formTitle', Yihai::t('yihai', 'View Data'));
+            $this->addParams('formTitle', Yihai::t('yihai', 'Lihat Data'));
         } elseif ($this->type === self::TYPE_IMPORT) {
             $this->viewFile = $this->modelOptions->viewFileImport;
-            $this->addParams('formTitle', Yihai::t('yihai', 'Import Data'));
+            $this->addParams('formTitle', Yihai::t('yihai', 'Impor Data'));
         } elseif ($this->type === self::TYPE_EXPORT) {
             $this->viewFile = $this->modelOptions->viewFileExport;
-            $this->addParams('formTitle', Yihai::t('yihai', 'Export Data'));
-            $this->addParams('formButton', Yihai::t('yihai', 'Export'));
+            $this->addParams('formTitle', Yihai::t('yihai', 'Ekspor Data'));
+            $this->addParams('formButton', Yihai::t('yihai', 'Ekspor'));
         } else {
             $this->viewFile = $this->modelOptions->viewFileIndex;
         }
@@ -172,12 +172,12 @@ class CrudAction extends Action
     {
         if ($this->formType === self::FORM_CREATE) {
             $this->model->loadDefaultValues();
-            $this->addParams('formTitle', Yihai::t('yihai', 'Form Insert'));
-            $this->addParams('formButton', Yihai::t('yihai', 'Save'));
+            $this->addParams('formTitle', Yihai::t('yihai', 'Formulir (Tambah)'));
+            $this->addParams('formButton', Yihai::t('yihai', 'Simpan'));
 
         } elseif ($this->formType === self::FORM_UPDATE) {
-            $this->addParams('formTitle', Yihai::t('yihai', 'Form Update'));
-            $this->addParams('formButton', Yihai::t('yihai', 'Update'));
+            $this->addParams('formTitle', Yihai::t('yihai', 'Formulir (Perbarui)'));
+            $this->addParams('formButton', Yihai::t('yihai', 'Perbarui'));
         }
         // menambah scenario
         $this->model->addScenario($this->formType, $this->scenarioAttributes);

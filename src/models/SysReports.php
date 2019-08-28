@@ -108,7 +108,7 @@ class SysReports extends ActiveRecord
             [['key', 'class', 'desc'], 'required'],
             ['key','match',
                 'pattern' => '/^(?![-])(?!.*[-]{2})[a-z0-9-]+(?<![-])$/',
-                'message' => Yihai::t('yihai', "Invalid {attribute}. No ({begin}) at the beginning, no ({inside}) inside, no ({end}) at the end, allowed characters ({allowed})",[
+                'message' => Yihai::t('yihai', "{attribute} tidak valid. tidak ada ({begin}) di awal, tidak ada ({inside}) di dalam, tidak ada ({end}) di akhir, karakter yang diizinkan ({allowed})",[
                     'attribute' => 'Key',
                     'begin' => '-',
                     'inside' => '--',
@@ -136,17 +136,17 @@ class SysReports extends ActiveRecord
     {
         return [
             'key' => Yihai::t('yihai', 'Key'),
-            'is_sys' => Yihai::t('yihai', 'System Report'),
-            'set_use_watermark' => Yihai::t('yihai', 'Use watermark'),
-            'set_use_watermark_image_system' => Yihai::t('yihai', 'Use watermark system setting'),
-            'set_watermark_image_upload' => Yihai::t('yihai', 'Watermark custom image'),
-            'set_header_use_system' => Yihai::t('yihai', 'Use header system setting'),
-            'set_page_format' => Yihai::t('yihai', 'Page format'),
-            'set_page_orientation' => Yihai::t('yihai', 'Page orientation'),
-            'created_by' => Yihai::t('yihai', 'Created By'),
-            'created_at' => Yihai::t('yihai', 'Created At'),
-            'updated_by' => Yihai::t('yihai', 'Updated By'),
-            'updated_at' => Yihai::t('yihai', 'Updated At'),
+            'is_sys' => Yihai::t('yihai', 'Laporan Sistem'),
+            'set_use_watermark' => Yihai::t('yihai', 'Gunakan watermark'),
+            'set_use_watermark_image_system' => Yihai::t('yihai', 'Gunakan pengaturan sistem'),
+            'set_watermark_image_upload' => Yihai::t('yihai', 'Kustom gambar watermark'),
+            'set_header_use_system' => Yihai::t('yihai', 'Gunakan pengaturan sistem (Header)'),
+            'set_page_format' => Yihai::t('yihai', 'Format Halaman'),
+            'set_page_orientation' => Yihai::t('yihai', 'Orientasi halaman'),
+            'created_by' => Yihai::t('yihai', 'Dibuat oleh'),
+            'created_at' => Yihai::t('yihai', 'Dibuat pada'),
+            'updated_by' => Yihai::t('yihai', 'Diperbarui oleh'),
+            'updated_at' => Yihai::t('yihai', 'Diperbarui pada'),
         ];
     }
 
@@ -157,7 +157,7 @@ class SysReports extends ActiveRecord
                 if ($cek = static::find()->select('module')->where(['class' => $this->class, 'is_sys' => 1])->one()) {
                     $this->module = $cek->module;
                 } else {
-                    $this->addError('class', Yihai::t('yihai', 'Unknown class.'));
+                    $this->addError('class', Yihai::t('yihai', '"class" Tidak dikenal.'));
                     return false;
                 }
             }
@@ -279,7 +279,7 @@ class SysReports extends ActiveRecord
                 'is_sys' => '0'
             ],
             'hint' => [
-                Yihai::t('yihai', 'Can\'t Update System Report , Delete and edit Template.')
+                Yihai::t('yihai', 'Tidak Dapat Memperbarui Laporan Sistem, Menghapus dan mengedit Template.')
             ],
             'gridViewActionColumn' => [
                 'class' => 'yihai\core\grid\ActionColumn',
@@ -298,7 +298,7 @@ class SysReports extends ActiveRecord
                 'buttonsCustom' => [
                     'duplicate' => [
                         'modal' => true,
-                        'label'=>Yihai::t('yihai', 'Duplicate'),
+                        'label'=>Yihai::t('yihai', 'Duplikat'),
                         'icon' => 'copy'
                     ],
                     'template' => [
@@ -314,7 +314,7 @@ class SysReports extends ActiveRecord
                     'label' => 'Build',
                     'format' => 'raw',
                     'value' => function ($model) {
-                        return Html::a(Html::icon('file'), ['build', 'key' => $model->key], ['data-pjax' => 0,'title'=>Yihai::t('yihai','Generate report/document')]);
+                        return Html::a(Html::icon('file'), ['build', 'key' => $model->key], ['data-pjax' => 0,'title'=>Yihai::t('yihai','Hasilkan laporan/dokumen')]);
                     }
                 ],
                 'key',
@@ -330,11 +330,11 @@ class SysReports extends ActiveRecord
                 [
                     'attribute' => 'is_sys',
                     'value' => function ($model) {
-                        return $model->is_sys == '1' ? Yihai::t('yihai', 'Yes') : Yihai::t('yihai', 'No');
+                        return $model->is_sys == '1' ? Yihai::t('yihai', 'Ya') : Yihai::t('yihai', 'Tidak');
                     },
                     'filter' => [
-                        '1' => Yihai::t('yihai','Yes'),
-                        '0' => Yihai::t('yihai','No')
+                        '1' => Yihai::t('yihai','Ya'),
+                        '0' => Yihai::t('yihai','Tidak')
                     ]
                 ],
                 static::gridCreatedBy(),

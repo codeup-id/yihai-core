@@ -38,7 +38,7 @@ class GridView extends \dosamigos\grid\GridView
             20 => 20,
             50 => 50,
             100 => 100,
-            -1 => Yihai::t('yihai','All')
+            -1 => Yihai::t('yihai','Semua')
         ];
         $default_pageSize = $this->dataProvider->getPagination()->pageSize;
         if (!isset($size[$default_pageSize])) {

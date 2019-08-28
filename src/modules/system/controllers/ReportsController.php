@@ -136,7 +136,7 @@ class ReportsController extends BackendController
             'class' => 'yihai\core\web\response\MpdfFormatter',
             'orientation' => $this->sysReportBuild->set_page_orientation,
             'dest' => $__type === 'print' ? Destination::INLINE : Destination::DOWNLOAD,
-            'fileName' => Yihai::t('yihai', 'Report') . ' ' . $this->sysReportBuild->key . ' (' . date('Y-m-d H-i-s', time()) . ').pdf',
+            'fileName' => Yihai::t('yihai', 'Laporan') . ' ' . $this->sysReportBuild->key . ' (' . date('Y-m-d H-i-s', time()) . ').pdf',
             'mpdfConfig' => array_merge([
                 'showWatermarkImage' => true,
                 'shrink_tables_to_fit' => 1

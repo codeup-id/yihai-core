@@ -60,7 +60,7 @@ class ModuleSettingsAction extends Action
                 $sysSetting->save(false);
             }
 
-            Alert::addFlashAlert(Alert::KEY_CRUD, 'success', Yihai::t('yihai', 'Module settings updated.'), true);
+            Alert::addFlashAlert(Alert::KEY_CRUD, 'success', Yihai::t('yihai', 'Pengaturan modul diperbaharui.'), true);
             return $this->controller->refresh();
         } else {
             $setting->loadSettings();

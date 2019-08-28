@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = 'View';
 echo Html::beginTag('div', ['class' => ('row')]);
 echo Html::beginTag('div', ['class' => ('col-md-6')]);
 if ($noData) {
-    echo Html::tag('div', Yihai::t('yihai', 'No data show here.'));
+    echo Html::tag('div', Yihai::t('yihai', 'Tidak ada data yang ditampilkan di sini.'));
 } else {
     BoxCard::begin([
         'type' => 'primary',
@@ -40,7 +40,7 @@ if (isset($detailViewCreatedUpdated)) {
         'afterBody' => $detailViewCreatedUpdated,
 
     ]);
-    echo Html::tag('div', Html::icon('th-list') . ' ' . Yihai::t('yihai', 'Created Updated Info'), ['class' => ('text-bold')]);
+    echo Html::tag('div', Html::icon('th-list') . ' ' . Yihai::t('yihai', 'Dibuat & Perbarui Info'), ['class' => ('text-bold')]);
     BoxCard::end();
     echo Html::endTag('div');
 }

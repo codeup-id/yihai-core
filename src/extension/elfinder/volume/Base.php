@@ -41,7 +41,7 @@ class Base extends BaseObject
     public $access_read = '*';
     public $access_write = '*';
     /**
-     * jika false, maka akan dibuat pada directory asset bundle
+     * jika false, maka akan Dibuat pada directory asset bundle
      * @var string|bool
      */
     public $tmbPath = 'assets/thumbnails';

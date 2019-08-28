@@ -37,11 +37,11 @@ $this->title = Yihai::$app->name;
 
         <?= $form->field($model, 'username', [
             'options'=>['class'=>'form-group has-feedback'],
-            'template' => '{input}{error}<span class="fal fa-user form-control-feedback"></span>'])->textInput(['autofocus' => true, 'placeholder' => Yihai::t('yihai', 'Username/Email')]) ?>
+            'template' => '{input}{error}<span class="fal fa-user form-control-feedback"></span>'])->textInput(['autofocus' => true, 'placeholder' => Yihai::t('yihai', 'Nama pengguna/Email')]) ?>
 
         <?= $form->field($model, 'password',[
             'options'=>['class'=>'form-group has-feedback'],
-            'template' => '{input}{error}<span class="fal fa-key form-control-feedback"></span>'])->passwordInput(['placeholder'=>Yihai::t('yihai','Password')]) ?>
+            'template' => '{input}{error}<span class="fal fa-key form-control-feedback"></span>'])->passwordInput(['placeholder'=>Yihai::t('yihai','Kata sandi')]) ?>
         <?php
         if($group && isset(Yihai::$app->user->groupClass[$group])){
             echo $form->field($model, 'group', ['template'=>'{input}Group: '.Inflector::camel2words($group)])->hiddenInput(['value'=>$group]);
@@ -61,7 +61,7 @@ $this->title = Yihai::$app->name;
                 ])?>
             </div>
             <div class="col-xs-4">
-                <?= Html::submitButton(Yihai::t('yihai','Sign In'), ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+                <?= Html::submitButton(Yihai::t('yihai','Masuk'), ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
             </div>
         </div>
 

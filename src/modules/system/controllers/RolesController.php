@@ -58,13 +58,13 @@ class RolesController extends Controller
         $model = new AddRoleForm();
         if ($model->load(Yihai::$app->request->post()) && $model->validate()) {
             if ($model->save()) {
-                Alert::addFlashAlert(Alert::KEY_CRUD, 'success', Yihai::t('yihai', 'The "{role}" role has been created with the name "{custom_role}"', [
+                Alert::addFlashAlert(Alert::KEY_CRUD, 'success', Yihai::t('yihai', 'Peran "{role}" telah dibuat dengan nama "{custom_role}"', [
                     'role' => $model->name,
                     'custom_role' => RbacHelper::roleRoleCustomName($model->name)
                 ]), true);
                 return $this->redirect(['roles']);
             } else {
-                Alert::addFlashAlert(Alert::KEY_CRUD, 'danger', Yihai::t('yihai', 'Can\'t add role.'));
+                Alert::addFlashAlert(Alert::KEY_CRUD, 'danger', Yihai::t('yihai', 'Tidak dapat menambahkan peran.'));
             }
         }
         return $this->render('detail-role', [
@@ -87,23 +87,23 @@ class RolesController extends Controller
 
         if ($delete = Yihai::$app->request->post('_delete')) {
             if ($model->delete()) {
-                Alert::addFlashAlert(Alert::KEY_CRUD, 'success', Yihai::t('yihai', 'The "{role}" role has been created with the name "{custom_role}"', [
+                Alert::addFlashAlert(Alert::KEY_CRUD, 'success', Yihai::t('yihai', 'Peran "{role}" telah dibuat dengan nama "{custom_role}"', [
                     'role' => $model->name,
                     'custom_role' => RbacHelper::roleRoleCustomName($model->name)
                 ]), true);
                 return $this->redirect(['roles']);
             } else {
-                Alert::addFlashAlert(Alert::KEY_CRUD, 'danger', Yihai::t('yihai', 'Can\'t delete role.'));
+                Alert::addFlashAlert(Alert::KEY_CRUD, 'danger', Yihai::t('yihai', 'Tidak dapat menghapus peran.'));
             }
         }
         if ($model->load(Yihai::$app->request->post()) && $model->validate()) {
             if ($model->update()) {
-                Alert::addFlashAlert(Alert::KEY_CRUD, 'success', Yihai::t('yihai', 'The "{role}" role has been updated.', [
+                Alert::addFlashAlert(Alert::KEY_CRUD, 'success', Yihai::t('yihai', 'Peran "{role}" telah diperbarui.', [
                     'role' => $model->name
                 ]), true);
                 return $this->redirect(['roles']);
             } else {
-                Alert::addFlashAlert(Alert::KEY_CRUD, 'danger', Yihai::t('yihai', 'Can\'t update role.'));
+                Alert::addFlashAlert(Alert::KEY_CRUD, 'danger', Yihai::t('yihai', 'Tidak dapat memperbarui peran.'));
             }
         }
         return $this->render('detail-role', [
@@ -202,7 +202,7 @@ class RolesController extends Controller
                 if ($type == Item::TYPE_ROLE && ($roleItem = $authManager->getRole($role)) && ($assign = $authManager->getAssignment($role, $check_id))) {
                     try {
                         $authManager->revoke($roleItem, $check_id);
-                        Alert::addFlashAlert(Alert::KEY_CRUD, 'success', Yihai::t('yihai', 'Success delete user role.'), true);
+                        Alert::addFlashAlert(Alert::KEY_CRUD, 'success', Yihai::t('yihai', 'Berhasil menghapus peran pengguna.'), true);
                         return $this->redirect(['assign', 'check-user_id' => $check_id]);
                     } catch (\Exception $e) {
 
@@ -210,7 +210,7 @@ class RolesController extends Controller
                 } elseif ($type == Item::TYPE_PERMISSION && ($roleItem = $authManager->getPermission($role)) && ($assign = $authManager->getAssignment($role, $check_id))) {
                     try {
                         $authManager->revoke($roleItem, $check_id);
-                        Alert::addFlashAlert(Alert::KEY_CRUD, 'success', Yihai::t('yihai', 'Success delete user role permission.'), true);
+                        Alert::addFlashAlert(Alert::KEY_CRUD, 'success', Yihai::t('yihai', 'Berhasil menghapus izin peran pengguna.'), true);
                         return $this->redirect(['assign', 'check-user_id' => $check_id]);
                     } catch (\Exception $e) {
 
@@ -227,13 +227,13 @@ class RolesController extends Controller
                 $role = $authManager->getRole($model->role);
                 if ($role) {
                     if ($authManager->getAssignment($role->name, $model->user_id)) {
-                        $error[] = Yihai::t('yihai', '\'{role}\' has already been assigned to user \'{user_id}\'', [
+                        $error[] = Yihai::t('yihai', '"{role}" telah ditetapkan untuk pengguna "{user_id}"', [
                             'role' => $role->name,
                             'user_id' => $model->user_id
                         ]);
                     } else {
                         $authManager->assign($role, $model->user_id);
-                        Alert::addFlashAlert(Alert::KEY_CRUD, 'success', Yihai::t('yihai', 'Success assign role.'), true);
+                        Alert::addFlashAlert(Alert::KEY_CRUD, 'success', Yihai::t('yihai', 'Sukses menetapkan peran.'), true);
                     }
                 }
             }
@@ -241,18 +241,18 @@ class RolesController extends Controller
                 $role = $authManager->getPermission($model->permission);
                 if ($role) {
                     if ($authManager->getAssignment($role->name, $model->user_id)) {
-                        $error[] = Yihai::t('yihai', '\'{role}\' has already been assigned to user \'{user_id}\'', [
+                        $error[] = Yihai::t('yihai', '"{role}" telah ditetapkan untuk pengguna "{user_id}"', [
                             'role' => $role->name,
                             'user_id' => $model->user_id
                         ]);
                     } else {
                         $authManager->assign($role, $model->user_id);
-                        Alert::addFlashAlert(Alert::KEY_CRUD, 'success', Yihai::t('yihai', 'Success assign role'), true);
+                        Alert::addFlashAlert(Alert::KEY_CRUD, 'success', Yihai::t('yihai', 'Sukses menetapkan peran.'), true);
                     }
                 }
             }
             if ($error)
-                Alert::addFlashAlert(Alert::KEY_CRUD, 'danger', Yihai::t('yihai', implode('<br/>', $error)));
+                Alert::addFlashAlert(Alert::KEY_CRUD, 'danger', implode('<br/>', $error));
             return $this->redirect(['assign']);
         }
         return $this->render('assign', [

@@ -37,10 +37,10 @@ if ($modelOptions->hint) {
     ]);
 }
 if ($modelOptions->actionCreate && $modelOptions->userCanAction('create')) {
-    $links[] = '<a href="' . Url::to([$modelOptions->getActionUrl('create')]) . '" ' . ($modelOptions->useModalLinkCreate ? $modal_attr : '') . ' class="btn btn-primary">' . Html::icon('file-plus', ['prefix' => 'fal fa-']) . ' ' . Yihai::t('yihai', 'Add') . '</a>';
+    $links[] = '<a href="' . Url::to([$modelOptions->getActionUrl('create')]) . '" ' . ($modelOptions->useModalLinkCreate ? $modal_attr : '') . ' class="btn btn-primary">' . Html::icon('file-plus', ['prefix' => 'fal fa-']) . ' ' . Yihai::t('yihai', 'Tambah') . '</a>';
 }
 if ($modelOptions->actionImport && $modelOptions->importAttributes && $modelOptions->userCanAction('import')) {
-    $links2[] = '<a href="' . Url::to([$modelOptions->getActionUrl('import')]) . '" ' . ($modelOptions->useModalLinkImport ? $modal_attr : '') . ' class="btn btn-primary">' . Html::icon('file-import', ['prefix' => 'fal fa-']) . ' ' . Yihai::t('yihai', 'Import') . '</a>';
+    $links2[] = '<a href="' . Url::to([$modelOptions->getActionUrl('import')]) . '" ' . ($modelOptions->useModalLinkImport ? $modal_attr : '') . ' class="btn btn-primary">' . Html::icon('file-import', ['prefix' => 'fal fa-']) . ' ' . Yihai::t('yihai', 'Impor') . '</a>';
 }
 if ($modelOptions->actionImport && $modelOptions->importCustom && $modelOptions->userCanAction('import')) {
     foreach ($modelOptions->importCustom as $key => $importCustom) {
@@ -49,7 +49,7 @@ if ($modelOptions->actionImport && $modelOptions->importCustom && $modelOptions-
 
 }
 if ($modelOptions->actionExport && $modelOptions->exportAttributes && $modelOptions->userCanAction('export')) {
-    $links2[] = '<a href="' . $modelOptions->getActionUrlTo('export') . '" ' . ($modelOptions->useModalLinkExport ? $modal_attr : '') . ' class="btn btn-primary">' . Html::icon('file-export', ['prefix' => 'fal fa-']) . ' ' . Yihai::t('yihai', 'Export') . '</a>';
+    $links2[] = '<a href="' . $modelOptions->getActionUrlTo('export') . '" ' . ($modelOptions->useModalLinkExport ? $modal_attr : '') . ' class="btn btn-primary">' . Html::icon('file-export', ['prefix' => 'fal fa-']) . ' ' . Yihai::t('yihai', 'Ekspor') . '</a>';
 }
 if (!$isAjax) {
     BoxCard::begin([
@@ -64,7 +64,7 @@ if (!$isAjax) {
         echo Html::beginTag('div', ['id' => 'data-hint-info', 'style' => 'display:none']);
         echo \yihai\core\theming\Alert::widget([
             'type' => 'info',
-            'title' => Yihai::t('yihai', 'Hint / Info'),
+            'title' => Yihai::t('yihai', 'Petunjuk / Info'),
             'icon' => Html::icon('info', ['class' => 'icon']),
             'closeButton' => false,
             'body' => $hint
@@ -91,7 +91,7 @@ if ($modelOptions->gridPrint) {
         'encodeLabel' => false,
         'size' => Button::SIZE_SM,
         'options' => [
-            'title' => Yihai::t('yihai', 'Print'),
+            'title' => Yihai::t('yihai', 'Cetak'),
             'formaction' => Url::current(['_grid_export' => 'print'])
         ]
     ]);
@@ -102,7 +102,7 @@ if ($modelOptions->gridPdf) {
         'encodeLabel' => false,
         'size' => Button::SIZE_SM,
         'options' => [
-            'title' => Yihai::t('yihai', 'Download Pdf'),
+            'title' => Yihai::t('yihai', 'Unduh Pdf'),
             'formaction' => Url::current(['_grid_export' => 'pdf'])
         ]
     ]);
@@ -113,7 +113,7 @@ if ($modelOptions->gridXlsx) {
         'encodeLabel' => false,
         'size' => Button::SIZE_SM,
         'options' => [
-            'title' => Yihai::t('yihai', 'Download Excel'),
+            'title' => Yihai::t('yihai', 'Unduh Excel'),
             'formaction' => Url::current(['_grid_export' => 'xlsx'])
         ]
     ]);
@@ -125,7 +125,7 @@ if ($modelOptions->gridCsv) {
         'encodeLabel' => false,
         'size' => Button::SIZE_SM,
         'options' => [
-            'title' => Yihai::t('yihai', 'Download Csv'),
+            'title' => Yihai::t('yihai', 'Unduh Csv'),
             'formaction' => Url::current(['_grid_export' => 'csv'])
         ]
     ]);

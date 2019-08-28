@@ -57,10 +57,10 @@ class LinkCrudColumn extends Column
             $this->buttons[$name] = function ($url, $model, $key) use ($name, $iconName, $additionalOptions) {
                 switch ($name) {
                     case 'add':
-                        $title = Yihai::t('yihai', 'Add');
+                        $title = Yihai::t('yihai', 'Tambah');
                         break;
                     case 'list':
-                        $title = Yihai::t('yihai', 'List');
+                        $title = Yihai::t('yihai', 'Data');
                         break;
                     default:
                         $title = ucfirst($name);

@@ -52,12 +52,12 @@ class Module extends \yihai\core\base\Module
                             'icon' => 'users',
                             'id' => 'users',
                             'type' => Menu::TYPE_GROUP,
-                            'label' => Yihai::t('yihai', 'Users'),
+                            'label' => Yihai::t('yihai', 'Pengguna'),
                             'position' => 10,
                             'child' => [
                                 'users' => new Menu([
                                     'type' => Menu::TYPE_MENU,
-                                    'label' => Yihai::t('yihai', 'All Users'),
+                                    'label' => Yihai::t('yihai', 'Semua Pengguna'),
                                     'id' => 'users',
                                     'route' => ['/system/users/index'],
                                     'icon' => 'users',
@@ -74,7 +74,7 @@ class Module extends \yihai\core\base\Module
                         'settings' => new Menu([
                             'type' => Menu::TYPE_GROUP,
                             'id' => 'settings',
-                            'label' => Yihai::t('yihai', 'Settings'),
+                            'label' => Yihai::t('yihai', 'Pengaturan'),
                             'position' => 20,
                             'icon' => 'settings',
                             'child' => [
@@ -107,7 +107,7 @@ class Module extends \yihai\core\base\Module
                                 'modules' => new Menu([
                                     'type' => Menu::TYPE_GROUP,
                                     'id' => 'modules',
-                                    'label' => Yihai::t('yihai', 'Modules'),
+                                    'label' => Yihai::t('yihai', 'Modul'),
                                     'icon' => 'setting',
                                     'child' => [
 
@@ -116,7 +116,7 @@ class Module extends \yihai\core\base\Module
                                 'settings' => new Menu([
                                     'type' => Menu::TYPE_MENU,
                                     'id' => 'settings',
-                                    'label' => Yihai::t('yihai', 'Settings'),
+                                    'label' => Yihai::t('yihai', 'Semua pengaturan'),
                                     'icon' => 'setting',
                                     'route' => ['/system/settings'],
                                 ])
@@ -126,7 +126,7 @@ class Module extends \yihai\core\base\Module
                             'type' => Menu::TYPE_MENU,
                             'id' => 'report',
                             'route' => ['/system/reports/index'],
-                            'label' => Yihai::t('yihai', 'Reports/Document'),
+                            'label' => Yihai::t('yihai', 'Laporan/Dokumen'),
                             'position' => 100,
                             'icon' => 'reports',
                         ]),

@@ -94,12 +94,12 @@ class CrudViewAction extends CrudAction
             $attribute = [
                 [
                     'attribute' => 'created_by_user.username',
-                    'label' => Yihai::t('yihai', 'Created By')
+                    'label' => Yihai::t('yihai', 'Dibuat oleh')
                 ],
                 'created_at:datetime',
                 [
                     'attribute' => 'updated_by_user.username',
-                    'label' => Yihai::t('yihai', 'Updated By')
+                    'label' => Yihai::t('yihai', 'Diperbarui oleh')
                 ],
                 'updated_at:datetime'
             ];

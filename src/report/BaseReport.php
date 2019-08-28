@@ -8,7 +8,6 @@
 
 namespace yihai\core\report;
 
-use Mpdf\Mpdf;
 use Yihai;
 use yihai\core\base\FilterModel;
 use yihai\core\db\ActiveRecord;
@@ -273,11 +272,6 @@ abstract class BaseReport extends BaseObject implements ReportInteface
     {
         $this->_template_render = preg_replace_callback('/{(?!\%)(.*?)(?!\%)}/', function ($key) {
             return $this->dataGet($this->_data_vars['global'], $key[1],'global');
-//            return ArrayHelper::getValue($this->_data_vars['global'], $key[1], '___null');
-//            if ($value === '___null') {
-//                return '{' . $key[1] . '}';
-//            }
-//            return $value;
         }, $this->_template_render);
 
 
@@ -391,16 +385,16 @@ abstract class BaseReport extends BaseObject implements ReportInteface
         $form = ActiveForm::begin([]);
         $this->filterHtml($form);
         echo Html::beginTag('div', ['class' => 'btn-group']);
-        echo Button::widget(['label' => Html::icon('eye'), 'encodeLabel' => false, 'options' => ['title' => Yihai::t('yihai', 'View')]]);
+        echo Button::widget(['label' => Html::icon('eye'), 'encodeLabel' => false, 'options' => ['title' => Yihai::t('yihai', 'Lihat')]]);
         echo Button::widget([
             'label' => Html::icon('print'),
             'encodeLabel' => false,
-            'options' => ['name' => 'type', 'formtarget' => '_blank', 'formaction' => Url::to(['export-report', 'key' => $this->model->key, '__type' => 'print']), 'title' => Yihai::t('yihai', 'Print')]
+            'options' => ['name' => 'type', 'formtarget' => '_blank', 'formaction' => Url::to(['export-report', 'key' => $this->model->key, '__type' => 'print']), 'title' => Yihai::t('yihai', 'Cetak')]
         ]);
         echo Button::widget([
             'label' => Html::icon('download'),
             'encodeLabel' => false,
-            'options' => ['name' => 'type', 'formtarget' => '_blank', 'formaction' => Url::to(['export-report', 'key' => $this->model->key, '__type' => 'pdf']), 'title' => Yihai::t('yihai', 'Download')]
+            'options' => ['name' => 'type', 'formtarget' => '_blank', 'formaction' => Url::to(['export-report', 'key' => $this->model->key, '__type' => 'pdf']), 'title' => Yihai::t('yihai', 'Unduh ({type})', ['type'=>'PDF'])]
         ]);
         echo Html::endTag('div');
         ActiveForm::end();

@@ -33,8 +33,8 @@ if ($fieldType === ModuleSetting::FIELD_HTML) {
         ]])->hint($hint);
 } elseif ($fieldType === ModuleSetting::FIELD_YESNO) {
     echo $form->field($model, 'value')->dropDownList([
-        '1' => Yihai::t('yihai', 'Yes'),
-        '0' => Yihai::t('yihai', 'No')
+        '1' => Yihai::t('yihai', 'Ya'),
+        '0' => Yihai::t('yihai', 'Tidak')
     ])->hint($hint);
 } elseif ($fieldType === ModuleSetting::FIELD_IMAGE) {
     $img = '';
@@ -42,8 +42,8 @@ if ($fieldType === ModuleSetting::FIELD_HTML) {
         $img = Html::tag('div', Html::img($file->urlFile('settings'), ['width' => '200px']), ['style'=>'padding:10px']);
     }
     echo $form->field($model, 'value', ['template'=>'{label}'.$img.'{input}{error}{hint}'])->fileInput([
-        '1' => Yihai::t('yihai', 'Yes'),
-        '0' => Yihai::t('yihai', 'No')
+        '1' => Yihai::t('yihai', 'Ya'),
+        '0' => Yihai::t('yihai', 'Tidak')
     ])->hint($hint);
 } else {
     echo $form->field($model, 'value')->hint($hint);

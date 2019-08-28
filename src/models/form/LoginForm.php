@@ -42,9 +42,9 @@ class LoginForm extends Model
     public function attributeLabels()
     {
         return [
-            'username' => Yihai::t('yihai', 'Username/Email'),
-            'password' => Yihai::t('yihai', 'Password'),
-            'rememberMe' => Yihai::t('yihai', 'Remember Me'),
+            'username' => Yihai::t('yihai', 'Nama pengguna/Email'),
+            'password' => Yihai::t('yihai', 'Kata sandi'),
+            'rememberMe' => Yihai::t('yihai', 'Ingatkan saya'),
         ];
     }
 
@@ -61,7 +61,7 @@ class LoginForm extends Model
             $user = $this->getUser();
 
             if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, Yihai::t('yihai','Incorrect username or password.'));
+                $this->addError($attribute, Yihai::t('yihai','Nama pengguna atau kata sandi salah.'));
             }
         }
     }

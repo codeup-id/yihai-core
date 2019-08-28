@@ -40,7 +40,7 @@ $contents .= $form->field($exportForm, 'format')->dropDownList([
 
 
 if ($_isAjax) {
-    $cancelBtn = Html::button(Html::icon('undo') . ' ' . Yihai::t('yihai', 'Cancel'),
+    $cancelBtn = Html::button(Html::icon('undo') . ' ' . Yihai::t('yihai', 'Batal'),
         ['class' => ['btn', 'btn-default'], 'data-dismiss' => 'modal']
     );
     $htmlGrid = Grid::begin([]);
@@ -50,7 +50,7 @@ if ($_isAjax) {
     Grid::end();
     echo $saveBtn . ' ' . $cancelBtn;
 } else {
-    $cancelBtn = Html::a(Html::icon('undo') . ' ' . Yihai::t('yihai', 'Cancel'),
+    $cancelBtn = Html::a(Html::icon('undo') . ' ' . Yihai::t('yihai', 'Batal'),
         [$modelOptions->actionIndex],
         ['class' => ['btn', 'btn-default']]
     );
