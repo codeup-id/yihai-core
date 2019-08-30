@@ -53,11 +53,7 @@ class Theme implements ThemeInterface
      */
     public function getPathMap()
     {
-        $alias = '@yihai-theme-'.$this->getName();
-        return [
-            '@yihai/views/layouts' => $alias.'/views/layouts',
-            '@yii/views/errorHandler' => $alias.'/views/_errorHandler'
-        ];
+        return [];
     }
 
 }

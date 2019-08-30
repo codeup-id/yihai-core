@@ -32,6 +32,7 @@ class CrudDeleteAction extends \yihai\core\actions\CrudAction{
     public function run(){
         $multiples = Yihai::$app->request->getBodyParam('multiple');
         if($multiples) {
+            $deleted = false;
             $model = $this->model;
             $primaryKeys = $model::primaryKey();
             foreach(json_decode($multiples, true) as $multiple){
@@ -43,14 +44,21 @@ class CrudDeleteAction extends \yihai\core\actions\CrudAction{
                     $multiple = $multiple_array;
                 }
                 if ($this->findModelDelete($multiple)->delete()) {
-                    Alert::addFlashAlert(Alert::KEY_CRUD, 'success', Yihai::t('yihai', 'Sukses menghapus items'), true);
+                    $deleted = true;
                 }
+            }
+            if($deleted){
+                Alert::addFlashAlert(Alert::KEY_CRUD, 'success', Yihai::t('yihai', 'Sukses menghapus items'), true);
+            }else{
+                Alert::addFlashAlert(Alert::KEY_CRUD, 'danger', Yihai::t('yihai', 'Gagal menghapus items'), true);
             }
         }else{
             $id = Yihai::$app->request->getQueryParams();
             unset($id[Yihai::$app->urlManager->routeParam]);
             if ($this->findModelDelete($id)->delete()) {
                 Alert::addFlashAlert(Alert::KEY_CRUD, 'success', Yihai::t('yihai', 'Sukses menghapus item'), true);
+            }else{
+                Alert::addFlashAlert(Alert::KEY_CRUD, 'danger', Yihai::t('yihai', 'Gagal menghapus item'), true);
             }
         }
         return $this->controller->redirect($this->modelOptions->getActionUrlTo('index'));

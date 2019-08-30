@@ -21,6 +21,7 @@ class Theme extends Component
 {
     public $list = [];
     public $active = 'defyihai';
+    public $pathMap = [];
     /** @var ThemeInterface */
     public $activeTheme;
 
@@ -48,9 +49,12 @@ class Theme extends Component
                 throw new InvalidConfigException("Theme list class is not instance of ThemeInterface");
             $this->initialize_theme($classObj);
         }
-        $this->initialize_active();
     }
 
+    public function init_active()
+    {
+        $this->initialize_active();
+    }
     /**
      * @param ThemeInterface $classObj
      */
@@ -70,14 +74,16 @@ class Theme extends Component
     {
         $theme = $this->getActiveClass();
         $this->activeTheme = $theme;
-        Yii::setAlias('@yihai-theme-active', $theme->getPath());
+        Yii::setAlias('@yihai-active-theme', $theme->getPath());
         Yihai::$app->view->theme->setBasePath($theme->getPath());
         Yihai::$app->view->theme->setBaseUrl('@web/themes/' . $this->active);
         $pathMap = [];
-        $pathMap['@app/views'] = '@yihai-theme-active/views';
-        $pathMap['@yihai/views'] = '@yihai-theme-active/views';
-        $pathMap['@yihai-theme-active/views'] = '@yihai/views/_themes/' . $this->active . '';
-        $pathMap = ArrayHelper::merge($pathMap, $theme->getPathMap());
+        $pathMap['@yii/views'] = $pathMap['@yihai/views'] = [
+            '@yihai-active-theme/views',
+            '@yihai-theme-defyihai/views',
+        ];
+        $pathMap = array_merge($this->pathMap, $pathMap);
+        $pathMap = array_merge($pathMap, $theme->getPathMap());
         Yihai::$app->view->theme->pathMap = $pathMap;
 
     }

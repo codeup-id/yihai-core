@@ -37,7 +37,6 @@ return \yii\helpers\ArrayHelper::merge(require __DIR__ . '/common.php', [
                 'basePath' => '@yihai-core/themes/defyihai/views',
                 'baseUrl' => '@web/themes/defyihai',
                 'pathMap' => [
-                    '@yihai/views/layouts' => '@yihai-core/themes/defyihai/views/layouts',
                 ],
             ],
         ],
