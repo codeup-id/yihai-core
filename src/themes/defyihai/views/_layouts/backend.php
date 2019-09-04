@@ -14,16 +14,17 @@ use yihai\core\theming\Modal;
 use yihai\core\web\Menu;
 use yihai\core\theming\Html;
 use yihai\core\web\NotificationFormat;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
 use yihai\core\helpers\Url;
 
-$mainAssetBundle = \yihai\core\themes\defyihai\assets\MainAsset::register($this);
+/** @var \yihai\core\themes\defyihai\Theme $activeTheme */
+$activeTheme = Yihai::$app->theme->activeTheme;
+$mainAssetBundle = $activeTheme->mainAssets();
+if(is_string($mainAssetBundle)) {
+    $mainAssetBundle = $mainAssetBundle::register($this);
+}
 $user_avatar_url = Yihai::$app->user->identity->model->avatarUrl($mainAssetBundle->baseUrl . '/default_avatar.png');
 $content_title = ($this->title ? $this->title : '-');
 $this->title = ($this->title ? $this->title . ' | Backend | ' . Yihai::$app->name : 'Backend | ' . Yihai::$app->name);
-/** @var \yihai\core\themes\defyihai\Theme $activeTheme */
-$activeTheme = Yihai::$app->theme->activeTheme;
 
 /** @var \yihai\core\assets\AppAsset $appAssetClass */
 if(isset(Yihai::$app->params['AppAssetClass']))
@@ -40,7 +41,7 @@ $skin = (isset(Yihai::$app->params['___settings']) && Yihai::$app->params['___se
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <?php $this->registerCsrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
-    <link rel="shotcut icon" href="<?= Url::to('@web/favicon.ico') ?>"/>
+    <link rel="shotcut icon" href="<?= Url::to('@web/favicon.ico') ?>" type="image/x-icon"/>
     <?php $this->head() ?>
 </head>
 <body class="hold-transition <?= $skin ?> sidebar-mini fixed">
@@ -107,10 +108,13 @@ $skin = (isset(Yihai::$app->params['___settings']) && Yihai::$app->params['___se
                         <ul class="dropdown-menu">
                             <li class="user-header">
                                 <img src="<?= $user_avatar_url ?>" class="img-circle"
-                                     alt="User Image">
+                                     alt="<?=Yihai::$app->user->identity->model->username?>">
 
                                 <p>
-                                    <?= Yihai::$app->user->identity->data->fullname ?>
+                                    <b><?= Yihai::$app->user->identity->data->fullname ?></b>
+                                    <small>
+                                    <?=Yihai::$app->user->identity->model->group?>
+                                    </small>
                                     <small><?= Yihai::t('yihai', 'Anggota sejak') ?>
                                         : <?= Yihai::$app->user->identity->model->memberSince ?></small>
                                 </p>

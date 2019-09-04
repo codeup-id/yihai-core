@@ -36,5 +36,9 @@ interface ThemeInterface
      */
     public function getPathMap();
 
-
+    /**
+     * Main Asset Class
+     * @return string|\yii\web\AssetBundle
+     */
+    public function mainAssets();
 }

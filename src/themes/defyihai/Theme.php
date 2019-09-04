@@ -56,4 +56,12 @@ class Theme implements ThemeInterface
         return [];
     }
 
+    /**
+     * Main Asset
+     * @return string|\yii\web\AssetBundle
+     */
+    public function mainAssets()
+    {
+        return 'yihai\core\themes\defyihai\assets\MainAsset';
+    }
 }

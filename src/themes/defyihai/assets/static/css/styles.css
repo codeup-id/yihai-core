@@ -27,7 +27,6 @@
 .main-sidebar .site-info{
     text-align: center;
     padding: 5px;
-    background-color: #ecf0f5;
 }
 .main-sidebar .site-info .logo{
 }
@@ -40,6 +39,7 @@
 
 .main-sidebar .site-info .name{
     font-weight: bold;
+    color: #828282;
 }
 .sidebar-collapse .main-sidebar .site-info .name{
     display: none;

@@ -21,7 +21,7 @@ class LoginAction extends Action
      */
     public $loginFormClass = '';
 
-    public $layout = '@yihai/views/_layouts/main';
+    public $layout = '@yihai/views/_layouts/blank-with-theme';
     /**
      * @var string view file
      */
