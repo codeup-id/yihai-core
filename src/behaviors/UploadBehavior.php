@@ -81,7 +81,6 @@ class UploadBehavior extends \yii\base\Behavior
      */
     public function init()
     {
-        //$this->uploadPath = Yii::getAlias($this->uploadPath);
         parent::init();
     }
 
@@ -98,7 +97,6 @@ class UploadBehavior extends \yii\base\Behavior
         if ($this->autoDelete && $this->savedAttribute !== null) {
             $event[BaseActiveRecord::EVENT_BEFORE_DELETE] = 'beforeDelete';
         }
-        $event['__adad'] = 'beforeSave';
         return $event;
     }
 
