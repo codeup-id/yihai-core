@@ -27,7 +27,7 @@ class PublicController extends Controller
     public function behaviors()
     {
         return [
-            'ada'=>[
+            [
                 'class' => 'yii\filters\HttpCache',
                 'lastModified' => function ($action, $params) {
                     if($action->id === 'files' && ($path = Yihai::$app->request->get('path'))){
