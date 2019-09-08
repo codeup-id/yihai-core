@@ -258,7 +258,7 @@ class UserModel extends \yihai\core\db\ActiveRecord
         if ($default === '') {
             /** @var AppAsset $appAsset */
             $appAsset = new Yihai::$app->params['AppAssetClass']();
-            $default = Url::to([$appAsset->getDefaultAvatar()]);
+            $default = $appAsset->getDefaultAvatar();
         }
         $avatar = $this->avatarFile;
         if (!$avatar) return $default;

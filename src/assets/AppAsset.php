@@ -9,6 +9,7 @@
 namespace yihai\core\assets;
 
 
+use Yihai;
 use yii\web\AssetBundle;
 
 class AppAsset extends AssetBundle
@@ -23,7 +24,11 @@ class AppAsset extends AssetBundle
 
     public function getDefaultAvatar()
     {
-        return $this->baseUrl.'/default_avatar.png';
+        $url = $this->baseUrl;
+        if(!$url)
+            $url = Yihai::$app->assetManager->getBundle(static::class)->baseUrl;
+
+        return $url.'/default_avatar.png';
     }
 
 }
