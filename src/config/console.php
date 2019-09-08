@@ -17,16 +17,5 @@ return \yii\helpers\ArrayHelper::merge(require __DIR__.'/common.php', [
     ],
     'components' => [
 
-        'i18n' => [
-            'translations' => [
-                'yihai*' => [
-                    'class' => 'yii\i18n\PhpMessageSource',
-                    'basePath' => '@yihai/messages',
-                    'fileMap' => [
-                        'yihai' => '@yihai-core/messages/en/yihai.php'
-                    ]
-                ]
-            ]
-        ],
     ]
 ]);
