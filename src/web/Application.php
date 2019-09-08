@@ -21,6 +21,7 @@ use yii\helpers\ArrayHelper;
  * @property Response $response
  * @property \yihai\core\base\Theme $theme
  * @property User $user
+ * @property \yihai\core\extension\SimpleBarcode $simpleBarcode
  * @property FileManager $fileManager
  * @property Formatter $formatter
  * @property Notification $notification
