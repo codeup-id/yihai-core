@@ -56,6 +56,9 @@ return \yii\helpers\ArrayHelper::merge(require __DIR__ . '/common.php', [
             'rules' => [
             ],
         ],
+        'simpleBarcode' => [
+            'class' => 'yihai\core\extension\SimpleBarcode'
+        ],
         'fileManager' => [
             'class' => 'yihai\core\extension\FileManager',
             'connectOptions' => [
