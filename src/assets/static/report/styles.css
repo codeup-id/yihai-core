@@ -46,7 +46,7 @@ hr {
 #tinymce table.no-border td, #tinymce table.no-border th{
     border:1px solid #e8e8e8 !important;
 }
-.main-report div{
+.main-report p{
     min-height: 14px;
 }
 html{

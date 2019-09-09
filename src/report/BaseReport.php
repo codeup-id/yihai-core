@@ -28,6 +28,7 @@ use yihai\core\helpers\ArrayHelper;
  * @property string $template
  * @property FilterModel $filterModel
  * @property string $filterModelName
+ * @property string $fileNameDocument
  */
 abstract class BaseReport extends BaseObject implements ReportInteface
 {
@@ -48,12 +49,19 @@ abstract class BaseReport extends BaseObject implements ReportInteface
      * list data
      * @var array
      */
-    private $_data_vars = [];
+    protected $_data_vars = [];
     /**
      * template telah di build
      * @var bool
      */
     private $_hasBuild = false;
+
+    private $_fileNameDocument;
+
+    /**
+     * @var array untuk menyimpan temporary var atau data
+     */
+    public $tmp;
 
     public function __construct($config = [])
     {
@@ -68,7 +76,7 @@ abstract class BaseReport extends BaseObject implements ReportInteface
         parent::init();
         Yihai::$app->formatter->nullDisplay = '';
         $this->_desc = $this->model->desc ? $this->model->desc : static::defaultDesc();
-        $this->_template = $this->model->template ? $this->model->template : static::defaultReportHtml();
+        $this->_template = $this->model->templateFormat ? $this->model->templateFormat : static::defaultReportHtml();
         $this->normalizeTemplete();
         if ($this->filterRules()) {
             $filterModel = FilterModel::newFromRules($this->filterRules());
@@ -106,6 +114,22 @@ abstract class BaseReport extends BaseObject implements ReportInteface
 
     }
 
+    /**
+     * mengganti value data untuk dataGet
+     * ```php
+     *      return [
+     *          'key' => [
+     *              'subkey' => function($data){...}
+     *          ]
+     *      ]
+     * ```
+     * @return array
+     * @see dataGet()
+     */
+    public function onDataGet()
+    {
+        return [];
+    }
 
     /**
      * @return string
@@ -121,30 +145,36 @@ abstract class BaseReport extends BaseObject implements ReportInteface
      * @param ActiveRecord|array $data
      * @param $key
      * @param string $type lists|global
+     * @param string $dataKey
      * @return string
      */
-    protected function dataGet($data, $key, $type = 'lists')
+    protected function dataGet($data, $key, $type = 'lists', $dataKey = '')
     {
         $formatter = explode(':', $key);
         $key = $formatter[0];
         unset($formatter[0]);
-        if($type === 'lists')
-        $defaultKey = '{%' . $key . '%}';
+        if ($type === 'lists')
+            $defaultKey = '{%' . $key . '%}';
         else
-        $defaultKey = '{' . $key . '}';
+            $defaultKey = '{' . $key . '}';
         try {
-            if($type === 'lists') {
-                if (is_array($data) && !ArrayHelper::keyExists($key, $data))
-                    return $defaultKey;
-                elseif ($data instanceof ActiveRecord && (count(explode('.', $key)) == 1) && !$data->canGetProperty($key))
-                    return $defaultKey;
-            }
-            $value = ArrayHelper::getValue($data, $key, null);
-            if (!empty($formatter)) {
-                $allFormatter = $this->formatters();
-                foreach ($formatter as $item) {
-                    if (($f = ArrayHelper::getValue($allFormatter, $item)) && is_callable($f)) {
-                        $value = call_user_func($f, $value);
+            $dataKey = ($dataKey ? $dataKey . '.' . $key : $key);
+            if (is_callable($onDataGet = ArrayHelper::getValue($this->onDataGet(), $dataKey, null))) {
+                $value = call_user_func($onDataGet, $data);
+            } else {
+                if ($type === 'lists') {
+                    if (is_array($data) && !ArrayHelper::keyExists($key, $data))
+                        return $defaultKey;
+                    elseif ($data instanceof ActiveRecord && (count(explode('.', $key)) == 1) && !$data->canGetProperty($key))
+                        return $defaultKey;
+                }
+                $value = ArrayHelper::getValue($data, $key, null);
+                if (!empty($formatter)) {
+                    $allFormatter = $this->formatters();
+                    foreach ($formatter as $item) {
+                        if (($f = ArrayHelper::getValue($allFormatter, $item)) && is_callable($f)) {
+                            $value = call_user_func($f, $value);
+                        }
                     }
                 }
             }
@@ -153,7 +183,6 @@ abstract class BaseReport extends BaseObject implements ReportInteface
             return $defaultKey;
         }
     }
-
 
 
     /**
@@ -186,12 +215,13 @@ abstract class BaseReport extends BaseObject implements ReportInteface
         if (!isset($this->_data_vars['lists'][$data])) return $template;
         $render = '';
         $no = 1;
+        $dataKey = $data;
         foreach ($this->_data_vars['lists'][$data] as $data) {
-            $render .= preg_replace_callback('/{%(.*?)%}/', function ($key) use ($data, $no) {
+            $render .= preg_replace_callback('/{%(.*?)%}/', function ($key) use ($data, $no, $dataKey) {
                 if ($key[1] === '__no') {
                     return $no;
                 }
-                return $this->dataGet($data, $key[1]);
+                return $this->dataGet($data, $key[1], 'lists', $dataKey);
             }, $template);
             $no++;
         }
@@ -232,10 +262,10 @@ abstract class BaseReport extends BaseObject implements ReportInteface
                     $outer = $outerHtml;
                     $data = (isset($matchDataList[1][$k]) ? $matchDataList[1][$k] : '');
                     $this->buildTemplateConditions($inner);
-                    if($data && isset($conditions[$data]) && is_callable($conditions[$data])){
-                        if(call_user_func($conditions[$data], $this->_data_vars)){
+                    if ($data && isset($conditions[$data]) && is_callable($conditions[$data])) {
+                        if (call_user_func($conditions[$data], $this->_data_vars)) {
                             $template = str_replace($outer, $inner, $template);
-                        }else{
+                        } else {
                             $template = str_replace($outer, '', $template);
                         }
                     }
@@ -271,7 +301,7 @@ abstract class BaseReport extends BaseObject implements ReportInteface
     public function buildTemplateGlobalVars()
     {
         $this->_template_render = preg_replace_callback('/{(?!\%)(.*?)(?!\%)}/', function ($key) {
-            return $this->dataGet($this->_data_vars['global'], $key[1],'global');
+            return $this->dataGet($this->_data_vars['global'], $key[1], 'global');
         }, $this->_template_render);
 
 
@@ -377,28 +407,91 @@ abstract class BaseReport extends BaseObject implements ReportInteface
     }
 
     /**
-     * gunakan @see filterHtml untuk membuat inputan
-     * @throws \Exception
+     * mode print/download yang tersedia.
+     * @return array
+     */
+    public function printMode()
+    {
+        return [
+            'html',
+            'pdf',
+            'pdf-download'
+        ];
+    }
+
+    /**
+     * info untuk membuat template laporan/dokumen
+     * @return array
+     */
+    public function hints()
+    {
+        return [];
+    }
+
+
+    /**
+     * gunakan @throws \Exception
+     * @see filterHtml untuk membuat inputan
      */
     public function renderFilterHtml()
     {
         $form = ActiveForm::begin([]);
-        $this->filterHtml($form);
+        $this->filterHtml($form, $this->filterModel);
         echo Html::beginTag('div', ['class' => 'btn-group']);
         echo Button::widget(['label' => Html::icon('eye'), 'encodeLabel' => false, 'options' => ['title' => Yihai::t('yihai', 'Lihat')]]);
-        echo Button::widget([
-            'label' => Html::icon('print'),
-            'encodeLabel' => false,
-            'options' => ['name' => 'type', 'formtarget' => '_blank', 'formaction' => Url::to(['export-report', 'key' => $this->model->key, '__type' => 'print']), 'title' => Yihai::t('yihai', 'Cetak')]
-        ]);
-        echo Button::widget([
-            'label' => Html::icon('download'),
-            'encodeLabel' => false,
-            'options' => ['name' => 'type', 'formtarget' => '_blank', 'formaction' => Url::to(['export-report', 'key' => $this->model->key, '__type' => 'pdf']), 'title' => Yihai::t('yihai', 'Unduh ({type})', ['type'=>'PDF'])]
-        ]);
+        $printMode = $this->printMode();
+        if (in_array('html', $printMode))
+            echo Button::widget([
+                'label' => Html::icon('print'),
+                'encodeLabel' => false,
+                'options' => ['name' => 'type', 'formtarget' => '_blank', 'formaction' => Url::to(['export-report', 'key' => $this->model->key, '__type' => 'html']), 'title' => Yihai::t('yihai', 'Cetak Html')]
+            ]);
+        if (in_array('pdf', $printMode))
+            echo Button::widget([
+                'label' => Html::icon('file-pdf'),
+                'encodeLabel' => false,
+                'options' => ['name' => 'type', 'formtarget' => '_blank', 'formaction' => Url::to(['export-report', 'key' => $this->model->key, '__type' => 'pdf']), 'title' => Yihai::t('yihai', 'Cetak Pdf')]
+            ]);
+        if (in_array('pdf-download', $printMode))
+            echo Button::widget([
+                'label' => Html::icon('download'),
+                'encodeLabel' => false,
+                'options' => ['name' => 'type', 'formtarget' => '_blank', 'formaction' => Url::to(['export-report', 'key' => $this->model->key, '__type' => 'pdf-download']), 'title' => Yihai::t('yihai', 'Unduh ({type})', ['type' => 'PDF'])]
+            ]);
         echo Html::endTag('div');
         ActiveForm::end();
 
+    }
+
+    /**
+     * event sebelum export-controller di render
+     * contoh set nama file dokumen
+     * ```php
+     * $this->setFileNameDocument('Dokumen '.$this->_data_vars['key_data']->id);
+     * ```
+     */
+    public function onBeforeExport()
+    {
+
+    }
+
+    public function getFileNameDocument()
+    {
+        if (!$this->_fileNameDocument)
+            return Yihai::t('yihai', 'Laporan') . ' ' . $this->model->key . ' (' . date('Y-m-d H-i-s', time()) . ')';
+        return $this->_fileNameDocument;
+    }
+
+    /**
+     * set nama file untuk laporan/dokumen.
+     * dapat dipanggil pada saat melakukan query,
+     * @param $fileName
+     * @see onBeforeExport()
+     * @see filterOnFilter()
+     */
+    public function setFileNameDocument($fileName)
+    {
+        $this->_fileNameDocument = $fileName;
     }
 
     /**
@@ -469,6 +562,7 @@ abstract class BaseReport extends BaseObject implements ReportInteface
     }
 
     /**
+     * default mpdf config
      * @return array
      */
     public function mpdf()
@@ -484,6 +578,7 @@ abstract class BaseReport extends BaseObject implements ReportInteface
             'margin_footer' => 9,
         ];
     }
+
     /**
      * menambah atau mengganti mpdf options
      * @param \Mpdf\Mpdf $mpdf

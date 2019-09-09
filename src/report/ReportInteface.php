@@ -8,11 +8,6 @@
 
 namespace yihai\core\report;
 
-
-use yihai\core\base\FilterModel;
-use yihai\core\theming\ActiveForm;
-use yii\db\ActiveQuery;
-
 interface ReportInteface
 {
     /**
@@ -34,36 +29,46 @@ interface ReportInteface
 
     /**
      * list query
-     * @return ActiveQuery[]
+     * @return \yii\db\ActiveQuery[]
      */
     public function dbQueries();
 
     /**
      * Rule untuk filter search
+     * ```php
+     *  return [
+     *      [['id','name'], 'required],
+     *      ['desc', 'safe']
+     *  ];
+     * ```
      * @return array
      */
     public function filterRules();
 
     /**
      * saat menerima form filter
+     * "key_query" diambil dari key @see dbQueries()
      * contoh:
      * ```php
      *  if($filterModel->filterRuleAttribute){
-     *      $query->andWhere(['table_field' => $filterModel->filterRuleAttribute]);
+     *      $query['key_query']->andWhere(['table_field' => $filterModel->filterRuleAttribute]);
      *  }
      * ```
-     * @param ActiveQuery[] $query
-     * @param FilterModel $filterModel
-     * @return mixed
+     * @param \yii\db\ActiveQuery[] $query
+     * @param \yihai\core\base\FilterModel $filterModel
      */
     public function filterOnFilter(&$query, $filterModel);
 
     /**
      * filter html form
-     * @param ActiveForm $form
+     * ```php
+     *  echo $form->field($filterModel, 'id');
+     * ```
+     * @param \yihai\core\theming\ActiveForm $form
+     * @param \yihai\core\base\FilterModel $filterModel $this->filterModel
      * @return void
      */
-    public function filterHtml($form);
+    public function filterHtml($form, $filterModel);
 
     /**
      * field yang tersedia ditamplkan pada template editor
@@ -81,6 +86,7 @@ interface ReportInteface
 
     /**
      * data lists
+     * "key_query" diambil dari key @see dbQueries()
      * ```php
      *      return [
      *          'lists' => [
@@ -88,7 +94,7 @@ interface ReportInteface
      *          ]
      *      ];
      * ```
-     * @return mixed
+     * @return array
      */
     public function dataVars();
 

@@ -11,11 +11,14 @@ use yihai\core\extension\tinymce\TinyMce;
 use yihai\core\extension\tinymce\TinyMceAsset;
 use yihai\core\helpers\ArrayHelper;
 use yihai\core\theming\Grid;
+use yihai\core\theming\Html;
+use yii\helpers\Json;
 
 
 /** @var \yihai\core\web\View $this */
 /** @var \yihai\core\models\SysReports $model */
 /** @var \yihai\core\base\ModelOptions $modelOptions */
+$model->template = $model->templateFormat;
 $modelOptions->formButtonContinueEdit = true;
 $reportClass = $model->reportClass;
 $reportAssetBundle = ReportAsset::register($this);
@@ -85,12 +88,29 @@ $tinyToolbar[] = 'codeup_formatters | codeup_conditions';
 $tinyToolbar[] = implode(' ', array_map(function ($v) {
     return 'formatters' . str_replace(" ", '-', $v);
 }, array_keys($formatters)));
+$hints_html = Yihai::t('yihai',"Tidak ada petunjuk yang bisa ditampilkan untuk template ini.");
+if($hints = $reportClass->hints()){
+//    \yihai\core\theming\BoxCard::begin([
+//        'tools_order' => ['collapse'],
+//        'isCollapsed' => true,
+//        'type' => 'info',
+//        'title' => Yihai::t('yihai', 'Petunjuk')
+//    ]);
+    $aa='';
+    foreach($hints as $hint){
+        $aa .= Html::tag('div', $hint);
+    }
+    $hints_html = Html::tag('div', $aa,['style'=>'padding:10px']);
+    $hints_html = Html::tag('div',Html::ul($hints, ['encode'=>false,'itemOptions'=>['style'=>'white-space: initial;']]),['style'=>'padding:10px']);
+//    \yihai\core\theming\BoxCard::end();
+}
 echo $form->field($model, 'template', ['inline' => false])->widget(TinyMce::class, [
     'preset' => 'custom',
     'clientOptions' => [
         'body_class' => 'main-report',
-        'relative_urls' => false,
+        'relative_urls' => true,
         'remove_script_host' => false,
+        'convert_urls' => false,
         'height' => '500px',
         'valid_elements' => '*[*]',
         'extended_valid_elements' => '*[*]',
@@ -114,13 +134,29 @@ echo $form->field($model, 'template', ['inline' => false])->widget(TinyMce::clas
             ['title' => 'default', 'value' => 'default-table'],
             ['title' => 'no-border', 'value' => 'no-border']
         ],
-        'force_br_newlines' => false,
-        'force_p_newlines' => false,
-        'forced_root_block' => 'div',
+//        'force_br_newlines' => false,
+//        'force_p_newlines' => false,
+//        'forced_root_block' => 'p',
         'inline_boundaries_selector' => 'a[href],code,b,i,strong,em,field',
         'fontsize_formats'=> implode(' ',array_map(function($v){
             return $v.'px';
-        },range(3, 40) ))
+        },range(3, 40) )),
+        'setup'=>new \yii\web\JsExpression("function(editor){
+            editor.addSidebar('sidebar-hints', {
+                tooltip: '".Yihai::t('yihai','Petunjuk template')."',
+                icon: 'help',
+                text:'ada',
+                onrender:  function(api) {
+                    api.element().innerHTML += ".Json::encode($hints_html).";
+                },
+                onshow: function (api) {
+                },
+                onhide: function (api) {
+                    console.log('Hide panel', api.element());
+                }
+            });
+        }
+        ")
 
     ]
 ]);

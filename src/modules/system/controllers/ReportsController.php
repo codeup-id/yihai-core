@@ -116,13 +116,14 @@ class ReportsController extends BackendController
      * @return string
      * @throws \Mpdf\MpdfException
      */
-    public function actionExportReport($key, $__type = 'print')
+    public function actionExportReport($key, $__type = 'html')
     {
         $reportClass = $this->reportClass;
         /** @var \yihai\core\modules\system\ModuleSetting $systemSetting */
         $systemSetting = \yihai\core\modules\system\Module::loadSettings();
 
         $reportClass->build();
+        $reportClass->onBeforeExport();
         $this->layout = '@yihai/views/_layouts/blank-content';
         $template = $this->render('export-report', [
             'model' => $this->sysReportBuild,
@@ -131,28 +132,40 @@ class ReportsController extends BackendController
             'type' => $__type,
             'systemSetting' => $systemSetting,
         ]);
-        Yihai::$app->response->format = Response::FORMAT_PDF;
-        Yihai::$app->response->formatters['pdf'] = [
-            'class' => 'yihai\core\web\response\MpdfFormatter',
-            'orientation' => $this->sysReportBuild->set_page_orientation,
-            'dest' => $__type === 'print' ? Destination::INLINE : Destination::DOWNLOAD,
-            'fileName' => Yihai::t('yihai', 'Laporan') . ' ' . $this->sysReportBuild->key . ' (' . date('Y-m-d H-i-s', time()) . ').pdf',
-            'mpdfConfig' => array_merge([
-                'showWatermarkImage' => true,
-                'shrink_tables_to_fit' => 1
-            ],$reportClass->mpdf()),
-            'format' => $this->sysReportBuild->set_page_format,
-            'mpdf' => function(\Mpdf\Mpdf $mpdf) use($reportClass, $systemSetting){
-                if ($this->sysReportBuild->useWatermark($systemSetting) && ($watermark_image = $this->sysReportBuild->watermark_image($systemSetting))) {
-                    $mpdf->showWatermarkImage = true;
-                    $mpdf->SetWatermarkImage($watermark_image->fullpath, 0.1, 40, 'F');
-                }
+//        echo $reportClass->fileNameDocument;
+        if (!in_array($__type, $reportClass->printMode()))
+            throw new NotFoundHttpException(Yihai::t('yihai', 'Mode ekspor "{type}" tidak tersedia.', ['type' => $__type]));
+        switch ($__type) {
+            case 'html':
+                return $template;
+                break;
+            case 'pdf':
+            case 'pdf-download':
+                Yihai::$app->response->format = Response::FORMAT_PDF;
+                Yihai::$app->response->formatters['pdf'] = [
+                    'class' => 'yihai\core\web\response\MpdfFormatter',
+                    'orientation' => $this->sysReportBuild->set_page_orientation,
+                    'dest' => $__type === 'pdf' ? Destination::INLINE : Destination::DOWNLOAD,
+                    'fileName' => $reportClass->fileNameDocument.'.pdf',
+                    'mpdfConfig' => array_merge([
+                        'showWatermarkImage' => true,
+                        'shrink_tables_to_fit' => 1
+                    ], $reportClass->mpdf()),
+                    'format' => $this->sysReportBuild->set_page_format,
+                    'mpdf' => function (\Mpdf\Mpdf $mpdf) use ($reportClass, $systemSetting) {
+                        if ($this->sysReportBuild->useWatermark($systemSetting) && ($watermark_image = $this->sysReportBuild->watermark_image($systemSetting))) {
+                            $mpdf->showWatermarkImage = true;
+                            $mpdf->SetWatermarkImage($watermark_image->fullpath, 0.1, 40, 'F');
+                        }
 
-                $mpdf->SetTitle($this->sysReportBuild->key . ' Report');
-                $mpdf->SetAuthor(Yihai::$app->user->identity->model->username . ' (Yihai App)');
-                $reportClass->mpdfOptions($mpdf);
-            }
-        ];
-        return $template;
+                        $mpdf->SetTitle($reportClass->fileNameDocument);
+                        $mpdf->SetAuthor(Yihai::$app->user->identity->model->username . ' (Yihai App)');
+                        $reportClass->mpdfOptions($mpdf);
+                    }
+                ];
+                return $template;
+                break;
+        }
+        return '';
     }
 }

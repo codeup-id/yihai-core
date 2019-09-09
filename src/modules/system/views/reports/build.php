@@ -39,7 +39,7 @@ if($reportClass->isHasBuild()) {
             $pwidth = $pageFormat[1] / 25.4;
             $pheight = $pageFormat[0] / 25.4;
         };
-        $options['style']="width:{$pwidth}cm;height:{$pheight}cm;";
+        $options['style']="width:{$pwidth}cm;min-height:{$pheight}cm;";
         if(isset($mpdfOptions['margin_left'])){
             $options['style'] .= ";padding-left:{$mpdfOptions['margin_left']}mm";
         }
@@ -55,6 +55,7 @@ if($reportClass->isHasBuild()) {
 
     }
     $templates = explode('<div><div class="page-break-always"></div></div>',$reportClass->getTemplateRender());
+    $templates = explode('<div class="page-break-always"></div>',$reportClass->getTemplateRender());
     echo Html::beginTag('div', ['class'=>'main-report','style'=>'height:600px;overflow:auto']);
 
     foreach($templates as $i => $template){

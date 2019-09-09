@@ -17,6 +17,7 @@ use yihai\core\behaviors\UploadBehavior;
 use yihai\core\db\ActiveRecord;
 use yihai\core\db\DataTrait;
 use yihai\core\helpers\ArrayHelper;
+use yihai\core\helpers\Url;
 use yihai\core\log\LoggableBehavior;
 use yihai\core\modules\system\ModuleSetting;
 use yihai\core\report\BaseReport;
@@ -40,13 +41,13 @@ use yii\base\UnknownClassException;
  * @property string $class
  *
  *
+ * @property string $templateFormat
  * @property int $set_use_watermark [tinyint(1)]
  * @property int $set_watermark_image [int(11)]
  * @property int $set_use_watermark_image_system [tinyint(1)]
  * @property bool $set_header_use_system [tinyint(1)]
  * @property string $set_page_format
  * @property string $set_page_orientation P|L
-
  * @property bool $isPagePotrait
  * @property bool $isPageLanscape
  *
@@ -94,6 +95,7 @@ class SysReports extends ActiveRecord
     {
         $this->_behaviors[] = $behavior;
     }
+
     public function init()
     {
         parent::init();
@@ -106,18 +108,18 @@ class SysReports extends ActiveRecord
     {
         return [
             [['key', 'class', 'desc'], 'required'],
-            ['key','match',
+            ['key', 'match',
                 'pattern' => '/^(?![-])(?!.*[-]{2})[a-z0-9-]+(?<![-])$/',
-                'message' => Yihai::t('yihai', "{attribute} tidak valid. tidak ada ({begin}) di awal, tidak ada ({inside}) di dalam, tidak ada ({end}) di akhir, karakter yang diizinkan ({allowed})",[
+                'message' => Yihai::t('yihai', "{attribute} tidak valid. tidak ada ({begin}) di awal, tidak ada ({inside}) di dalam, tidak ada ({end}) di akhir, karakter yang diizinkan ({allowed})", [
                     'attribute' => 'Key',
                     'begin' => '-',
                     'inside' => '--',
                     'end' => '-',
-                    'allowed'=>'a-z,0-9,-'
+                    'allowed' => 'a-z,0-9,-'
                 ])
             ],
-            [['set_use_watermark','set_use_watermark_image_system','set_header_use_system'],'required'],
-            [['set_page_format','set_page_orientation'], 'required'],
+            [['set_use_watermark', 'set_use_watermark_image_system', 'set_header_use_system'], 'required'],
+            [['set_page_format', 'set_page_orientation'], 'required'],
             ['set_watermark_image_upload', 'file', 'skipOnEmpty' => true, 'extensions' => ['jpg', 'jpeg', 'png']],
             [['template', 'desc', 'class', 'created_by', 'updated_by'], 'string'],
             [['is_sys'], 'integer'],
@@ -152,6 +154,8 @@ class SysReports extends ActiveRecord
 
     public function beforeSave($insert)
     {
+
+        $this->template = str_replace(array_values(Url::getKontenReplacing()), array_keys(Url::getKontenReplacing()), $this->template);
         if ($insert) {
             if ($this->is_sys == 0 && !$this->module) {
                 if ($cek = static::find()->select('module')->where(['class' => $this->class, 'is_sys' => 1])->one()) {
@@ -186,27 +190,29 @@ class SysReports extends ActiveRecord
      */
     public function useWatermark($sysSetting)
     {
-        if($this->set_use_watermark === 0)
+        if ($this->set_use_watermark === 0)
             return $sysSetting->reportWatermark;
-        elseif($this->set_use_watermark === 1)
+        elseif ($this->set_use_watermark === 1)
             return true;
         return false;
     }
+
     /**
      * @param ModuleSetting $sysSetting
      * @return SysUploadedFiles|bool
      */
     public function watermark_image($sysSetting)
     {
-        if($this->set_use_watermark_image_system) {
+        if ($this->set_use_watermark_image_system) {
             /** @var SysUploadedFiles $image */
             $image = $sysSetting->reportWatermarkImage;
             return $image;
-        }elseif($this->watermark_image){
+        } elseif ($this->watermark_image) {
             return $this->watermark_image;
         }
         return false;
     }
+
     /**
      * @return BaseReport
      * @throws UnknownClassException
@@ -220,9 +226,17 @@ class SysReports extends ActiveRecord
         return $i;
     }
 
+    /**
+     * @return string
+     */
+    public function getTemplateFormat()
+    {
+        return strtr($this->template, Url::getKontenReplacing());
+    }
+
     public function getWatermark_image()
     {
-        return $this->hasOne(SysUploadedFiles::class, ['id'=>'set_watermark_image']);
+        return $this->hasOne(SysUploadedFiles::class, ['id' => 'set_watermark_image']);
     }
 
     public function getIsPagePotrait()
@@ -234,6 +248,7 @@ class SysReports extends ActiveRecord
     {
         return $this->set_page_orientation === 'L';
     }
+
     public function filterRules()
     {
         return [
@@ -250,30 +265,30 @@ class SysReports extends ActiveRecord
      */
     public function onSearch(&$query, $filterModel)
     {
-        if($filterModel->key !== ''){
-            $query->andWhere(['like','key',$filterModel->key]);
+        if ($filterModel->key !== '') {
+            $query->andWhere(['like', 'key', $filterModel->key]);
         }
-        if($filterModel->module !== ''){
-            $query->andWhere(['module'=>$filterModel->module]);
+        if ($filterModel->module !== '') {
+            $query->andWhere(['module' => $filterModel->module]);
         }
-        if($filterModel->desc !== ''){
-            $query->andWhere(['like','desc',$filterModel->desc]);
+        if ($filterModel->desc !== '') {
+            $query->andWhere(['like', 'desc', $filterModel->desc]);
         }
-        if($filterModel->is_sys !== ''){
-            $query->andWhere(['is_sys'=>$filterModel->is_sys]);
+        if ($filterModel->is_sys !== '') {
+            $query->andWhere(['is_sys' => $filterModel->is_sys]);
         }
     }
 
     protected function onDataProvider(&$dataProvider)
     {
-        $dataProvider->query = static::find()->orderBy(['class'=>SORT_ASC]);
+        $dataProvider->query = static::find()->orderBy(['class' => SORT_ASC]);
     }
 
     protected function _options()
     {
 
         return new ModelOptions([
-            'baseTitle' => Yihai::t('yihai','Laporan/Dokumen'),
+            'baseTitle' => Yihai::t('yihai', 'Laporan/Dokumen'),
             'actionCreate' => false,
             'mergeDeleteParams' => [
                 'is_sys' => '0'
@@ -298,7 +313,7 @@ class SysReports extends ActiveRecord
                 'buttonsCustom' => [
                     'duplicate' => [
                         'modal' => true,
-                        'label'=>Yihai::t('yihai', 'Duplikat'),
+                        'label' => Yihai::t('yihai', 'Duplikat'),
                         'icon' => 'copy'
                     ],
                     'template' => [
@@ -314,13 +329,13 @@ class SysReports extends ActiveRecord
                     'label' => 'Build',
                     'format' => 'raw',
                     'value' => function ($model) {
-                        return Html::a(Html::icon('file'), ['build', 'key' => $model->key], ['data-pjax' => 0,'title'=>Yihai::t('yihai','Hasilkan laporan/dokumen')]);
+                        return Html::a(Html::icon('file'), ['build', 'key' => $model->key], ['data-pjax' => 0, 'title' => Yihai::t('yihai', 'Hasilkan laporan/dokumen')]);
                     }
                 ],
                 'key',
                 [
-                    'attribute'=>'module',
-                    'filter' =>function(){
+                    'attribute' => 'module',
+                    'filter' => function () {
                         return ArrayHelper::map(static::find()->select('module')->distinct('module')->all(), 'module', 'module');
                     }
                 ],
@@ -333,8 +348,8 @@ class SysReports extends ActiveRecord
                         return $model->is_sys == '1' ? Yihai::t('yihai', 'Ya') : Yihai::t('yihai', 'Tidak');
                     },
                     'filter' => [
-                        '1' => Yihai::t('yihai','Ya'),
-                        '0' => Yihai::t('yihai','Tidak')
+                        '1' => Yihai::t('yihai', 'Ya'),
+                        '0' => Yihai::t('yihai', 'Tidak')
                     ]
                 ],
                 static::gridCreatedBy(),

@@ -21,7 +21,7 @@ use yii\widgets\Pjax;
 /** @var \yihai\core\report\BaseReport $reportClass */
 /** @var \yihai\core\modules\system\ModuleSetting $systemSetting */
 \yihai\core\assets\ReportAsset::register($this);
-$this->title = Yihai::t('yihai','Laporan').' ('.$model->key.')';
+$this->title = $reportClass->fileNameDocument;
 if($model->set_header_use_system){
     $header_html = $systemSetting->reportHeader;
     echo $header_html;
@@ -47,7 +47,7 @@ if ($model->useWatermark($systemSetting)) {
         }
     ');
 }
-if ($type === 'print') {
+if ($type === 'html') {
     $this->registerJs('
     window.print();
     window.close();

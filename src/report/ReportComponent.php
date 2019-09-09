@@ -10,6 +10,7 @@ namespace yihai\core\report;
 
 
 use Yihai;
+use yihai\core\extension\SimpleBarcode;
 use yihai\core\models\SysReports;
 use yihai\core\models\UserModel;
 use yihai\core\rbac\RbacHelper;
@@ -35,7 +36,7 @@ class ReportComponent extends Component
      * @param string $moduleId
      * @param string|IReport $class
      * @param array $roles
-     * @param array|SysReports $data
+     * @param SysReports|array $data
      */
     public function saveReport($moduleId, $class, $roles, $data = [])
     {
@@ -150,8 +151,8 @@ class ReportComponent extends Component
      */
     public function formatters()
     {
-        return [
 
+        return [
             'datetime' => [
                 'full' => [
                     'iso' => function ($value) { return Yihai::$app->formatter->asDate($value, 'php:c');},
@@ -199,11 +200,64 @@ class ReportComponent extends Component
                     return Yihai::$app->formatter->asUsername($value);
                 }
             ],
+            'barcode' => [
+                'svg'=>$this->barcodeFormatter(SimpleBarcode::OUTPUT_SVG),
+                'png'=>$this->barcodeFormatter(SimpleBarcode::OUTPUT_PNG),
+                'jpg'=>$this->barcodeFormatter(SimpleBarcode::OUTPUT_JPG),
+                'gif'=>$this->barcodeFormatter(SimpleBarcode::OUTPUT_GIF),
+            ],
             'others' => [
                 'yes_no' => function($value){
                     return Yihai::$app->formatter->asYesno($value);
                 }
             ]
         ];
+    }
+
+    public function barcodeFormatter($format)
+    {
+        $typeList = [
+            SimpleBarcode::TYPE_UPC_A,
+            SimpleBarcode::TYPE_UPC_E,
+            SimpleBarcode::TYPE_EAN_8,
+            SimpleBarcode::TYPE_EAN_13,
+            SimpleBarcode::TYPE_EAN_13_PAD,
+            SimpleBarcode::TYPE_EAN_13_NOPAD,
+            SimpleBarcode::TYPE_EAN_128,
+            SimpleBarcode::TYPE_EAN_128_A,
+            SimpleBarcode::TYPE_EAN_128_B,
+            SimpleBarcode::TYPE_EAN_128_C,
+            SimpleBarcode::TYPE_EAN_128_AC,
+            SimpleBarcode::TYPE_EAN_128_BC,
+            SimpleBarcode::TYPE_CODE_39,
+            SimpleBarcode::TYPE_CODE_39_ASCII,
+            SimpleBarcode::TYPE_CODE_93,
+            SimpleBarcode::TYPE_CODE_93_ASCII,
+            SimpleBarcode::TYPE_CODE_128,
+            SimpleBarcode::TYPE_CODE_128_A,
+            SimpleBarcode::TYPE_CODE_128_B,
+            SimpleBarcode::TYPE_CODE_128_C,
+            SimpleBarcode::TYPE_CODE_128_AC,
+            SimpleBarcode::TYPE_CODE_128_BC,
+            SimpleBarcode::TYPE_CODABAR,
+            SimpleBarcode::TYPE_ITF,
+            SimpleBarcode::TYPE_ITF_14,
+            SimpleBarcode::TYPE_QR,
+            SimpleBarcode::TYPE_QR_L,
+            SimpleBarcode::TYPE_QR_M,
+            SimpleBarcode::TYPE_QR_Q,
+            SimpleBarcode::TYPE_QR_H,
+            SimpleBarcode::TYPE_DMTX,
+            SimpleBarcode::TYPE_DMTX_S,
+            SimpleBarcode::TYPE_DMTX_R,
+            SimpleBarcode::TYPE_GS1_DMTX,
+            SimpleBarcode::TYPE_GS1_DMTX_S,
+            SimpleBarcode::TYPE_GS1_DMTX_R,
+        ];
+        $formatters=[];
+        foreach($typeList as $type){
+            $formatters[$type] = function($value) use($format, $type){ return Yihai::$app->simpleBarcode->base64_image_url($format, $value, $type);};
+        }
+        return $formatters;
     }
 }

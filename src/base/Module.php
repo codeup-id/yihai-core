@@ -14,6 +14,7 @@ use yihai\core\models\SysSettings;
 use yihai\core\web\Menu;
 use yii\base\Application;
 use yii\base\BootstrapInterface;
+use yii\base\Event;
 
 abstract class Module extends \yii\base\Module implements BootstrapInterface
 {
@@ -21,7 +22,16 @@ abstract class Module extends \yii\base\Module implements BootstrapInterface
      * @var callable
      */
     public $onBootstrap;
-    public $reportsClass = [];
+    /**
+     * dijalankan setelah setup module. dapat digunakan untuk menambah kustom reportClass
+     * ```php
+     * function($module){
+     *  Yihai::$app->reports->saveReport($module->id,\namespace\NamaClassReport::class, [RbacHelper::roleRoleName('superuser')]);
+     * }
+     * ```
+     * @var callable
+     */
+    public $afterSetup;
     /** @var string */
     public $settingsClass;
     /** @var ModuleSetting */
@@ -51,6 +61,9 @@ abstract class Module extends \yii\base\Module implements BootstrapInterface
         $this->init_component();
         if($this->_settings){
             Yihai::$app->settings->setup($this->_settings);
+        }
+        if($this->afterSetup){
+            call_user_func($this->afterSetup, $this);
         }
     }
     public function addMenu(){
@@ -82,9 +95,6 @@ abstract class Module extends \yii\base\Module implements BootstrapInterface
                 'route' => ["/system/settings/module-".$this->id],
                 'activeRoute' => true,
             ]);
-        }
-        if($this->reportsClass){
-            Yihai::$app->reports->addReportModule($this->id, $this->reportsClass);
         }
 
     }
