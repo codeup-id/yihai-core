@@ -32,40 +32,71 @@ class TinyMce extends InputWidget
 
     public $fileManagerUrl;
 
+    /** @var string full|inline */
     public $preset = 'full';
     public $useFilePicker = true;
 
     public $mobileTheme = false;
 
+    public $inline = false;
+
     /**
      * @var bool|array
      */
     public $elfinderPathId = false;
+
     /**
      * @inheritdoc
      */
     public function run()
     {
-        if ($this->hasModel()) {
-            echo Html::activeTextarea($this->model, $this->attribute, $this->options);
+        if ($this->inline) {
+            $this->clientOptions['inline'] = true;
+            if (!isset($this->clientOptions['menubar'])) $this->clientOptions['menubar'] = false;
+            if (!isset($this->clientOptions['valid_elements'])) $this->clientOptions['valid_elements'] = 'p[style],strong,em,span[style],a[href],ul,ol,li,img[*]';
+            if (!isset($this->clientOptions['valid_styles'])) $this->clientOptions['valid_styles'] = ['*'=> 'font-size,font-family,color,text-decoration,text-align'];
+            $this->preset = 'inline';
+            $style = 'height:auto;width:auto;resize: both;overflow: auto;';
+            if (isset($this->options['style']))
+                $this->options['style'] .= ';' . $style;
+            else
+                $this->options['style'] = $style;
+            $iName = $this->hasModel() ? Html::getInputName($this->model, $this->attribute) : $this->name;
+            $value = $this->hasModel() ? Html::getAttributeValue($this->model, $this->attribute) : $this->value;
+            echo Html::hiddenInput($iName, $value, ['id' => $this->options['id'] . '_input']);
+            echo Html::tag('div', $value, $this->options);
         } else {
-            echo Html::textarea($this->name, $this->value, $this->options);
+            if ($this->hasModel()) {
+                echo Html::activeTextarea($this->model, $this->attribute, $this->options);
+            } else {
+                echo Html::textarea($this->name, $this->value, $this->options);
+            }
         }
-        if(!$this->language){
+
+        if (!$this->language) {
             $this->language = Yihai::$app->language;
         }
         switch ($this->preset) {
             case 'full':
                 $this->presetFull();
                 break;
+            case 'inline':
+                $this->presetInline();
+                break;
         }
-        if($this->useFilePicker){
+        if ($this->useFilePicker) {
             $this->clientOptions['file_picker_callback'] = new \yii\web\JsExpression('tinyMceElFinderBrowser');
         }
-        if($this->mobileTheme === false){
-            $this->clientOptions['mobile'] = ['theme'=>'silver'];
+        if ($this->mobileTheme === false) {
+            $this->clientOptions['mobile'] = ['theme' => 'silver'];
         }
         $this->registerClientScript();
+    }
+
+    protected function presetInline()
+    {
+        $this->clientOptions['plugins'] = 'textcolor colorpicker image link media advlist lists';
+        $this->clientOptions['toolbar'] = 'undo redo | forecolor backcolor | bold italic underline | image | bullist numlist';
     }
 
     protected function presetFull()
@@ -99,7 +130,11 @@ class TinyMce extends InputWidget
         $js[] = 'tinymce.remove("#' . $id . '");';
         $js[] = "tinymce.init($options);";
         if ($this->triggerSaveOnBeforeValidateForm) {
-            $js[] = "$('#{$id}').parents('form').on('beforeValidate', function() { tinymce.triggerSave(); });";
+            $js[] = "$('#{$id}').parents('form').on('beforeValidate', function() {
+            if(" . Json::encode($this->inline) . "){
+                $(this).find('#{$id}_input').val($(this).find('#{$id}').html());
+             }else
+             tinymce.triggerSave(); });";
         }
         $view->registerJs(implode("\n", $js));
         $this->registerElfinder();
@@ -110,12 +145,12 @@ class TinyMce extends InputWidget
 
         $view = $this->getView();
         $elPathId = '';
-        if(is_array($this->elfinderPathId)){
-            $elPathId = '&pathId='.implode(',',$this->elfinderPathId);
+        if (is_array($this->elfinderPathId)) {
+            $elPathId = '&pathId=' . implode(',', $this->elfinderPathId);
         }
         $view->registerJs('function tinyMceElFinderBrowser (callback, value, meta) {
 			tinymce.activeEditor.windowManager.open({
-				file: \'' . \yii\helpers\Url::to(['/system/file-manager/manager?tinymce'.$elPathId]) . '\',
+				file: \'' . \yii\helpers\Url::to(['/system/file-manager/manager?tinymce' . $elPathId]) . '\',
 				title: \'' . Yihai::t('yihai', 'Jelajahi File') . '\',
 				width: jQuery(window).width()/1.2,	
 				height: jQuery(window).height()/1.2,

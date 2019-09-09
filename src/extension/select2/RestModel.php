@@ -28,15 +28,65 @@ class RestModel extends BaseObject
     private $modelSearchClassName;
     /** @var string|ActiveRecord */
     public $modelClass;
+    /**
+     * fields yang akan di ambil
+     * @var string
+     */
     public $fields = '';
+    /**
+     * data per request
+     * @var int
+     */
     public $perPage = 10;
+    /**
+     * template data yang akan ditampilkan
+     * @var string
+     */
     public $templateResult = 'return data.id;';
+    /**
+     * data/field yang akan ditampilkan setelah dipilih. jika kosong, maka default adalah $templateResult
+     * @var string
+     */
     public $templateSelection;
+    /**
+     * data yang akan di filter, contoh
+     * ```php
+     *  ['id','uid']
+     * ```
+     * @var array
+     */
     public $filter = [];
+    /**
+     * data yang akan di tambah pada query. berbeda dengan $filter, ini dapat melakukan filter kustom.
+     * ```php
+     *  [
+     *      'field1' => new JsExpression("function(){return $('#id-input').val();}"),
+     *      'field2' => ....
+     *  ]
+     *
+     * @var array
+     */
     public $appendQuery = [];
+    /**
+     * data relasi model yang akan digunakan.
+     * @var array
+     */
     public $expands = [];
+    /**
+     * jika "true" maka query pada filter menggunakan nama class model,
+     * jika "false" maka query filter menggunakan "filter".
+     * @var bool
+     */
     public $useModelFilter = false;
 
+    /**
+     * digunakan untuk mengganti value "id" yang akan disimpan pada inputan.
+     * ```php
+     *  $dataId = new JsExpression("function(data){return data.uid;}")
+     *```
+     * @var string
+     */
+    public $dataID = 'null';
     public function init()
     {
         parent::init();
@@ -70,6 +120,7 @@ class RestModel extends BaseObject
                 'data' => new JsExpression("function (params) {
                     var fields = '{$this->fields}';
                     var filter = {$filter};
+                    var appendQuery = {$appendQuery};
                     
                     var query = {
                         'fields': fields,
@@ -80,16 +131,32 @@ class RestModel extends BaseObject
                     filter.forEach(function(v){
                         query['{$filter_q}['+v+']']  = params.term
                     })
-                    return $.extend(query, {$appendQuery});
+                    $.each(appendQuery, function(k,v){
+                        query['{$filter_q}['+k+']']  = v
+                    })
+                    return query;
                 }"),
-                'processResults' => new JsExpression("function (data, params) {
+                'processResults' => new JsExpression("function (_data, params) {
+                    var dataId = {$this->dataID};
+                    if(_data.items && dataId !== null){
+                        var data_ = $.map(_data.items, function(obj){
+                            obj.id = dataId(obj)
+                            return obj;
+                        });
+                    }
                     return {
-                      results: data.items,
+                      results: data_ || _data.items,
                       pagination: {
-                        more: data.{$this->serializer->linksEnvelope}.next
+                        more: _data.{$this->serializer->linksEnvelope}.next
                       }
      
                     };
+                }"),
+                'results' => new JsExpression("function(data, page){
+                    var data = $.map(data, function (obj) {
+                        obj.id = obj.uid || obj.id;
+                        return obj;
+                        });
                 }")
             ],
             'templateResult' => new JsExpression("function(data) {
