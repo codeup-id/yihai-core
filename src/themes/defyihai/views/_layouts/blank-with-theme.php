@@ -17,6 +17,7 @@ $mainAssetBundle = $activeTheme->mainAssets();
 if(is_string($mainAssetBundle)) {
     $mainAssetBundle = $mainAssetBundle::register($this);
 }
+$mainClass = Yihai::$app->controller->module->id . '-'.Yihai::$app->controller->id .'-'.Yihai::$app->controller->action->id;
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -29,7 +30,7 @@ if(is_string($mainAssetBundle)) {
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
-<body>
+<body class="<?=$mainClass?>">
 <?php $this->beginBody() ?>
 
 <?php

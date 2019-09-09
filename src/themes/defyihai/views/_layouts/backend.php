@@ -22,7 +22,6 @@ $mainAssetBundle = $activeTheme->mainAssets();
 if(is_string($mainAssetBundle)) {
     $mainAssetBundle = $mainAssetBundle::register($this);
 }
-$user_avatar_url = Yihai::$app->user->identity->model->avatarUrl($mainAssetBundle->baseUrl . '/default_avatar.png');
 $content_title = ($this->title ? $this->title : '-');
 $this->title = ($this->title ? $this->title . ' | Backend | ' . Yihai::$app->name : 'Backend | ' . Yihai::$app->name);
 
@@ -31,6 +30,7 @@ if(isset(Yihai::$app->params['AppAssetClass']))
     $appAssetClass = Yihai::$app->params['AppAssetClass'];
 $appAsset = $appAssetClass::register($this);
 $skin = (isset(Yihai::$app->params['___settings']) && Yihai::$app->params['___settings']['skin']) ? Yihai::$app->params['___settings']['skin'] : $activeTheme->skin;
+$mainClass = Yihai::$app->controller->module->id . '-'.Yihai::$app->controller->id .'-'.Yihai::$app->controller->action->id;
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -44,7 +44,7 @@ $skin = (isset(Yihai::$app->params['___settings']) && Yihai::$app->params['___se
     <link rel="shotcut icon" href="<?= Url::to('@web/favicon.ico') ?>" type="image/x-icon"/>
     <?php $this->head() ?>
 </head>
-<body class="hold-transition <?= $skin ?> sidebar-mini fixed">
+<body class="<?=$mainClass?> hold-transition <?= $skin ?> sidebar-mini fixed">
 <?php $this->beginBody() ?>
 
 <div class="wrapper">
@@ -101,13 +101,13 @@ $skin = (isset(Yihai::$app->params['___settings']) && Yihai::$app->params['___se
                         <?php endif; ?>
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-                            <img src="<?= $user_avatar_url ?>" class="user-image"
+                            <img src="<?= $appAsset->getDefaultAvatar() ?>" class="user-image"
                                  alt="User Image">
                             <span class="hidden-xs"><?= Yihai::$app->user->identity->model->username ?></span>
                         </a>
                         <ul class="dropdown-menu">
                             <li class="user-header">
-                                <img src="<?= $user_avatar_url ?>" class="img-circle"
+                                <img src="<?= $appAsset->getDefaultAvatar() ?>" class="img-circle"
                                      alt="<?=Yihai::$app->user->identity->model->username?>">
 
                                 <p>
