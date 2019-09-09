@@ -21,7 +21,7 @@ class Select2 extends InputWidget
     public $crudRestFields = [];
     /** @var ModelOptions */
     public $modelOptions;
-    /** @var array|RestModel */
+    /** @var RestModel|array */
     public $restModel;
 
     // EVENTS

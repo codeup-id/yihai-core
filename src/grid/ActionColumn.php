@@ -26,7 +26,16 @@ class ActionColumn extends \yii\grid\ActionColumn
     public $queryParams = [];
 
     public $templateAppend;
-
+    /**
+     * ```php
+     * 'duplicate' => [
+     *   'modal' => true,
+     *   'label'=>Yihai::t('yihai', 'Duplikat'),
+     *   'icon' => 'copy'
+     *   ],
+     * ```
+     * @var array
+     */
     public $buttonsCustom = [];
 
     public function init()
@@ -91,7 +100,7 @@ class ActionColumn extends \yii\grid\ActionColumn
                         $classColor = 'text-danger ';
                         break;
                     default:
-                        if(isset($additionalOptions['label']))
+                        if (isset($additionalOptions['label']))
                             $title = ArrayHelper::remove($additionalOptions, 'label');
                         else
                             $title = ucfirst($name);
@@ -101,8 +110,9 @@ class ActionColumn extends \yii\grid\ActionColumn
                     'aria-label' => $title,
                     'data-pjax' => '0',
                 ], $additionalOptions, $this->buttonOptions);
+                if (!$iconName)
+                    return Html::a($title, $url, $options);
                 $icon = Html::icon($iconName, ['class' => $classColor, 'tag' => 'i']);
-//                $icon = Html::tag('i', '', ['class' => $classColor . "far fa-$iconName"]);
                 return Html::a($icon, $url, $options);
             };
         }

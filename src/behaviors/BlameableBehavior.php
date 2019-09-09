@@ -9,8 +9,6 @@
 namespace yihai\core\behaviors;
 
 
-use Yihai;
-
 class BlameableBehavior extends \yii\behaviors\BlameableBehavior
 {
 

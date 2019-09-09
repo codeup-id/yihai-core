@@ -19,6 +19,10 @@ use yii\helpers\ArrayHelper;
 
 class ActiveRecord extends \yii\db\ActiveRecord
 {
+    /**
+     * url untuk crud, juga dipakai bila ingin menggunakan rest pada model.
+     * @var string
+     */
     public static $crud_url;
     private $_options;
     private $_yihai_scenarios = [];
