@@ -28,7 +28,7 @@ return \yii\helpers\ArrayHelper::merge(require __DIR__ . '/common.php', [
             'class' => 'yihai\core\base\DashboardWidget'
         ] ,
         'assetManager' => [
-            'linkAssets' => true,
+            'linkAssets' => (DIRECTORY_SEPARATOR !== '/' && substr_compare(PHP_OS, 'win', 0, 3, true) === 0) ? false : true,
         ],
         'view' => [
             'class' => 'yihai\core\web\View',
