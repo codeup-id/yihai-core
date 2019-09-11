@@ -67,7 +67,7 @@ class CrudIndexAction extends CrudAction
                     'class' => 'yihai\core\web\response\MpdfFormatter',
                     'orientation' => $this->modelOptions->gridPdfOrientation,
                     'fileName' => "Export " . $this->modelOptions->baseTitle . '.pdf',
-                    'dest' => $this->_grid_export === 'print' ? Destination::INLINE : Destination::DOWNLOAD,
+                    'dest' => $this->_grid_export === 'print' ? Destination::STRING_RETURN : Destination::DOWNLOAD,
                     'mpdfConfig' => [
                         'showWatermarkImage' => true,
                     ],
