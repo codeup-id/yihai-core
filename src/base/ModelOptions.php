@@ -247,6 +247,8 @@ class ModelOptions extends BaseObject
     public $restDataFilter = [
         'class' => 'yii\data\ActiveDataFilter',
     ];
+
+    private $_gridExportMpdf;
     public function init()
     {
         parent::init();
@@ -401,7 +403,7 @@ class ModelOptions extends BaseObject
      */
     public function getGridExportMpdf()
     {
-        return $this->gridExportMpdf;
+        return $this->_gridExportMpdf;
     }
 
     /**
@@ -410,7 +412,7 @@ class ModelOptions extends BaseObject
      */
     public function setGridExportMpdf($gridExportMpdf)
     {
-        $this->gridExportMpdf = $gridExportMpdf;
+        $this->_gridExportMpdf = $gridExportMpdf;
     }
 
 }
