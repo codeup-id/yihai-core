@@ -145,7 +145,7 @@ class ReportsController extends BackendController
                 Yihai::$app->response->formatters['pdf'] = [
                     'class' => 'yihai\core\web\response\MpdfFormatter',
                     'orientation' => $this->sysReportBuild->set_page_orientation,
-                    'dest' => $__type === 'pdf' ? Destination::INLINE : Destination::DOWNLOAD,
+                    'dest' => $__type === 'pdf' ? Destination::STRING_RETURN : Destination::DOWNLOAD,
                     'fileName' => $reportClass->fileNameDocument.'.pdf',
                     'mpdfConfig' => array_merge([
                         'showWatermarkImage' => true,

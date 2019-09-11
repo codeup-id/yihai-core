@@ -30,7 +30,7 @@ echo Html::beginTag('div', ['class' => 'main-report']);
 echo $reportClass->getTemplateRender();
 echo Html::endTag('div');
 $watermark_image = $model->watermark_image($systemSetting);
-if ($model->useWatermark($systemSetting)) {
+if ($model->useWatermark($systemSetting) && $watermark_image) {
     $this->registerCss('    
         body:before{
             content: "";

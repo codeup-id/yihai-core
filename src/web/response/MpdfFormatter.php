@@ -10,6 +10,7 @@ namespace yihai\core\web\response;
 
 
 use Mpdf\Mpdf;
+use Mpdf\Output\Destination;
 use Yihai;
 use yii\base\Component;
 use yii\web\Response;
@@ -26,7 +27,7 @@ class MpdfFormatter extends Component implements ResponseFormatterInterface
     /**
      * @var string the Content-Type header for the response
      */
-    public $contentType = 'application/apdf';
+    public $contentType = 'application/pdf';
 
     /**
      * @var array
@@ -76,7 +77,20 @@ class MpdfFormatter extends Component implements ResponseFormatterInterface
         }
         if($this->writeMode)
             $mpdf->WriteHTML($response->data);
-        $mpdf->Output($this->fileName, $this->dest);
+        if($this->dest === Destination::STRING_RETURN){
+            $content = $mpdf->Output($this->fileName, $this->dest);
+            if (!isset($_SERVER['HTTP_ACCEPT_ENCODING']) || empty($_SERVER['HTTP_ACCEPT_ENCODING'])) {
+                // don't use length if server using compression
+                header('Content-Length: ' . strlen($content));
+            }
+            header('Cache-Control: public, must-revalidate, max-age=0');
+            header('Pragma: public');
+            header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
+            header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+            $response->content = $content;
+        }else{
+            $mpdf->Output($this->fileName, $this->dest);
+        }
     }
 
     protected function mpdf()
