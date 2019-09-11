@@ -85,13 +85,24 @@ echo Html::beginTag('div', ['class' => 'text-right']);
 
 echo Html::beginForm(Yihai::$app->request->url, 'post', ['target' => '_blank', 'style' => 'display:inline-block']);
 echo Html::beginTag('div',['class'=>'btn-group']);
-if ($modelOptions->gridPrint) {
+if ($modelOptions->gridHtml) {
     echo Button::widget([
-        'label' => Html::icon('print'),
+        'label' => Html::icon('print').' HTML',
         'encodeLabel' => false,
         'size' => Button::SIZE_SM,
         'options' => [
-            'title' => Yihai::t('yihai', 'Cetak'),
+            'title' => Yihai::t('yihai', 'Cetak HTML'),
+            'formaction' => Url::current(['_grid_export' => 'html'])
+        ]
+    ]);
+}
+if ($modelOptions->gridPrint) {
+    echo Button::widget([
+        'label' => Html::icon('print').' PDF',
+        'encodeLabel' => false,
+        'size' => Button::SIZE_SM,
+        'options' => [
+            'title' => Yihai::t('yihai', 'Cetak PDF'),
             'formaction' => Url::current(['_grid_export' => 'print'])
         ]
     ]);
@@ -131,17 +142,6 @@ if ($modelOptions->gridCsv) {
     ]);
 }
 
-if ($modelOptions->gridHtml) {
-    echo Button::widget([
-        'label' => Html::icon('table', ['prefix' => 'far fa-']),
-        'encodeLabel' => false,
-        'size' => Button::SIZE_SM,
-        'options' => [
-            'title' => Yihai::t('yihai', 'Html'),
-            'formaction' => Url::current(['_grid_export' => 'html'])
-        ]
-    ]);
-}
 echo Html::endTag('div');
 echo Html::endForm();
 echo Html::endTag('div');

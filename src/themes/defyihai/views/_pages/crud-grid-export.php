@@ -7,12 +7,8 @@
  */
 
 use yihai\core\grid\GridView;
-use yihai\core\theming\BoxCard;
 use yihai\core\theming\Html;
-use yihai\core\theming\Modal;
 use yii\helpers\ArrayHelper;
-use yihai\core\helpers\Url;
-use yii\widgets\Pjax;
 
 /** @var \yihai\core\web\View $this */
 /** @var \yihai\core\base\ModelOptions $modelOptions */
@@ -44,8 +40,8 @@ if ($_grid_export === 'xlsx') {
         if ($column instanceof \yii\grid\Column) {
             $styleHeader = isset($column->headerOptions['style']) ? $column->headerOptions['style'] . ';' : '';
             $styleContent = isset($column->contentOptions['style']) ? $column->contentOptions['style'] . ';' : '';
-            $styleHeader .= 'text-align:center;border:1px solid;word-wrap:break-word;vertical-align:middle;font-weight:bold';
-            $styleContent .= 'border:1px solid;word-wrap:break-word;vertical-align:top;';
+            $styleHeader .= 'text-align:center;border:1px solid #000000;word-wrap:break-word;vertical-align:middle;font-weight:bold';
+            $styleContent .= 'border:1px solid #000000;word-wrap:break-word;vertical-align:top;';
             $column->headerOptions['style'] = $styleHeader;
             $column->contentOptions['style'] = $styleContent;
         }
@@ -187,7 +183,6 @@ if ($systemSetting->gridExportPrint_Watermark) {
             height: 100%;
             opacity : 0.1;
             z-index: -1;
-            filter: grayscale(100%);
             background-size: contain !important;
         }
     </style>';
@@ -195,7 +190,7 @@ if ($systemSetting->gridExportPrint_Watermark) {
 
 if ($_grid_export === 'html') {
     echo '<script>
-//    window.print();
-//    window.close();
+    window.print();
+    window.close();
     </script>';
 }
