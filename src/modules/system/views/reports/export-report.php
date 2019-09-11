@@ -6,13 +6,7 @@
  * @author  Upik Saleh <upik@codeup.id>
  */
 
-use yihai\core\grid\GridView;
-use yihai\core\theming\BoxCard;
 use yihai\core\theming\Html;
-use yihai\core\theming\Modal;
-use yii\helpers\ArrayHelper;
-use yihai\core\helpers\Url;
-use yii\widgets\Pjax;
 
 /** @var \yihai\core\web\View $this */
 /** @var string $type */
@@ -31,7 +25,8 @@ echo $reportClass->getTemplateRender();
 echo Html::endTag('div');
 $watermark_image = $model->watermark_image($systemSetting);
 if ($model->useWatermark($systemSetting) && $watermark_image) {
-    $this->registerCss('    
+    $this->registerCss('
+    html{background:#fff;}
         body:before{
             content: "";
             display: block;
@@ -42,7 +37,6 @@ if ($model->useWatermark($systemSetting) && $watermark_image) {
             height: 100%;
             opacity : 0.1;
             z-index: -1;
-            filter: grayscale(100%);
             background-size: contain !important;
         }
     ');
