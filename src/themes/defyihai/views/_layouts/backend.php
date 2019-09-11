@@ -101,13 +101,13 @@ $mainClass = Yihai::$app->controller->module->id . '-'.Yihai::$app->controller->
                         <?php endif; ?>
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-                            <img src="<?= $appAsset->getDefaultAvatar() ?>" class="user-image"
+                            <img src="<?= Yihai::$app->user->identity->model->avatarUrl() ?>" class="user-image"
                                  alt="User Image">
                             <span class="hidden-xs"><?= Yihai::$app->user->identity->model->username ?></span>
                         </a>
                         <ul class="dropdown-menu">
                             <li class="user-header">
-                                <img src="<?= $appAsset->getDefaultAvatar() ?>" class="img-circle"
+                                <img src="<?= Yihai::$app->user->identity->model->avatarUrl() ?>" class="img-circle"
                                      alt="<?=Yihai::$app->user->identity->model->username?>">
 
                                 <p>

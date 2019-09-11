@@ -50,7 +50,7 @@ class MpdfFormatter extends Component implements ResponseFormatterInterface
      * @see \Mpdf\Output\Destination
      * @var string output mode default 'I'
      */
-    public $dest = 'I';
+    public $dest = 'S';
     /**
      * true, write html
      * false, no write mode

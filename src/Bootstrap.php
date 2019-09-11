@@ -72,7 +72,7 @@ class Bootstrap implements \yii\base\BootstrapInterface
                     $module = $app->getModule($name);
                 }
 
-                if ($module instanceof \yihai\core\base\Module) {
+                if ($module instanceof Module) {
                     $this->_modules[$name] = $module;
                     try {
                         $module->init_app_config($app);
@@ -83,7 +83,7 @@ class Bootstrap implements \yii\base\BootstrapInterface
                 if(!isset($this->_modules[$name])) continue;
                 $module = $this->_modules[$name];
                 // memuat bootstrap jika tidak ada pada config
-                if ($module instanceof \yihai\core\base\Module) {
+                if ($module instanceof Module) {
                     Yihai::setAlias('@yihai-modules-' . $name, $module->getBasePath());
                     if (!in_array($name, $app->bootstrap)) {
                         $app->bootstrap[] = $name;
