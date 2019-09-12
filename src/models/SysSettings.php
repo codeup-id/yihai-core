@@ -119,6 +119,11 @@ class SysSettings extends ActiveRecord
     {
         return static::find()->where(['module'=>$module]);
     }
+    public static function find()
+    {
+        return parent::find()->where(['in', 'module',array_keys(Yihai::$app->settings->getModuleSettings())]);
+    }
+
     protected function _options()
     {
         return new ModelOptions([
