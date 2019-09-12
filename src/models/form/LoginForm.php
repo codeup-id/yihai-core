@@ -10,10 +10,11 @@ namespace yihai\core\models\form;
 
 
 use Yihai;
+use yihai\core\base\LoginFormInterface;
 use yihai\core\base\UserIdent;
 use yihai\core\base\Model;
 
-class LoginForm extends Model
+class LoginForm extends Model implements LoginFormInterface
 {
     public $username;
     public $password;
@@ -83,11 +84,10 @@ class LoginForm extends Model
      *
      * @return UserIdent|null
      */
-    public function getUser()
+    protected function getUser()
     {
         if ($this->_user === false) {
-            UserIdent::$group = $this->group;
-            $this->_user = UserIdent::findByUsername($this->username);
+            $this->_user = UserIdent::findForLogin($this->username, $this->group);
         }
 
         return $this->_user;

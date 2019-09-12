@@ -35,10 +35,16 @@ class UserIdent extends BaseObject implements IdentityInterface
     private $_data;
 
     /**
-     * dipakai untuk login. untuk mengakses user group @see $this->model
+     * group user
      * @var string
      */
-    public static $group = '';
+    public $group = '';
+
+    /**
+     * default group.
+     * @var string
+     */
+    public static $defGroup = 'system';
 
     /**
      * @param UserModel $model
@@ -89,38 +95,81 @@ class UserIdent extends BaseObject implements IdentityInterface
      * @param mixed $token the token to be looked for
      * @param mixed $type the type of the token. The value of this parameter depends on the implementation.
      * For example, [[\yii\filters\auth\HttpBearerAuth]] will set this parameter to be `yii\filters\auth\HttpBearerAuth`.
+     * @param string|null $group
      * @return IdentityInterface the identity object that matches the given token.
      * Null should be returned if such an identity cannot be found
      * or the identity is not in an active state (disabled, deleted, etc.)
      */
-    public static function findIdentityByAccessToken($token, $type = null)
+    public static function findIdentityByAccessToken($token, $type = null, $group = null)
     {
         $user = UserModel::findOne([
             'access_token' => $token,
             'status' => UserModel::STATUS_ACTIVE,
-            'group' => static::$group
+            'group' => $group ? $group : static::$defGroup
         ]);
         if (!$user) return NULL;
         return new static(['id' => $user->id, 'model' => $user, 'data' => $user->datauser]);
     }
 
     /**
-     * Finds user by username
+     * Finds user by ID
      *
-     * @param string $username
+     * @param int|string $id
+     * @param string|null $group
      * @return static|null
      */
-    public static function findByUsername($username)
+    public static function findByID($id, $group = null)
     {
         $user = UserModel::find()
             ->andWhere([
                 'status'=>UserModel::STATUS_ACTIVE,
-                'group' => static::$group
+                'group' => $group ? $group : static::$defGroup
+            ])
+            ->andWhere(['id'=>$id])
+            ->one();
+        if (!$user)
+            return null;
+        return new static(['id' => $user->id, 'model' => $user, 'data' => $user->datauser]);
+    }
+
+    /**
+     * Finds user by form login
+     *
+     * @param string $username
+     * @param string|null $group
+     * @return static|null
+     */
+    public static function findForLogin($username, $group = null)
+    {
+        $user = UserModel::find()
+            ->andWhere([
+                'status'=>UserModel::STATUS_ACTIVE,
+                'group' => $group ? $group : static::$defGroup
             ])
             ->andWhere(['or',
                 ['username'=>$username],
                 ['email'=>$username]
             ])
+            ->one();
+        if (!$user)
+            return null;
+        return new static(['id' => $user->id, 'model' => $user, 'data' => $user->datauser]);
+    }
+    /**
+     * Finds user by username
+     *
+     * @param string $username
+     * @param string|null $group
+     * @return static|null
+     */
+    public static function findByUsername($username, $group = null)
+    {
+        $user = UserModel::find()
+            ->andWhere([
+                'status'=>UserModel::STATUS_ACTIVE,
+                'group' => $group ? $group : static::$defGroup
+            ])
+            ->andWhere(['username'=>$username])
             ->one();
         if (!$user)
             return null;

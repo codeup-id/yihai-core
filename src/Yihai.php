@@ -40,5 +40,20 @@ class Yihai extends Yii
 
     }
 
+    /**
+     * jika view null, maka tidak akan di register.
+     * @param \yihai\core\web\View $view
+     * @return \yihai\core\assets\AppAsset
+     */
+    public static function registerAppAsset($view = null)
+    {
+        /** @var \yihai\core\assets\AppAsset $class */
+        $class = Yihai::$app->params['AppAssetClass'];
+        if($view)
+            return $class::register($view);
+        return new $class();
+
+    }
+
 
 }
