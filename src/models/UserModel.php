@@ -83,7 +83,9 @@ class UserModel extends \yihai\core\db\ActiveRecord
                 'autoSave' => true,
                 'autoDelete' => true,
 
-            ]
+            ],
+            'yihai\core\log\LoggableBehavior'
+
         ];
     }
 
