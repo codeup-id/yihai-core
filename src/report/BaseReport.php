@@ -442,19 +442,19 @@ abstract class BaseReport extends BaseObject implements ReportInteface
         $printMode = $this->printMode();
         if (in_array('html', $printMode))
             echo Button::widget([
-                'label' => Html::icon('print'),
+                'label' => Html::icon('print').' HTML',
                 'encodeLabel' => false,
                 'options' => ['name' => 'type', 'formtarget' => '_blank', 'formaction' => Url::to(['export-report', 'key' => $this->model->key, '__type' => 'html']), 'title' => Yihai::t('yihai', 'Cetak Html')]
             ]);
         if (in_array('pdf', $printMode))
             echo Button::widget([
-                'label' => Html::icon('file-pdf'),
+                'label' => Html::icon('print').' PDF',
                 'encodeLabel' => false,
                 'options' => ['name' => 'type', 'formtarget' => '_blank', 'formaction' => Url::to(['export-report', 'key' => $this->model->key, '__type' => 'pdf']), 'title' => Yihai::t('yihai', 'Cetak Pdf')]
             ]);
         if (in_array('pdf-download', $printMode))
             echo Button::widget([
-                'label' => Html::icon('download'),
+                'label' => Html::icon('download').' PDF',
                 'encodeLabel' => false,
                 'options' => ['name' => 'type', 'formtarget' => '_blank', 'formaction' => Url::to(['export-report', 'key' => $this->model->key, '__type' => 'pdf-download']), 'title' => Yihai::t('yihai', 'Unduh ({type})', ['type' => 'PDF'])]
             ]);

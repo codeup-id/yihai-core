@@ -24,9 +24,9 @@ echo Html::beginTag('div', ['class' => 'main-report']);
 echo $reportClass->getTemplateRender();
 echo Html::endTag('div');
 $watermark_image = $model->watermark_image($systemSetting);
+$this->registerCss('html{background:#ffffff;}');
 if ($model->useWatermark($systemSetting) && $watermark_image) {
     $this->registerCss('
-    html{background:#fff;}
         body:before{
             content: "";
             display: block;
