@@ -20,7 +20,7 @@ class MainAsset extends AssetBundle
     public $sourcePath = __DIR__ .'/static';
 
     public $css = [
-        'css/AdminLTE.min.css',
+        'css/main.min.css',
         'css/skins/_all-skins.min.css',
         'css/styles.css'
     ];
