@@ -316,7 +316,6 @@ Modal::end();
 $this->registerJs("
 $('.content a[title], .content button[title]').tooltip({ trigger: 'hover' });
 jQuery(document).on(\"pjax:success\",  function(event){
-console.log(event);
     $('.content a[title], .content button[title]').tooltip({ trigger: 'hover' });
 });
 ");
