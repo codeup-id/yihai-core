@@ -137,7 +137,9 @@ class SysReports extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'key' => Yihai::t('yihai', 'ID Key'),
+            'key' => Yihai::t('yihai', 'ID/Key'),
+            'module' => Yihai::t('yihai', 'Modul'),
+            'desc' => Yihai::t('yihai', 'Keterangan'),
             'is_sys' => Yihai::t('yihai', 'Laporan Sistem'),
             'set_use_watermark' => Yihai::t('yihai', 'Gunakan watermark'),
             'set_use_watermark_image_system' => Yihai::t('yihai', 'Gunakan pengaturan sistem'),
@@ -357,6 +359,20 @@ class SysReports extends ActiveRecord
                 static::gridUpdatedBy(),
                 static::gridUpdatedAtSimple(),
 
+            ],
+            'detailViewCreatedUpdated' => true,
+            'detailViewData' => [
+                'id',
+                'key',
+                'module',
+                'class',
+                'desc',
+                'is_sys:yesNo',
+                'set_use_watermark:yesNo',
+                'set_use_watermark_image_system:yesNo',
+                'set_header_use_system:yesNo',
+                'set_page_format',
+                'set_page_orientation'
             ]
         ]);
     }
