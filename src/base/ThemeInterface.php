@@ -31,7 +31,7 @@ interface ThemeInterface
     public function getContainer();
 
     /**
-     * path map yang akan ditambah pada Yii::$app->view->theme
+     * path map yang akan ditambah pada Yihai::$app->view->theme
      * @return array
      */
     public function getPathMap();
