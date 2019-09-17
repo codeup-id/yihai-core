@@ -30,10 +30,10 @@ class MainAsset extends AssetBundle
     ];
 
     public $depends = [
-        '\yihai\core\assets\FontAwesomeAsset',
-        '\yihai\core\assets\JqueryAsset',
-        '\yihai\core\assets\BootstrapAsset',
-        '\yihai\core\assets\JquerySlimScrollAsset',
+        'yihai\core\assets\FontAwesomeAsset',
+        'yihai\core\assets\JqueryAsset',
+        'yihai\core\assets\BootstrapAsset',
+        'yihai\core\assets\JquerySlimScrollAsset',
         'yii\web\YiiAsset',
     ];
 
