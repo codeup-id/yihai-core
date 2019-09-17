@@ -11,7 +11,6 @@ return \yii\helpers\ArrayHelper::merge(require __DIR__.'/common.php', [
     'bootstrap' => ['yihai\core\Bootstrap'],
     'controllerMap' => [
         'setup' => 'yihai\core\console\controllers\SetupController',
-        'modules' => 'yihai\core\console\controllers\ModulesController',
         'security' => 'yihai\core\console\controllers\SecurityController',
         'migrate' => 'yihai\core\console\controllers\MigrateController',
     ],
