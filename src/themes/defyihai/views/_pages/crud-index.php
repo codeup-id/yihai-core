@@ -10,7 +10,6 @@ use yihai\core\grid\GridView;
 use yihai\core\theming\BoxCard;
 use yihai\core\theming\Button;
 use yihai\core\theming\Html;
-use yihai\core\theming\Modal;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\widgets\Pjax;
@@ -56,7 +55,7 @@ if (!$isAjax) {
         'type' => 'primary',
         'title' => Html::tag('div', implode(' ', $links_helps), ['class' => 'btn-group']) . ' ' . Html::tag('div', implode(' ', $links), ['class' => 'btn-group']) . ' ' . Html::tag('div', implode(' ', $links2), ['class' => 'btn-group']),
         'headerBorder' => true,
-        'tools_order' => ['collapse'],
+        'tools_order' => ['refresh','maximize','collapse'],
 
     ]);
     if (isset($modelOptions->hint)) {

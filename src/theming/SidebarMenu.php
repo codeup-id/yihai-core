@@ -118,6 +118,11 @@ class SidebarMenu extends BaseWidget
     public $menuItemOptions = [
         'template' => '<a href="{url}">{icon} <span>{label}</span></a>'
     ];
+    /**
+     * nama class yang akan dipakai di "li" ketika sub menu aktif.
+     * @var string
+     */
+    public $groupMenuOpenClass = '';
 
     /**
      * Renders the menu.
@@ -166,6 +171,9 @@ class SidebarMenu extends BaseWidget
                 $itemOptions = array_merge($this->itemOptions, $this->headerItemOptions);
             } elseif ($item->type === Menu::TYPE_GROUP) {
                 $itemOptions = array_merge($this->itemOptions, $this->groupItemOptions);
+                if ($this->groupMenuOpenClass && $item->isActive) {
+                    $itemOptions['_class'] = [$this->groupMenuOpenClass];
+                }
             } else {
                 $itemOptions = array_merge($this->itemOptions, $this->menuItemOptions);
             }
@@ -191,11 +199,14 @@ class SidebarMenu extends BaseWidget
                     $options['class'] .= ' ' . implode(' ', $class);
                 }
             }
+            $_class = ArrayHelper::remove($options, '_class', []);
+            Html::addCssClass($options, $_class);
             $replacements = [
                 '{label}' => $item->label,
                 '{icon}' => Html::icon($item->icon, ['tag' => 'i']),
                 '{url}' => $item->route ? Url::to($item->route) : 'javascript:void(0);',
-                '{items}' => (!empty($item->child) ? $this->renderItems($item->child) : '')
+                '{items}' => (!empty($item->child) ? $this->renderItems($item->child) : ''),
+                '{activeClass}' => $item->isActive ? $activeClass : '',
             ];
             $build = strtr($template, $replacements);
             $lines[] = Html::tag($tag, $build, $options);

@@ -6,8 +6,6 @@
  * @author  Upik Saleh <upik@codeup.id>
  */
 
-use yihai\core\base\Module;
-
 /** @var \yihai\core\web\View $this */
 /** @var \yihai\core\base\DashboardWidget[] $dashboardWidgets */
 

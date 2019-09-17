@@ -8,9 +8,9 @@
 
 namespace yihai\core\theming;
 
-
+use Yihai;
 use yihai\core\assets\JqueryAsset;
-use yii\bootstrap\BootstrapPluginAsset;
+use yii\base\InvalidCallException;
 use yii\helpers\Json;
 use yii\web\AssetBundle;
 
@@ -21,12 +21,45 @@ class BaseWidget extends \yii\base\Widget
 
     public $clientEvents = [];
 
+    public static $stackClass = [];
+
     public function init()
     {
         parent::init();
         if (!isset($this->options['id'])) {
             $this->options['id'] = $this->getId();
         }
+    }
+
+    // fix widget yang ada pada container
+    public static function begin($config = [])
+    {
+        $config['class'] = get_called_class();
+        /* @var $widget Widget */
+        $widget = Yihai::createObject($config);
+        self::$stack[] = $widget;
+        self::$stackClass[] = $widget::className();
+        return $widget;
+    }
+
+    public static function end()
+    {
+        if (!empty(self::$stack)) {
+            $widget = array_pop(self::$stack);
+            $widgetClass = array_pop(self::$stackClass);
+            if (get_class($widget) === $widgetClass) {
+                /* @var $widget Widget */
+                if ($widget->beforeRun()) {
+                    $result = $widget->run();
+                    $result = $widget->afterRun($result);
+                    echo $result;
+                }
+
+                return $widget;
+            }
+            throw new InvalidCallException('Expecting end() of ' . get_class($widget) . ', found ' . get_called_class());
+        }
+        throw new InvalidCallException('Unexpected ' . get_called_class() . '::end() call. A matching begin() is not found.');
     }
 
     /**
