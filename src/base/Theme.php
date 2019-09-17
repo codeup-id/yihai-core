@@ -10,12 +10,8 @@ namespace yihai\core\base;
 
 
 use Yihai;
-use yihai\core\base\ThemeInterface;
-use Yii;
-use yii\base\BaseObject;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
-use yii\helpers\ArrayHelper;
 
 class Theme extends Component
 {
@@ -60,21 +56,22 @@ class Theme extends Component
      */
     private function initialize_theme($classObj)
     {
-        Yii::setAlias('@yihai-theme-' . $classObj->getName(), $classObj->getPath());
+        Yihai::setAlias('@yihai-theme-' . $classObj->getName(), $classObj->getPath());
         $this->path[$classObj->getName()] = [
             'views' => $classObj->getPath() . '/views'
         ];
         $this->_theme[$classObj->getName()] = $classObj;
-        foreach ($classObj->getContainer() as $class => $definition) {
-            Yii::$container->set($class, $definition);
-        }
     }
 
     public function initialize_active()
     {
         $theme = $this->getActiveClass();
         $this->activeTheme = $theme;
-        Yii::setAlias('@yihai-active-theme', $theme->getPath());
+        // container
+        foreach ($theme->getContainer() as $class => $definition) {
+            Yihai::$container->set($class, $definition);
+        }
+        Yihai::setAlias('@yihai-active-theme', $theme->getPath());
         Yihai::$app->view->theme->setBasePath($theme->getPath());
         Yihai::$app->view->theme->setBaseUrl('@web/themes/' . $this->active);
         $pathMap = [];
