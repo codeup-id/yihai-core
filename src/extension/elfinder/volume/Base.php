@@ -178,6 +178,13 @@ class Base extends BaseObject
 
         $options['mimeDetect'] = 'internal';
         $options['imgLib'] = 'auto';
+        $this->attributes[] = [
+            'pattern' => '#.*(\.git(.*)$)#i',
+            'read' => false,
+            'write' => false,
+            'hidden' => true,
+            'locked' => false
+        ];
         if($this->hide_tmb){
             $this->attributes[] = [
                 'pattern' => '#.*(\.tmb)$#i',
