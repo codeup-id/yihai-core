@@ -71,7 +71,7 @@ echo \yihai\core\grid\GridView::widget([
             'headerOptions' => ['class' => 'text-center', 'style'=>'width:100px'],
             'contentOptions' => ['class' => 'text-center'],
             'format' => 'raw',
-            'value' => function ($model) use ($type, $authManager) {
+            'value' => function ($model) use ($authManager) {
                 return Html::beginForm().Html::hiddenInput('delete-assign', $model['id']). Button::widget(['encodeLabel' => false,'size' => Button::SIZE_XS,'label' => Html::icon('trash')]).Html::endForm();
             }
         ],
