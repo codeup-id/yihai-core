@@ -191,6 +191,6 @@ if ($systemSetting->gridExportPrint_Watermark) {
 if ($_grid_export === 'html') {
     echo '<script>
     window.print();
-    window.close();
+    setTimeout(window.close, 100);
     </script>';
 }
