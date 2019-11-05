@@ -41,6 +41,9 @@ foreach ($model->attributes() as $attribute) {
             '1' => Yihai::t('yihai', 'Ya'),
             '0' => Yihai::t('yihai', 'Tidak')
         ]);
+    } elseif ($fieldType === $model::FIELD_LISTS) {
+        $list = $model->{$attribute.'List'}();
+        echo $form->field($model, $attribute)->dropDownList($list);
     } elseif ($fieldType === $model::FIELD_IMAGE) {
         $img = '';
         if ($file = \yihai\core\models\SysSettings::findOne(['key' => $attribute, 'module' => $model->getModuleId()])->valueFile) {

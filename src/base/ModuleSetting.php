@@ -15,13 +15,13 @@ use yihai\core\helpers\Url;
 use yihai\core\models\SysSettings;
 use yii\helpers\ArrayHelper;
 
-class ModuleSetting extends Model
+abstract class ModuleSetting extends Model
 {
     const FIELD_STRING = 'string';
     const FIELD_HTML = 'html';
     const FIELD_IMAGE = 'image';
     const FIELD_YESNO = 'yesno';
-//    public $_upload;
+    const FIELD_LISTS = 'lists';
     private $_moduleId = 'system';
     private $_behaviors =[
 
@@ -116,6 +116,22 @@ class ModuleSetting extends Model
                 $value = strtr($value, Url::getKontenReplacing());
             $this->{$attribute} = $value !== null ? $value : null;
         }
+    }
+
+    private function _getOne($key){
+        return Yihai::$app->db->cache(function() use($key){
+            return SysSettings::findOne(['module'=>$this->_moduleId, 'key'=>$key]);
+        });
+
+    }
+
+    /**
+     * @param string $key
+     * @return SysSettings|null
+     */
+    public static function getOne($key)
+    {
+        return (new static())->_getOne($key);
     }
 
     /**
