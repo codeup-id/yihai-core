@@ -12,5 +12,6 @@ return [
     'languageList' => [
         'id' => 'Indonesia',
         'en' => 'English'
-    ]
+    ],
+    'gridShowUsernameInCreatedUpdated' => true
 ];

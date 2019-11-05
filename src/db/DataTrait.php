@@ -11,6 +11,8 @@ namespace yihai\core\db;
 
 use Yihai;
 use yihai\core\models\UserModel;
+use yihai\core\modules\system\Module;
+use yihai\core\modules\system\ModuleSetting;
 
 /**
  * Trait CreatedUpdatedInfoTrait
@@ -35,6 +37,7 @@ trait DataTrait
     {
         return Yihai::$app->formatter->asDatetime_simple($this->created_at);
     }
+
     public static function gridID($attribute = 'id', $value = 'id')
     {
         return [
@@ -48,8 +51,20 @@ trait DataTrait
 
     public static function gridCreatedBy()
     {
+
         return [
             'attribute' => 'created_by',
+            'value' => function ($model) {
+                if ($model->created_by) {
+                    if (Yihai::$app->params['gridShowUsernameInCreatedUpdated']) {
+                        return Yihai::$app->db->cache(function () use ($model) {
+                            return UserModel::findOne(['id' => $model->created_by])->username;
+                        });
+                    }
+                    return $model->created_by;
+                }
+                return '__system';
+            },
             'headerOptions' => ['class' => 'grid-th-createdBy text-center'],
             'contentOptions' => ['class' => 'grid-td-createdBy text-center']
         ];
@@ -77,6 +92,17 @@ trait DataTrait
     {
         return [
             'attribute' => 'updated_by',
+            'value' => function ($model) {
+                if ($model->updated_by) {
+                    if (Yihai::$app->params['gridShowUsernameInCreatedUpdated']) {
+                        return Yihai::$app->db->cache(function () use ($model) {
+                            return UserModel::findOne(['id' => $model->updated_by])->username;
+                        });
+                    }
+                    return $model->updated_by;
+                }
+                return '__system';
+            },
             'headerOptions' => ['class' => 'grid-th-updatedBy text-center'],
             'contentOptions' => ['class' => 'grid-td-updatedBy text-center']
         ];
@@ -104,30 +130,30 @@ trait DataTrait
     public static function viewUserRole()
     {
         return function ($model) {
-                $am = Yihai::$app->getAuthManager();
-                if($model->hasProperty('sys_user'))
-                    $id = $model->sys_user->id;
-                else
-                    $id = $model->id;
-                $roles = $am->getRolesByUser($id);
-                $attributes_roles = [];
-                $no=1;
-                foreach($roles as $role){
-                    $attributes_roles[] = [
-                        'label' => $no,
-                        'format' => 'raw',
-                        'value' => function($model) use($role){
-                            return $role->name;
-                        }
-                    ];
-                    $no++;
-                }
-                return [
-                    'Roles' => [
-                        'model' => $model,
-                        'attributes' => $attributes_roles
-                    ],
+            $am = Yihai::$app->getAuthManager();
+            if ($model->hasProperty('sys_user'))
+                $id = $model->sys_user->id;
+            else
+                $id = $model->id;
+            $roles = $am->getRolesByUser($id);
+            $attributes_roles = [];
+            $no = 1;
+            foreach ($roles as $role) {
+                $attributes_roles[] = [
+                    'label' => $no,
+                    'format' => 'raw',
+                    'value' => function ($model) use ($role) {
+                        return $role->name;
+                    }
                 ];
-            };
+                $no++;
+            }
+            return [
+                'Roles' => [
+                    'model' => $model,
+                    'attributes' => $attributes_roles
+                ],
+            ];
+        };
     }
 }
