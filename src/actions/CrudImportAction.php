@@ -223,7 +223,7 @@ class CrudImportAction extends CrudAction
             $model->scenario = $this->formType;
             $array_attribute = [];
             foreach ($attributes as $col => $attribute) {
-                $value = $sheet->getCell($col . $i)->getValue();
+                $value = $sheet->getCell($col . $i)->getFormattedValue();
                 $keys = explode('.', $attribute);
                 ArrayHelper::setValue($array_attribute, $keys, $value);
             }
