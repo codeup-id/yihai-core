@@ -54,6 +54,7 @@ class UserIdent extends BaseObject implements IdentityInterface
         $this->username = $model->username;
         $this->email = $model->email;
         $this->_model = $model;
+        $this->group = $this->model->group;
     }
 
     /**
@@ -141,6 +142,7 @@ class UserIdent extends BaseObject implements IdentityInterface
      */
     public static function findForLogin($username, $group = null)
     {
+        $username = trim($username);
         $user = UserModel::find()
             ->andWhere([
                 'status'=>UserModel::STATUS_ACTIVE,
