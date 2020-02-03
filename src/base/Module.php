@@ -74,7 +74,7 @@ abstract class Module extends \yii\base\Module implements BootstrapInterface
 
     /**
      * merge app config saat memulai module
-     * @param Application $app
+     * @param Application|\yihai\core\web\Application|\yihai\core\console\Application $app
      */
     public function init_app_config($app)
     {
