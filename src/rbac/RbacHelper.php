@@ -23,6 +23,7 @@ class RbacHelper
     public static $idRoleUser = '_user-';
     public static $idRoleRole = '_role-';
     public static $idRoleMenu = '_menu-';
+    public static $idRoleModule = '_module-';
     public static $idRoleCustom = '_custom_role-';
 
     public static function userGroupRoleName($group)
@@ -33,6 +34,14 @@ class RbacHelper
     public static function roleRoleName($role)
     {
         return static::$idRoleRole . $role;
+    }
+
+
+    public static function roleModuleName($module, $role = '')
+    {
+        $module = trim($module, '-');
+        $role = ($role === '') ? $module : $module . '-' . $role;
+        return static::$idRoleModule . $role;
     }
 
     public static function roleRoleCustomName($role)
@@ -224,8 +233,8 @@ class RbacHelper
         $role = static::getAndCreate($roleName, self::TYPE_ROLE);
         try {
             $auth->assign($role, $user_id);
-        }catch (Exception $e){
-            echo $e->getMessage()."\n";
+        } catch (Exception $e) {
+            echo $e->getMessage() . "\n";
         }
     }
 
@@ -257,8 +266,8 @@ class RbacHelper
     public static function getRolesExcludeUserGroup()
     {
         $roles = static::getRoles();
-        foreach($roles as $name => $role){
-            if(static::roleIsUserGroupName($name))
+        foreach ($roles as $name => $role) {
+            if (static::roleIsUserGroupName($name))
                 unset($roles[$name]);
         }
         return $roles;
@@ -273,7 +282,6 @@ class RbacHelper
         $am = Yihai::$app->getAuthManager();
         return $am->getRolesByUser($userId);
     }
-
 
 
     public static function getRolesRole()

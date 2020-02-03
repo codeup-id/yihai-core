@@ -16,10 +16,10 @@ class m190400_100120_activity_log extends Migration
     {
         $this->createTable($this->tableName, [
             'id'    => $this->primaryKey(),
-            'action' => $this->string()->notNull(),
-            'model' => $this->string(),
+            'action' => $this->string(100)->notNull(),
+            'model' => $this->string(100),
             'type' => $this->string(20)->notNull(),
-            'user' => $this->string()->notNull(),
+            'user' => $this->string(64)->notNull(),
             'time' => $this->integer()->notNull(),
             'ip' => $this->string(45),
             'msg' => $this->binary(),
