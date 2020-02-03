@@ -68,9 +68,9 @@ class SetupController extends Controller
 
     public function actionUninstall()
     {
-        if($this->confirm('Sure?')){
-            $migrationPath =  ['@yihai/migrations'];
-            foreach($this->yihaiModules as $name => $obj){
+        if ($this->confirm('Sure?')) {
+            $migrationPath = ['@yihai/migrations'];
+            foreach ($this->yihaiModules as $name => $obj) {
                 $migrationPath[] = $obj->getBasePath() . DIRECTORY_SEPARATOR . 'migrations';
             }
             $migrationPath[] = '@yihai-core/migrations';
@@ -82,10 +82,10 @@ class SetupController extends Controller
             $authManager = Yihai::$app->authManager;
             if ($authManager instanceof PhpManager) {
                 foreach ([$authManager->assignmentFile, $authManager->itemFile, $authManager->ruleFile] as $file) {
-                    try{
+                    try {
                         unlink($file);
-                    }catch (\Exception $e){
-                        echo $e->getMessage()."\n";
+                    } catch (\Exception $e) {
+                        echo $e->getMessage() . "\n";
                     }
                 }
             }
@@ -217,8 +217,8 @@ class SetupController extends Controller
             $config = Yihai::getAlias($config);
             if (is_file($config)) {
                 $content = file_get_contents($config);
-                preg_match('/(("|\')cookieValidationKey("|\')\s*=>\s*)("|\')(.+)("|\')/', $content,$match);
-                if(isset($match[5]) && $match[5] === '{cookieValidationKey}'){
+                preg_match('/(("|\')cookieValidationKey("|\')\s*=>\s*)("|\')(.+)("|\')/', $content, $match);
+                if (isset($match[5]) && $match[5] === '{cookieValidationKey}') {
                     $content = str_replace('{cookieValidationKey}', $key, $content);
                     file_put_contents($config, $content);
                     $this->stdout("--------------------------\n== cookieValidationKey Generated: {$key} ({$config})\n--------------------------\n");
