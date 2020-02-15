@@ -225,7 +225,7 @@ class Module extends \yihai\core\base\Module
         RbacHelper::addRoleCrud('/system/reports/', [RbacHelper::roleRoleName('superuser')], ['duplicate','template']);
         RbacHelper::addRoleCrud('/system/users-system/', [RbacHelper::roleRoleName('superuser')]);
         RbacHelper::addRoleCrud('/system/users/', [RbacHelper::roleRoleName('superuser')]);
-        RbacHelper::addRoleCrud('/system/users/', [RbacHelper::roleRoleName('superuser')],['password']);
+        RbacHelper::addRoleCrud('/system/users/', [RbacHelper::roleRoleName('superuser')],['password', 'switch']);
         RbacHelper::addRoleCrud('/system/activity-log/', [RbacHelper::roleRoleName('superuser')], ['index', 'view']);
         RbacHelper::addRoleCrud('/system/roles/', [RbacHelper::roleRoleName('superuser')], ['roles', 'permissions', 'assign', 'add-role', 'detail-role','users']);
         parent::setup_module();

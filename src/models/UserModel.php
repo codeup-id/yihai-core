@@ -313,12 +313,17 @@ class UserModel extends \yihai\core\db\ActiveRecord
             'gridViewCheckboxColumn' => false,
             'gridViewActionColumn' => [
                 'class' => 'yihai\core\grid\ActionColumn',
-                'templateAppend' => '{password} {roles}',
+                'templateAppend' => '{password} {roles} {switch}',
                 'buttonsCustom' => [
                     'password' => [
                         'modal' => true,
                         'icon' => 'password',
                         'title' => Yihai::t('yihai', 'Ganti kata sandi'),
+                    ],
+                    'switch' => [
+                        'modal' => false,
+                        'icon' => 'user',
+                        'title' => Yihai::t('yihai', 'Beralih user'),
                     ],
                 ]
             ],

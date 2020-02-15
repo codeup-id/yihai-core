@@ -130,6 +130,13 @@ $mainClass = Yihai::$app->controller->module->id . '-'.Yihai::$app->controller->
                             </li>
                         </ul>
                     </li>
+                    <?php if(Yihai::$app->session->has('user_switch_from')){
+                        $session_switch = Yihai::$app->session->get('user_switch_from');
+                        ?>
+                    <li>
+                        <a href="<?= Url::to(['/system/users/switch', 'id'=>'_back'])?>"><i class="fal fa-user"></i> <?=$session_switch['username']?></a>
+                    </li>
+                    <?php } ?>
                     <li>
                         <a href="#" data-toggle="control-sidebar"><i class="fal fa-cogs"></i></a>
                     </li>
