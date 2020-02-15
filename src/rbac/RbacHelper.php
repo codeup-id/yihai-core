@@ -28,11 +28,17 @@ class RbacHelper
 
     public static function userGroupRoleName($group)
     {
+        if(is_array($group)) return static::array_or_string(static::$idRoleUser, $group);
         return static::$idRoleUser . $group;
     }
 
+    /**
+     * @param string|array $role
+     * @return string|array
+     */
     public static function roleRoleName($role)
     {
+        if(is_array($role)) return static::array_or_string(static::$idRoleRole, $role);
         return static::$idRoleRole . $role;
     }
 
@@ -46,6 +52,7 @@ class RbacHelper
 
     public static function roleRoleCustomName($role)
     {
+        if(is_array($role)) return static::array_or_string(static::$idRoleUser, $role);
         return static::$idRoleCustom . $role;
     }
 
@@ -55,6 +62,15 @@ class RbacHelper
         return static::$idRoleMenu . $menu;
     }
 
+    private static function array_or_string($prefix, $item)
+    {
+        $array = [];
+        foreach($item as $i){
+            $array[] = $prefix.$i;
+        }
+        return $array;
+
+    }
     /**
      * @param string $role
      * @return bool
