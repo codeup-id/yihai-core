@@ -12,6 +12,7 @@ namespace yihai\core\modules\system\controllers;
 use Yihai;
 use yihai\core\actions\CrudFormAction;
 use yihai\core\base\UserIdent;
+use yihai\core\log\ActivityLog;
 use yihai\core\models\form\ChangePasswordUserForm;
 use yihai\core\web\BackendController;
 use yii\web\NotFoundHttpException;
@@ -60,6 +61,11 @@ class UsersController extends BackendController
             'username' => $userFrom->username,
             'group' => $userFrom->group,
             'last_url' => Yihai::$app->request->referrer ?: Yihai::$app->homeUrl
+        ]);
+        ActivityLog::newLog('switch-user', null, [
+            'id'=>$userNew->id,
+            'username'=>$userNew->username,
+            'group' => $userNew->group
         ]);
         Yihai::$app->user->switchIdentity($userNew);
         return $this->goHome();
