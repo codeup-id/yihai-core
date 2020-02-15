@@ -257,6 +257,13 @@ class RbacHelper
 
     }
 
+    /**
+     * @return \yii\rbac\ManagerInterface
+     */
+    public static function getAuthManager()
+    {
+        return Yihai::$app->getAuthManager();
+    }
     public static function getRoles()
     {
         $auth = Yihai::$app->getAuthManager();
