@@ -119,12 +119,11 @@ class UserIdent extends BaseObject implements IdentityInterface
      * @param string|null $group
      * @return static|null
      */
-    public static function findByID($id, $group = null)
+    public static function findByID($id)
     {
         $user = UserModel::find()
             ->andWhere([
                 'status'=>UserModel::STATUS_ACTIVE,
-                'group' => $group ? $group : static::$defGroup
             ])
             ->andWhere(['id'=>$id])
             ->one();
