@@ -20,12 +20,21 @@ use yii\web\JsExpression;
 
 class RestModel extends BaseObject
 {
-    private $options;
+    /**
+     * Jika url di set, maka tidak akan menggunakan model
+     * @var string
+     */
+    public $url;
     /** @var Serializer */
     private $serializer;
     /** @var ActiveRecord */
     private $model;
-    private $modelSearchClassName;
+
+    /**
+     * key untuk filter, jika menggunakan url maka harus di set manual
+     * @var string
+     */
+    public $modelSearchClassName;
     /** @var string|ActiveRecord */
     public $modelClass;
     /**
@@ -48,14 +57,35 @@ class RestModel extends BaseObject
      * @var string
      */
     public $templateSelection;
+
     /**
-     * data yang akan di filter, contoh
+     * data yang akan di filter (menggunakan ModelSearch), contoh
      * ```php
      *  ['id','uid']
      * ```
      * @var array
+     * @see ActiveRecord::prosesFiltering()
      */
     public $filter = [];
+
+    /**
+     * menggunakan DataFilter
+     * ```php
+     *  [
+     *      'or',
+     *      ['LIKE', 'nama', '{{term}}'],
+     *      ['LIKE', 'id', '{{term}}'],
+     *  ]
+     * @var array
+     * @see ActiveRecord::prosesFiltering()
+     */
+    public $filterData = [];
+
+    /**
+     * Custom query params
+     * @var array
+     */
+    public $queryParams = [];
     /**
      * data yang akan di tambah pada query. berbeda dengan $filter, ini dapat melakukan filter kustom.
      * ```php
@@ -90,24 +120,35 @@ class RestModel extends BaseObject
     public function init()
     {
         parent::init();
-        $this->model = new $this->modelClass();
-        $model = $this->modelClass;
-        $this->modelSearchClassName = $model::searchClassName();
-        $this->serializer = Yihai::createObject($this->model->options()->restSerializer);
+        if($this->url){
+            $this->serializer = Yihai::createObject([
+                'class' => 'yii\rest\Serializer',
+                'collectionEnvelope' => 'items'
+            ]);
+        }else {
+            $this->model = new $this->modelClass();
+            $model = $this->modelClass;
+            $this->modelSearchClassName = $model::searchClassName();
+            $this->serializer = Yihai::createObject($this->model->options()->restSerializer);
+        }
         if(!$this->templateSelection)
             $this->templateSelection = $this->templateResult;
     }
 
     public function getUrl()
     {
-        $model = $this->modelClass;
+        if($this->url)
+            return Url::to($this->url);
 
+        $model = $this->modelClass;
         return Url::to([$model::crud_url_rest()]);
     }
 
     public function options()
     {
         $filter = Json::encode($this->filter);
+        $filterData = Json::encode($this->filterData);
+        $queryParams = Json::encode($this->queryParams);
         $appendQuery = Json::encode($this->appendQuery);
         $expands = implode(',', $this->expands);
         $filter_q = 'filter';
@@ -116,10 +157,15 @@ class RestModel extends BaseObject
         return [
             'ajax' => [
                 'url' => $this->getUrl(),
+                'type'=>'POST',
+                'contentType'=>'application/json',
+                'dataType' => 'json',
                 'cache'=>true,
                 'data' => new JsExpression("function (params) {
                     var fields = '{$this->fields}';
                     var filter = {$filter};
+                    var filterData = {$filterData};
+                    var queryParams = {$queryParams};
                     var appendQuery = {$appendQuery};
                     
                     var query = {
@@ -128,13 +174,24 @@ class RestModel extends BaseObject
                         'expand': '{$expands}',
                         page: params.page || 1
                     }
-                    filter.forEach(function(v){
-                        query['{$filter_q}['+v+']']  = params.term
+                    if(!params.term) params.term = '';
+                    if(filter.length){
+                        if(!query['{$filter_q}'])
+                            query['{$filter_q}'] = {};
+                        filter.forEach(function(v){
+                            query['{$filter_q}'][v] = params.term
+                        })
+                        $.each(appendQuery, function(k,v){
+                            query['{$filter_q}'][k] = v
+                        })
+                    }else if(filterData.length){
+                        query['filter'] = filterData; 
+                    }
+                    $.each(queryParams, function(k,v){
+                        query[k] = v
                     })
-                    $.each(appendQuery, function(k,v){
-                        query['{$filter_q}['+k+']']  = v
-                    })
-                    return query;
+                    
+                    return JSON.stringify(query).replace(/{{term}}/g, params.term);
                 }"),
                 'processResults' => new JsExpression("function (_data, params) {
                     var dataId = {$this->dataID};

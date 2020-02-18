@@ -36,6 +36,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
 
     /** @var ActiveDataFilter */
     public $dataFilter;
+
     public function init()
     {
         parent::init();
@@ -46,7 +47,7 @@ class ActiveRecord extends \yii\db\ActiveRecord
         }
         if(!$this->dataFilter){
             $this->dataFilter = new ActiveDataFilter([
-                'searchModel' => $this->_filterModel
+                'searchModel' => $this->_filterModel,
             ]);
         }
     }
@@ -168,37 +169,30 @@ class ActiveRecord extends \yii\db\ActiveRecord
         return $this->_filterModel;
     }
 
-
     /**
      * @param \yii\data\ActiveDataProvider $dataProvider
      * @throws InvalidConfigException
      */
-    public function prosesFilteringDataFilter(&$dataProvider)
+    protected function prosesFiltering(&$dataProvider)
     {
         $requestParams = Yihai::$app->getRequest()->getBodyParams();
         if (empty($requestParams)) {
             $requestParams = Yihai::$app->getRequest()->getQueryParams();
         }
         unset($requestParams['restAction']);
-        if ($this->dataFilter->load($requestParams) && ($dataFilterBuild = $this->dataFilter->build())) {
-            $dataProvider->query->filterWhere($dataFilterBuild);
+
+        if(isset($requestParams['filter'])){
+            if ($this->dataFilter->load($requestParams) && $this->dataFilter->filter) {
+                $dataProvider->query->filterWhere($this->dataFilter->filter);
+            }
         }
-    }
 
-    /**
-     * @param \yii\data\ActiveDataProvider $dataProvider
-     */
-    protected function prosesFiltering(&$dataProvider)
-    {
-        if ($this->_filterModel === null)
-            return;
+        if(isset($requestParams[$this->_searchClassName()])) {
+            if ($this->_filterModel === null) return;
 
-        try {
-            $params = Yihai::$app->request->getQueryParams();
-            if ($this->_filterModel->load($params, $this->_searchClassName()) && $this->_filterModel->validate()) {
+            if ($this->_filterModel->load($requestParams, $this->_searchClassName()) && $this->_filterModel->validate()) {
                 $this->onSearch($dataProvider->query, $this->_filterModel);
             }
-        } catch (InvalidConfigException $e) {
         }
     }
 
@@ -221,7 +215,6 @@ class ActiveRecord extends \yii\db\ActiveRecord
             $dataProvider->query = $query;
         }
 
-        $this->prosesFilteringDataFilter($dataProvider);
         $this->prosesFiltering($dataProvider);
 
     }
