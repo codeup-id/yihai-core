@@ -106,8 +106,6 @@ class LinkCrudColumn extends Column
 
         if ($model instanceof ActiveRecord && isset($this->crudParams)) {
             if (is_array($this->crudParams) && isset($this->crudParams[$action])) {
-                if($action === 'list')
-                print_r(call_user_func($this->crudParams[$action], $crudModel, $model));
                 $url = $crudModel::buildSearchUrl($url, call_user_func($this->crudParams[$action], $crudModel, $model), $classParam);
             }
             elseif (is_callable($this->crudParams))
