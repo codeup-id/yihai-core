@@ -37,7 +37,8 @@ DetailView::begin([
         'created_by',
         'updated_at:datetime',
         'updated_by:username',
-        'memberSince'
+        'memberSince',
+        'last_time:datetime'
     ]
 ]);
 DetailView::end();
