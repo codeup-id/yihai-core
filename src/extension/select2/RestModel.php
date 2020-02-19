@@ -116,6 +116,8 @@ class RestModel extends BaseObject
      * @var string
      */
     public $dataID = 'null';
+
+    public $prompt = false;
     public function init()
     {
         parent::init();
@@ -149,6 +151,7 @@ class RestModel extends BaseObject
         $filterData = Json::encode($this->filterData);
         $queryParams = Json::encode($this->queryParams);
         $appendQuery = Json::encode($this->appendQuery);
+        $prompt = Json::encode($this->prompt);
         $expands = implode(',', $this->expands);
         $filter_q = 'filter';
         if($this->useModelFilter)
@@ -160,6 +163,8 @@ class RestModel extends BaseObject
                 'contentType'=>'application/json',
                 'dataType' => 'json',
                 'cache'=>true,
+                'placeholder'=> "Select a state",
+                'prompt'=> "Select a state",
                 'data' => new JsExpression("function (params) {
                     var fields = '{$this->fields}';
                     var filter = {$filter};
@@ -194,14 +199,19 @@ class RestModel extends BaseObject
                 }"),
                 'processResults' => new JsExpression("function (_data, params) {
                     var dataId = {$this->dataID};
-                    if(_data.items && dataId !== null){
-                        var data_ = $.map(_data.items, function(obj){
+                    var items = _data.{$this->serializer->collectionEnvelope};
+                    if(items && dataId !== null){
+                        var data_ = $.map(items, function(obj){
                             obj.id = dataId(obj)
                             return obj;
                         });
                     }
+                    if({$prompt}){
+                        data_.unshift({'id':''})
+                        items.unshift({'id':''})
+                    }
                     return {
-                      results: data_ || _data.items,
+                      results: data_ || items,
                       pagination: {
                         more: _data.{$this->serializer->linksEnvelope}.next
                       }
@@ -211,16 +221,18 @@ class RestModel extends BaseObject
                 'results' => new JsExpression("function(data, page){
                     var data = $.map(data, function (obj) {
                         obj.id = obj.uid || obj.id;
-                        return obj;
+                            return obj;
                         });
                 }")
             ],
             'templateResult' => new JsExpression("function(data) {
                 if(data.loading)
                     return data.text;
+                if({$prompt} && data.id==='') return '---';
                 {$this->templateResult}
             }"),
             'templateSelection' => new JsExpression("function (data) {
+            if({$prompt} && data.id==='') return '---';
                 {$this->templateSelection}
             }"),
         ];
