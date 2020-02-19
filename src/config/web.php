@@ -13,6 +13,13 @@ return \yii\helpers\ArrayHelper::merge(require __DIR__ . '/common.php', [
 //        'errorHandler' => [
 //            'errorAction' => 'system/error',
 //        ],
+
+        'request' => [
+            'class' => 'yihai\core\web\Request',
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser',
+            ]
+        ],
         'response' => [
             'class' => 'yihai\core\web\Response'
         ],

@@ -18,6 +18,7 @@ use yii\helpers\ArrayHelper;
 /**
  * Class WebApplication
  * @package yihai\core\base
+ * @property Request $request
  * @property Response $response
  * @property \yihai\core\base\Theme $theme
  * @property User $user

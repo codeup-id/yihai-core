@@ -22,11 +22,6 @@ return [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
-        'request' => [
-            'parsers' => [
-                'application/json' => 'yii\web\JsonParser',
-            ]
-        ],
         'cache-db' => [
             'class' => 'yii\caching\FileCache',
             'cachePath' => '@runtime/cache-db'
