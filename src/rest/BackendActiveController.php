@@ -21,6 +21,7 @@ use yii\web\ForbiddenHttpException;
 
 class BackendActiveController extends Controller
 {
+    public $serializer = 'yihai\core\rest\Serializer';
     /**
      * @var string the model class name. This property must be set.
      */
@@ -65,6 +66,8 @@ class BackendActiveController extends Controller
         }
         if($this->model === null)
             $this->model = new $this->modelClass();
+        if(!$this->modelOptions)
+            $this->modelOptions = $this->model->options();
 
         if($this->modelOptions->restSerializer)
             $this->serializer=$this->modelOptions->restSerializer;
@@ -139,7 +142,7 @@ class BackendActiveController extends Controller
     protected function verbs()
     {
         return [
-            'index' => ['GET', 'HEAD'],
+            'index' => ['GET', 'POST', 'HEAD'],
             'view' => ['GET', 'HEAD'],
             'create' => ['POST'],
             'update' => ['PUT', 'PATCH'],

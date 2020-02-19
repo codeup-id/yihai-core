@@ -18,4 +18,9 @@ class CrudAction extends Action
     public $model;
     /** @var ModelOptions */
     public $modelOptions;
+    public function init()
+    {
+        if($this->model === null)
+            $this->model = new $this->modelClass();
+    }
 }

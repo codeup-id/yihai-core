@@ -9,14 +9,10 @@
 namespace yihai\core\base;
 
 
-use Yihai;
 use yihai\core\grid\GridView;
 use yihai\core\rbac\RbacHelper;
-use yihai\core\theming\Html;
 use yii\base\BaseObject;
-use yii\base\InvalidConfigException;
 use yii\data\ActiveDataProvider;
-use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 
 /**
@@ -241,7 +237,7 @@ class ModelOptions extends BaseObject
         'updated_at' => 'datetime',
     ];
     public $restSerializer = [
-        'class' => 'yii\rest\Serializer',
+        'class' => 'yihai\core\rest\Serializer',
         'collectionEnvelope' => 'items'
     ];
     public $restDataFilter = [

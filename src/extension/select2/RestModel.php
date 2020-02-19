@@ -13,9 +13,8 @@ use Yihai;
 use yihai\core\db\ActiveRecord;
 use yihai\core\helpers\Url;
 use yii\base\BaseObject;
-use yii\data\ActiveDataFilter;
 use yii\helpers\Json;
-use yii\rest\Serializer;
+use yihai\core\rest\Serializer;
 use yii\web\JsExpression;
 
 class RestModel extends BaseObject
@@ -122,7 +121,7 @@ class RestModel extends BaseObject
         parent::init();
         if($this->url){
             $this->serializer = Yihai::createObject([
-                'class' => 'yii\rest\Serializer',
+                'class' => 'yihai\core\rest\Serializer',
                 'collectionEnvelope' => 'items'
             ]);
         }else {
