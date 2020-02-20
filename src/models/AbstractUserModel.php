@@ -174,6 +174,9 @@ abstract class AbstractUserModel extends \yihai\core\db\ActiveRecord implements 
     public function fields()
     {
         $fields = parent::fields();
+        $fields['fullname'] = function($model){
+            return $model->fullname;
+        };
         return $fields;
     }
 
