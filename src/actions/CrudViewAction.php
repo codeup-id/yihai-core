@@ -119,10 +119,10 @@ class CrudViewAction extends CrudAction
             if (is_callable($attribute)) {
                 $custom = call_user_func($attribute, $this->model);
                 foreach ($custom as $label => $config) {
-                    $this->detailViewCustom[Yihai::t('yihai', ucfirst($label))] = DetailView::widget(ArrayHelper::merge($config, $this->detailViewOptions));
+                    $this->detailViewCustom[$label] = DetailView::widget(ArrayHelper::merge($config, $this->detailViewOptions));
                 }
             } else {
-                $this->detailViewCustom[Yihai::t('yihai', ucfirst($i))] = DetailView::widget(ArrayHelper::merge([
+                $this->detailViewCustom[$i] = DetailView::widget(ArrayHelper::merge([
                     'id' => 'yihai-detailviewcustom-' . md5($i) . '-' . str_replace('/','-',$this->modelOptions->getActionUrl()),
                     'model' => $this->model,
                     'attributes' => $attribute
