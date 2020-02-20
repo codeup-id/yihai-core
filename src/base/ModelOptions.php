@@ -9,6 +9,7 @@
 namespace yihai\core\base;
 
 
+use Yihai;
 use yihai\core\grid\GridView;
 use yihai\core\rbac\RbacHelper;
 use yii\base\BaseObject;
@@ -22,6 +23,7 @@ use yii\helpers\Url;
  */
 class ModelOptions extends BaseObject
 {
+    const _grid_show_column = '_grid_show_column';
     public $model = null;
 
     /**
@@ -184,7 +186,7 @@ class ModelOptions extends BaseObject
      * hint/info yang akan tampil pada main crud
      * @var array
      */
-    public $hint=[];
+    public $hint = [];
     /**
      * diset hanya pada crud action
      * @var string
@@ -245,6 +247,7 @@ class ModelOptions extends BaseObject
     ];
 
     private $_gridExportMpdf;
+
     public function init()
     {
         parent::init();
@@ -297,7 +300,8 @@ class ModelOptions extends BaseObject
         return '/' . $id . '/' . $action;
 
     }
-    public function getActionUrlTo($action = '', $params =[])
+
+    public function getActionUrlTo($action = '', $params = [])
     {
         $url = [$this->getActionUrl($action)];
         $url = array_merge($url, $params);
@@ -327,7 +331,7 @@ class ModelOptions extends BaseObject
      */
     public function getGridViewActionColumn()
     {
-        if($this->gridViewActionColumn === false) return false;
+        if ($this->gridViewActionColumn === false) return false;
         $this->gridViewActionColumn['modelOptions'] = $this;
         return $this->gridViewActionColumn;
     }
@@ -368,25 +372,40 @@ class ModelOptions extends BaseObject
         return $this->gridViewCheckboxColumn;
     }
 
+    public function gridColumnData()
+    {
+        if($show_column = Yihai::$app->request->get(static::_grid_show_column)){
+            $show_column=explode(',',$show_column);
+            foreach($this->gridColumnData as $i => $config){
+                if(is_array($config) && isset($config['attribute']) && !in_array($config['attribute'], $show_column)){
+                    unset($this->gridColumnData[$i]);
+                }elseif(is_string($config) && !in_array($config, $show_column)){
+                    unset($this->gridColumnData[$i]);
+                }
+            }
+        }
+        return $this->gridColumnData;
+    }
+
     /**
      * @return array
      */
     public function getImportAttributes()
     {
         $importAttributes = [];
-        foreach ($this->importAttributes as $attribute){
-            if(is_string($attribute)){
+        foreach ($this->importAttributes as $attribute) {
+            if (is_string($attribute)) {
                 $importAttributes[] = [
                     'data' => $attribute,
                     'label' => $attribute,
                     'attribute' => $attribute,
                 ];
-            }elseif(is_array($attribute)){
-                if(!isset($attribute['attribute']))
+            } elseif (is_array($attribute)) {
+                if (!isset($attribute['attribute']))
                     continue;
-                if(!isset($attribute['label']))
+                if (!isset($attribute['label']))
                     $attribute['label'] = $attribute['attribute'];
-                if(!isset($attribute['data']))
+                if (!isset($attribute['data']))
                     $attribute['data'] = $attribute['attribute'];
                 $importAttributes[] = $attribute;
             }

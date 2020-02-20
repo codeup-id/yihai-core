@@ -183,7 +183,7 @@ class CrudIndexAction extends CrudAction
         if ($this->gridColumns) {
             $this->modelOptions->gridColumnData = $this->gridColumns;
         }
-        $gridColumns = ArrayHelper::merge($gridColumns, $this->modelOptions->gridColumnData);
+        $gridColumns = ArrayHelper::merge($gridColumns, $this->modelOptions->gridColumnData());
 
         /** @var ActiveDataProvider $dataProvider */
         if ($this->dataProvider)
