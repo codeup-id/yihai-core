@@ -21,7 +21,7 @@ $htmlGrid->endCol();
 $htmlGrid->beginCol(['lg-4', 'sm-6']);
 echo $form->field($model, 'user_username');
 /** @var \yihai\core\modules\system\ModuleSetting $sysSetting */
-$sysSetting = Yihai::$app->settings->getModuleSetting('system');
+$sysSetting = \yihai\core\modules\system\Module::loadSettings();
 $sysEmail = $sysSetting->defaultEmailDomain;
 echo $form->field($model, 'user_email')->widget(\yihai\core\theming\InputWithAddon::class, [
     'addonOptions' => ['id'=>'generateEmailUser'],
