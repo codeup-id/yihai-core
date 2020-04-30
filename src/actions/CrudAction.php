@@ -14,10 +14,9 @@ use yihai\core\base\Action;
 use yihai\core\base\CrudInterface;
 use yihai\core\base\ModelOptions;
 use yihai\core\base\Model;
-use yihai\core\theming\Html;
 use yii\base\InvalidConfigException;
-use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
+use yii\helpers\StringHelper;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -119,8 +118,11 @@ class CrudAction extends Action
             $queryParams = Yihai::$app->request->getQueryParams();
             if(isset($queryParams[Yihai::$app->urlManager->routeParam]))
             unset($queryParams[Yihai::$app->urlManager->routeParam]);
-            if(isset($queryParams['__redirect']))
-            unset($queryParams['__redirect']);
+            // remove custom params
+            foreach($queryParams as $key => $val){
+                if(StringHelper::startsWith($key, '__'))
+                    unset($queryParams[$key]);
+            }
             $this->model = $this->findModel($queryParams);
         } else {
             if (!$this->model)
