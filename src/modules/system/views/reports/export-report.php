@@ -44,6 +44,6 @@ if ($model->useWatermark($systemSetting) && $watermark_image) {
 if ($type === 'html') {
     $this->registerJs('
     window.print();
-    window.close();
+    setTimeout(window.close, 100);
     ');
 }
