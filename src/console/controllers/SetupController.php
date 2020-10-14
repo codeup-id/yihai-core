@@ -14,6 +14,7 @@ use yihai\core\models\SysUsersSystem;
 use yihai\core\rbac\PhpManager;
 use yihai\core\rbac\RbacHelper;
 use yihai\core\console\Controller;
+use yii\base\Event;
 use yii\console\ExitCode;
 use yii\helpers\Console;
 
@@ -45,10 +46,8 @@ class SetupController extends Controller
         }
     }
 
-    public function actionInstall()
+    private function base_install_update()
     {
-
-        $this->init_rbac();
         $migrationController = $this->getMigrationController();
         $migrationController->interactive = false;
         $migrationController->migrationPath = ['@yihai-core/migrations'];
@@ -61,6 +60,17 @@ class SetupController extends Controller
         $migrationController->migrationPath = ['@yihai/migrations'];
         $migrationController->migrationNamespaces = ['yihai\migrations'];
         $migrationController->runAction('up');
+        Yihai::$app->trigger('setup');
+    }
+
+    private function baseAppSetup()
+    {
+    }
+
+    public function actionInstall()
+    {
+        $this->init_rbac();
+        $this->base_install_update();
         $this->generateCookieValidationKey(['@yihai/config/web.php']);
         $this->createUser();
 
@@ -68,7 +78,7 @@ class SetupController extends Controller
 
     public function actionUninstall()
     {
-        if ($this->confirm('Sure?')) {
+        if ($this->confirm('Yakin uninstall?')) {
             $migrationPath = ['@yihai/migrations'];
             foreach ($this->yihaiModules as $name => $obj) {
                 $migrationPath[] = $obj->getBasePath() . DIRECTORY_SEPARATOR . 'migrations';
@@ -91,6 +101,11 @@ class SetupController extends Controller
             }
         }
         ExitCode::OK;
+    }
+
+    public function actionUpdate()
+    {
+        $this->base_install_update();
     }
 
     protected function init_rbac()
