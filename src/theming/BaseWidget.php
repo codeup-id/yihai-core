@@ -32,6 +32,13 @@ class BaseWidget extends \yii\base\Widget
     }
 
     // fix widget yang ada pada container
+
+    /**
+     * {@inheritDoc}
+     * @param array $config
+     * @return static
+     * @throws \yii\base\InvalidConfigException
+     */
     public static function begin($config = [])
     {
         $config['class'] = get_called_class();

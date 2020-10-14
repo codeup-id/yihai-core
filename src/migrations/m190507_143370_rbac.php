@@ -8,7 +8,6 @@
 
 use yihai\core\rbac\DbManager;
 use yihai\core\rbac\PhpManager;
-use yii\base\InvalidConfigException;
 
 /**
  *  Yihai
@@ -23,21 +22,26 @@ class m190507_143370_rbac extends \yihai\core\db\Migration
     private $authManager;
 
     public function up(){
-        $this->authManager = Yihai::$app->getAuthManager();
-        if ($this->authManager instanceof DbManager) {
-            $this->_db_up();
-        }elseif($this->authManager instanceof PhpManager){
-
-        }
+//        Yihai::$app->authManager = ['class'=>'yihai\core\rbac\DbManager'];
+        $this->authManager = Yihai::createObject(['class'=>DbManager::class]);
+        $this->_db_up();
+//        if ($this->authManager instanceof DbManager) {
+//            $this->_db_up();
+//        }elseif($this->authManager instanceof PhpManager){
+//
+//        }
     }
     public function down(){
 
-        $this->authManager = Yihai::$app->getAuthManager();
-        if ($this->authManager instanceof DbManager) {
+//        $this->authManager = Yihai::$app->getAuthManager();
+        $this->authManager = Yihai::createObject(['class'=>DbManager::class]);
+//        if ($this->authManager instanceof DbManager) {
             $this->_db_down();
-        }elseif($this->authManager instanceof PhpManager){
+//        }elseif($this->authManager instanceof PhpManager){
+
+        $this->authManager = Yihai::createObject(['class'=>PhpManager::class]);
             $this->authManager->removeAll();
-        }
+//        }
     }
 
     /**
@@ -143,7 +147,7 @@ class m190507_143370_rbac extends \yihai\core\db\Migration
      */
     public function _db_down()
     {
-        $authManager = $this->getAuthManagerDB();
+        $authManager = $this->authManager;
         $this->db = $authManager->db;
 
         if ($this->isMSSQL()) {

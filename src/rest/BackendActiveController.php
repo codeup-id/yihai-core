@@ -52,6 +52,8 @@ class BackendActiveController extends Controller
      */
     public $backendControllerId;
 
+    public $customAccess = null;
+
     /**
      * {@inheritdoc}
      */
