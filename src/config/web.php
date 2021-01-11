@@ -8,7 +8,6 @@
 
 
 return \yii\helpers\ArrayHelper::merge(require __DIR__ . '/common.php', [
-    'bootstrap' => ['yihai\core\Bootstrap'],
     'components' => [
 //        'errorHandler' => [
 //            'errorAction' => 'system/error',

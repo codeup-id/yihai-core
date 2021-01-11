@@ -3,12 +3,12 @@
  *  Yihai
  *
  *  Copyright (c) 2019, CodeUP.
- *  @author  Upik Saleh <upik@codeup.id>
+ * @author  Upik Saleh <upik@codeup.id>
  */
 
 
 return [
-    'bootstrap' => ['yihai\core\Bootstrap'],
+    'bootstrap' => ['core' => 'yihai\core\Bootstrap'],
     'layoutPath' => '@yihai/views/_layouts',
     'params' => require __DIR__ . '/params.php',
     'components' => [
