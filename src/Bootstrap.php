@@ -11,6 +11,7 @@ namespace yihai\core;
 
 use Yihai;
 use yihai\core\base\Module;
+use yii\base\Event;
 use yii\base\InvalidConfigException;
 
 class Bootstrap implements \yii\base\BootstrapInterface
@@ -100,6 +101,9 @@ class Bootstrap implements \yii\base\BootstrapInterface
                 }
             }
         }
+        // trigger bootstrap app event
+        $eventBootstrapSender = new Event(['data' => ['app'=>$app]]);
+        Yihai::$app->trigger('bootstrap', new Event(['sender' => $eventBootstrapSender]));
         // SET CONTAINER
         Yihai::$container->set('yii\web\JqueryAsset', 'yihai\core\assets\JqueryAsset');
 
