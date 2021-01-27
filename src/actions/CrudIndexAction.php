@@ -72,10 +72,11 @@ class CrudIndexAction extends CrudAction
                         'showWatermarkImage' => true,
                     ],
                     'format' => $this->modelOptions->gridPdfSize,
-                    'mpdf' => function(\Mpdf\Mpdf $mpdf) use($systemSetting){
+                    'mpdf' => function (\Mpdf\Mpdf $mpdf) use ($systemSetting) {
                         $mpdf->SetTitle($this->modelOptions->baseTitle . ' Data');
                         $mpdf->SetAuthor(Yihai::$app->user->identity->model->username . ' (Yihai App)');
-                        $mpdf->SetWatermarkImage($systemSetting->gridExportWatermark_image->fullpath, 0.1, 40, 'F');
+                        if ($systemSetting->reportWatermark)
+                            $mpdf->SetWatermarkImage($systemSetting->gridExportWatermark_image->fullpath, 0.1, 40, 'F');
                         $mpdf->SetFooter(array(
                             'odd' => array(
                                 'L' => array(
@@ -102,7 +103,7 @@ class CrudIndexAction extends CrudAction
                                 'line' => 1,
                             ),
                         ));
-                        if(is_callable($this->modelOptions->gridExportMpdf)){
+                        if (is_callable($this->modelOptions->gridExportMpdf)) {
                             call_user_func($this->modelOptions->gridExportMpdf, $mpdf);
                         }
                     }

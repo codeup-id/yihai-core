@@ -53,8 +53,7 @@ class CrudDeleteAction extends \yihai\core\actions\CrudAction{
                 Alert::addFlashAlert(Alert::KEY_CRUD, 'danger', Yihai::t('yihai', 'Gagal menghapus items'), true);
             }
         }else{
-            $id = Yihai::$app->request->getQueryParams();
-            unset($id[Yihai::$app->urlManager->routeParam]);
+            $id = $this->queryParams;
             if ($this->findModelDelete($id)->delete()) {
                 Alert::addFlashAlert(Alert::KEY_CRUD, 'success', Yihai::t('yihai', 'Sukses menghapus item'), true);
             }else{

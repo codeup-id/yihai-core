@@ -83,6 +83,8 @@ class CrudAction extends Action
 
     public $redirect;
 
+    protected $queryParams;
+
     /**
      * CrudAction constructor.
      * @param $id
@@ -114,15 +116,16 @@ class CrudAction extends Action
             throw new InvalidConfigException('modelClass must define');
 
         if ($this->findParams) $this->modelOptions->findParams = $this->findParams;
-        if (($this->type === self::TYPE_FORM && $this->formType === self::FORM_UPDATE) || $this->type === self::TYPE_VIEW) {
-            $queryParams = Yihai::$app->request->getQueryParams();
-            if(isset($queryParams[Yihai::$app->urlManager->routeParam]))
+        $queryParams = Yihai::$app->request->getQueryParams();
+        if(isset($queryParams[Yihai::$app->urlManager->routeParam]))
             unset($queryParams[Yihai::$app->urlManager->routeParam]);
-            // remove custom params
-            foreach($queryParams as $key => $val){
-                if(StringHelper::startsWith($key, '__'))
-                    unset($queryParams[$key]);
-            }
+        // remove custom params
+        foreach($queryParams as $key => $val){
+            if(StringHelper::startsWith($key, '__'))
+                unset($queryParams[$key]);
+        }
+        $this->queryParams = $queryParams;
+        if (($this->type === self::TYPE_FORM && $this->formType === self::FORM_UPDATE) || $this->type === self::TYPE_VIEW) {
             $this->model = $this->findModel($queryParams);
         } else {
             if (!$this->model)
