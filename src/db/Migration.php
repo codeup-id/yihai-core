@@ -76,5 +76,14 @@ class Migration extends \yii\db\Migration
         return $this->integer();
     }
 
+    /**
+     * @return \yii\db\ColumnSchemaBuilder
+     */
+    public function uid()
+    {
+        return $this->char(36)->notNull()->defaultValue('0');
+    }
+
+
 
 }
