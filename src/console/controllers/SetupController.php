@@ -58,7 +58,7 @@ class SetupController extends Controller
         $migrationController = $this->getMigrationController();
         $migrationController->interactive = false;
         $migrationController->migrationPath = ['@yihai/migrations'];
-        $migrationController->migrationNamespaces = ['yihai\migrations'];
+//        $migrationController->migrationNamespaces = ['yihai\migrations'];
         $migrationController->runAction('up');
         Yihai::$app->trigger('setup');
     }
