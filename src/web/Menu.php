@@ -75,7 +75,7 @@ class Menu extends BaseObject
     /**
      * @var bool
      */
-    public $encode = true;
+    public $encode = null;
 
     public function init()
     {

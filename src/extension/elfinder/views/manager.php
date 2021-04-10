@@ -27,6 +27,8 @@ $options['soundPath'] = Assets::getSoundPathUrl();
 $options['i18nBaseUrl'] = Assets::getI18nPathUrl();
 $options['height'] = '100%';
 $options['startPathHash'] = 'yihai_';
+$options['cssAutoLoad'] = []; //disable theme
+
 
 $this->registerJs("
 function ElFinderGetCommands(disabled){
@@ -60,7 +62,7 @@ function ElFinderGetCommands(disabled){
         el.resize(width, height);
     }
 
-    var _elfinder = jQuery('#elfinder').elfinder(".Json::encode($options).").elfinder('instance');
+//    var _elfinder = jQuery('#elfinder').elfinder(".Json::encode($options).").elfinder('instance');
     jQuery(window).resize(elFinderFullScreen);
     elFinderFullScreen();
     "/*, \yii\web\View::POS_LOAD*/);

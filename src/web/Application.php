@@ -36,11 +36,15 @@ class Application extends \yii\web\Application
 {
 
     public $copyright = '<strong>Copyright © 2019 <a target="_blank" href="http://codeup.id/">codeup.id</a>.</strong> All rights reserved.';
+
     public function __construct($config = [])
     {
         Yihai::$app = $this;
-        $common_config = require __DIR__ . '/../config/web.php';
-        $config = ArrayHelper::merge($common_config, $config);
+        $isBasic = ArrayHelper::remove($config, 'isBasic', false);
+        if (!$isBasic) {
+            $common_config = require __DIR__ . '/../config/web.php';
+            $config = ArrayHelper::merge($common_config, $config);
+        }
         Yihai::bootstrap_config($config);
         parent::__construct($config);
     }

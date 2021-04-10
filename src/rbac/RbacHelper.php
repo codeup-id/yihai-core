@@ -175,9 +175,10 @@ class RbacHelper
      * @param array $roles main role
      * @param array $actions
      * @param string $description
+     * @param array|item $attributes
      * @throws \yii\base\Exception
      */
-    public static function addRoleCrud($route, $roles = [], $actions = [], $description = 'Main CRUD')
+    public static function addRoleCrud($route, $roles = [], $actions = [], $description = 'Main CRUD', $attributes = [])
     {
         if (is_array($route)) {
             foreach ($route as $r) {
@@ -186,12 +187,13 @@ class RbacHelper
             return;
         }
         if (empty($actions)) {
-            $actions = ['index', 'create', 'update', 'delete', 'view', 'import'];
+            $actions = ['index', 'create', 'update', 'delete', 'view', 'import','export'];
         } elseif ($actions === false) {
             $actions = [];
         }
         $route = '/' . trim($route, '/');
-        $menu_role = static::getAndCreate(static::menuRoleName($route), Item::TYPE_PERMISSION, ['description' => $description]);
+
+        $menu_role = static::getAndCreate(static::menuRoleName($route), Item::TYPE_PERMISSION, array_merge($attributes,['description' => $description]));
         if (!empty($roles)) {
             foreach ($roles as $role) {
                 $main_role = static::getAndCreate($role, Item::TYPE_ROLE);
@@ -200,7 +202,7 @@ class RbacHelper
         }
         foreach ($actions as $action) {
             $permission_name = static::menuRoleName($route . '/' . trim($action, '/'));
-            $permission = static::getAndCreate($permission_name, Item::TYPE_PERMISSION);
+            $permission = static::getAndCreate($permission_name, Item::TYPE_PERMISSION, $attributes);
             static::addChild($menu_role, $permission);
         }
     }

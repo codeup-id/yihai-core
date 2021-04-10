@@ -23,6 +23,7 @@ class Module extends \yihai\core\base\Module
     public $urlRuleClass = 'yii\web\UrlRule';
     public $controllerNamespace = 'yihai\core\modules\system\controllers';
 
+    public $systemDefaultController = '/system/default';
 
     public function init()
     {
@@ -139,7 +140,7 @@ class Module extends \yihai\core\base\Module
                                     'type' => Menu::TYPE_MENU,
                                     'id' => 'log',
                                     'label' => 'Activity Log',
-                                    'route' => ['/system/activity-log'],
+                                    'route' => ['/system/activity-log/index'],
                                     'icon' => 'file',
                                     'position' => 10,
                                 ]),
@@ -167,14 +168,15 @@ class Module extends \yihai\core\base\Module
         $app->getUrlManager()->addRules([
             [
                 'class' => 'yii\web\GroupUrlRule',
+                'routePrefix' => $this->systemDefaultController,
                 'prefix' => 'system',
                 'rules' => [
-                    'index' => 'default/index',
-                    'login' => 'default/login',
-                    'profile' => 'default/profile',
-                    'profile-update' => 'default/profile-update',
-                    'change-password' => 'default/change-password',
-                    'logout' => 'default/logout',
+                    'index' => 'index',
+                    'login' =>  'login',
+                    'profile' =>  'profile',
+                    'profile-update' =>  'profile-update',
+                    'change-password' =>  'change-password',
+                    'logout' =>  'logout',
 //                    '<controller:(public)>/<action:(files)>/<group:\w+>' => '<controller>/<action>',
                     '<controller:(public)>/user-avatar/<filename>' => '<controller>/user-avatar',
                 ]

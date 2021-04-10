@@ -229,7 +229,7 @@ class SidebarMenu extends BaseWidget
             if (!empty($item->permissions)) {
                 $can = false;
                 foreach ($item->permissions as $permission) {
-                    if (Yihai::$app->user->can($permission)) {
+                    if (Yihai::$app->user->can($permission,['menu'=>$item,'permission'=>$permission])) {
                         $can = true;
                         continue;
                     }
@@ -244,7 +244,7 @@ class SidebarMenu extends BaseWidget
                 $item->label = '';
             }
 
-            $encodeLabel = $item->encode ? $item->encode : $this->encodeLabels;
+            $encodeLabel = (is_bool($item->encode)) ? $item->encode : $this->encodeLabels;
             $items->child[$i]->label = $encodeLabel ? Html::encode($item->label) : $item->label;
             $items->child[$i]->icon = $item->icon ? $item->icon : '';
             $hasActiveChild = false;

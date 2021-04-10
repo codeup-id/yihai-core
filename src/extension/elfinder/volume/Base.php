@@ -44,7 +44,7 @@ class Base extends BaseObject
      * jika false, maka akan Dibuat pada directory asset bundle
      * @var string|bool
      */
-    public $tmbPath = 'assets/thumbnails';
+    public $tmbPath = 'thumbnails';
 
     public $plugin = [];
 
@@ -102,12 +102,11 @@ class Base extends BaseObject
 
         if (!empty($this->access_write)) {
             if (is_string($this->access_write)) {
-                if($this->access_write === '*')
+                if ($this->access_write === '*')
                     $this->_defaults['write'] = true;
                 else
                     $this->_defaults['write'] = Yihai::$app->user->can($this->access_write);
-            }
-            elseif (is_array($this->access_write)) {
+            } elseif (is_array($this->access_write)) {
                 foreach ($this->access_write as $role) {
                     if (Yihai::$app->user->can($role)) {
                         $this->_defaults['write'] = true;
@@ -120,12 +119,11 @@ class Base extends BaseObject
             $this->_defaults['read'] = true;
         } elseif (!empty($this->access_read)) {
             if (is_string($this->access_read)) {
-                if($this->access_read === '*')
+                if ($this->access_read === '*')
                     $this->_defaults['read'] = true;
                 else
                     $this->_defaults['read'] = Yihai::$app->user->can($this->access_read);
-            }
-            elseif (is_array($this->access_read)) {
+            } elseif (is_array($this->access_read)) {
                 foreach ($this->access_read as $role) {
                     if (Yihai::$app->user->can($role)) {
                         $this->_defaults['read'] = true;
@@ -150,7 +148,7 @@ class Base extends BaseObject
     public function getRoot()
     {
 
-        if(!$this->group){
+        if (!$this->group) {
             $this->group = $this->path;
         }
         $options['id'] = $this->id;
@@ -165,8 +163,8 @@ class Base extends BaseObject
         $options['tmpPath'] = Yihai::getAlias('@runtime/elFinderTmpPath');
         if ($this->tmbPath) {
             $this->tmbPath = trim($this->tmbPath, '/');
-            $options['tmbPath'] = Yihai::getAlias('@webroot/' . $this->tmbPath);
-            $options['tmbURL'] = Yihai::$app->request->hostInfo . Yihai::getAlias('@web/' . $this->tmbPath);
+            $options['tmbPath'] = Yihai::getAlias(rtrim(Yihai::$app->assetManager->basePath, '/') . '/' . $this->tmbPath);
+            $options['tmbURL'] = Yihai::getAlias(rtrim(Yihai::$app->assetManager->baseUrl, '/') . '/' . $this->tmbPath);
         } else {
             $subPath = md5($this->className() . '|' . serialize($this->name));
             $options['tmbPath'] = Yihai::$app->assetManager->getPublishedPath(__DIR__) . DIRECTORY_SEPARATOR . $subPath;
@@ -185,7 +183,7 @@ class Base extends BaseObject
             'hidden' => true,
             'locked' => false
         ];
-        if($this->hide_tmb){
+        if ($this->hide_tmb) {
             $this->attributes[] = [
                 'pattern' => '#.*(\.tmb)$#i',
                 'read' => false,
@@ -194,7 +192,7 @@ class Base extends BaseObject
                 'locked' => false
             ];
         }
-        if($this->hide_quarantine){
+        if ($this->hide_quarantine) {
             $this->attributes[] = [
                 'pattern' => '#.*(\.quarantine)$#i',
                 'read' => false,
@@ -204,7 +202,7 @@ class Base extends BaseObject
             ];
         }
         $options['attributes'] = $this->attributes;
-        if(!empty($this->disabled))
+        if (!empty($this->disabled))
             $options['disabled'] = $this->disabled;
         if (is_array($this->watermark)) {
             Yihai::$app->fileManager->connectOptions['bind']['upload.presave'] = 'Plugin.Watermark.onUpLoadPreSave';

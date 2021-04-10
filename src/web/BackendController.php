@@ -29,12 +29,12 @@ abstract class BackendController extends Controller implements CrudInterface
     /**
      * @var ModelOptions
      */
-    private $modelOptions;
+    protected $modelOptions;
     /**
      * @var null|\yihai\core\db\ActiveRecord
      */
-    private $model = null;
-    private $modelClass;
+    protected $model = null;
+    protected $modelClass;
 
     /**
      * BackendController constructor.
@@ -101,6 +101,9 @@ abstract class BackendController extends Controller implements CrudInterface
                         'controllers' => [$this->getUniqueId()],
                         'allow' => true,
                         'roles' => [RbacHelper::menuRoleName($this->getUniqueId())],
+                        'roleParams'=>[
+                            'action'=>$this->action->id
+                        ]
                     ],
                     [
                         'controllers' => [$this->getUniqueId()],
