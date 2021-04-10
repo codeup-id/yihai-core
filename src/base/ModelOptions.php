@@ -248,6 +248,13 @@ class ModelOptions extends BaseObject
 
     private $_gridExportMpdf;
 
+    /**
+     * ex: [
+     *  function($modelOptions){ return '.......'; }
+     * ]
+     * @var array append links pada button di index
+     */
+    public $appendLinks = [];
     public function init()
     {
         parent::init();

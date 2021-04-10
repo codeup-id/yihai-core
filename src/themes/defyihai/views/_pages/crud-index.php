@@ -38,6 +38,13 @@ if ($modelOptions->hint) {
 if ($modelOptions->actionCreate && $modelOptions->userCanAction('create')) {
     $links[] = '<a href="' . Url::to([$modelOptions->getActionUrl('create')]) . '" ' . ($modelOptions->useModalLinkCreate ? $modal_attr : '') . ' class="btn btn-primary">' . Html::icon('file-plus', ['prefix' => 'fal fa-']) . ' ' . Yihai::t('yihai', 'Tambah') . '</a>';
 }
+
+foreach($modelOptions->appendLinks as $appendLink){
+    if($appendLink instanceof Closure){
+        $links[] = call_user_func($appendLink,$modelOptions);
+    }
+}
+
 if ($modelOptions->actionImport && $modelOptions->importAttributes && $modelOptions->userCanAction('import')) {
     $links2[] = '<a href="' . Url::to([$modelOptions->getActionUrl('import')]) . '" ' . ($modelOptions->useModalLinkImport ? $modal_attr : '') . ' class="btn btn-primary">' . Html::icon('file-import', ['prefix' => 'fal fa-']) . ' ' . Yihai::t('yihai', 'Impor') . '</a>';
 }
