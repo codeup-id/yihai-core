@@ -77,7 +77,7 @@ class ActivityLog extends ActiveRecord
         $log = new static();
         $log->type = $type;
         if(Yihai::$app instanceof Application) {
-            if (Yihai::$app->user->isGuest)
+            if (Yihai::$app->user->getIsGuest())
                 $log->user = '0|guest|guest';
             else {
                 $user = Yihai::$app->user->identity->model->id . '|' . Yihai::$app->user->identity->model->group . '|' . Yihai::$app->user->identity->model->username;
