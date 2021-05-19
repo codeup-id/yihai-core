@@ -3,7 +3,7 @@
  *  Yihai
  *
  *  Copyright (c) 2019, CodeUP.
- *  @author  Upik Saleh <upik@codeup.id>
+ * @author  Upik Saleh <upik@codeup.id>
  */
 
 
@@ -13,5 +13,6 @@ return [
         'id' => 'Indonesia',
         'en' => 'English'
     ],
-    'gridShowUsernameInCreatedUpdated' => true
+    'gridShowUsernameInCreatedUpdated' => true,
+    'noSeo' => true
 ];
