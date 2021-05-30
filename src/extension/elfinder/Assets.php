@@ -32,6 +32,7 @@ class Assets extends AssetBundle
 		'js/elfinder.min.js'
 	);
 	public $depends = array(
+	    AssetsCallBack::class,
 		'yii\jui\JuiAsset',
 	);
 

@@ -22,6 +22,7 @@ class SelectImageWidget extends InputWithAddon
     public $elfinderUrl;
     public $elfinderPathID;
     public $elfinderGetFileCallback;
+    public $themes = [];
     public function init()
     {
         parent::init();
@@ -31,6 +32,9 @@ class SelectImageWidget extends InputWithAddon
             {$this->elfinderGetFileCallback};
             jQuery('button.ui-dialog-titlebar-close[type=\"button\"]').click();
         }");
+        if($this->themes === true)
+            $this->themes = Assets::getThemesListManifest();
+
         $this->elfinderOptions = ArrayHelper::merge([
             'url'=>$this->elfinderUrl,
             'cssAutoLoad' => [],
@@ -39,7 +43,7 @@ class SelectImageWidget extends InputWithAddon
                 Yihai::$app->request->csrfParam => Yihai::$app->request->csrfToken,
             ],
             'zIndex'=>88888,
-            'themes'=>Assets::getThemesListManifest(),
+            'themes'=>$this->themes,
             'lang'=>Yihai::$app->language,
             'i18nBaseUrl'=> Assets::getI18nPathUrl(),
             'commandsOptions' => [
