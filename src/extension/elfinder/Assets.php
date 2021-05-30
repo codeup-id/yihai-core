@@ -9,6 +9,7 @@
 namespace yihai\core\extension\elfinder;
 
 use Yihai;
+use yihai\core\helpers\Url;
 use yii\web\AssetBundle;
 use yii\web\JqueryAsset;
 
@@ -34,7 +35,13 @@ class Assets extends AssetBundle
 		'yii\jui\JuiAsset',
 	);
 
-	/**
+	public function init()
+    {
+        parent::init();
+        $this->css[] = Url::to(self::getPathUrlExt().'/material-themes/Material/css/theme-light.css', true);
+    }
+
+    /**
 	 * @param string $lang
 	 * @param \yii\web\View $view
 	 */
@@ -50,6 +57,18 @@ class Assets extends AssetBundle
         return Yihai::$app->assetManager->getPublishedUrl("@vendor/studio-42/elfinder");
     }
 
+    public static function getPathUrlExt(){
+        return Yihai::$app->assetManager->getPublishedUrl(__DIR__."/assets");
+    }
+
+    public static function getThemesListManifest()
+    {
+        return [
+            'material' => Url::to(self::getPathUrlExt().'/material-themes/Material/css/theme.css', true),
+            'material-gray' => Url::to(self::getPathUrlExt().'/material-themes/Material/css/theme-gray.css', true),
+            'material-light' => Url::to(self::getPathUrlExt().'/material-themes/Material/css/theme-light.css', true),
+        ];
+    }
     public static function getSoundPathUrl(){
         return self::getPathUrl()."/sounds/";
     }

@@ -28,7 +28,7 @@ $options['i18nBaseUrl'] = Assets::getI18nPathUrl();
 $options['height'] = '100%';
 $options['startPathHash'] = 'yihai_';
 $options['cssAutoLoad'] = []; //disable theme
-
+$options['themes'] = Assets::getThemesListManifest();
 
 $this->registerJs("
 function ElFinderGetCommands(disabled){
@@ -61,8 +61,6 @@ function ElFinderGetCommands(disabled){
 
         el.resize(width, height);
     }
-
-//    var _elfinder = jQuery('#elfinder').elfinder(".Json::encode($options).").elfinder('instance');
     jQuery(window).resize(elFinderFullScreen);
     elFinderFullScreen();
     "/*, \yii\web\View::POS_LOAD*/);
@@ -82,4 +80,3 @@ html, body {
 
 echo '<div id="elfinder"></div>';
 
-?>
