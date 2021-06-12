@@ -175,6 +175,12 @@ class UserModel extends \yihai\core\db\ActiveRecord
         parent::afterSave($insert, $changedAttributes);
     }
 
+    public function afterDelete()
+    {
+        RbacHelper::getAuthManager()->revokeAll($this->id);
+        parent::afterDelete();
+    }
+
     //-------------------------------------------------------------------------
 
     public function fields()
